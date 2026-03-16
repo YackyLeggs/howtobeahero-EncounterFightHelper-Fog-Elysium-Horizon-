@@ -1,0 +1,3381 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to be a Hero – Encounter / Fight Helper</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #15274f 0%, #050711 55%, #02030a 100%);
+      color: #e0ecff;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    button {
+      background: #0d1a2e;
+      border: 1px solid #38e9c8;
+      color: #e0ecff;
+      padding: 4px 8px;
+      margin: 2px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    button:hover {
+      box-shadow: 0 0 6px #38e9c8;
+    }
+
+    input, select, textarea {
+      background: #0b1020;
+      border: 1px solid #32425f;
+      color: #e0ecff;
+      border-radius: 3px;
+      padding: 3px 5px;
+      font-size: 0.8rem;
+    }
+
+    textarea {
+      width: 100%;
+      resize: vertical;
+    }
+
+    #app {
+      padding: 10px;
+    }
+
+    #top-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .panel {
+      background: rgba(5, 10, 25, 0.9);
+      border-radius: 10px;
+      padding: 8px;
+      border: 1px solid #1e3b70;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.05);
+    }
+
+    .initiative-panel {
+      flex: 1 1 auto;
+    }
+
+    .initiative-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 0.85rem;
+    }
+
+    #initiative-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 4px;
+      min-height: 24px;
+    }
+
+    .initiative-chip {
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid #32425f;
+      font-size: 0.75rem;
+      background: rgba(21, 39, 79, 0.7);
+    }
+
+    .initiative-chip.active {
+      border-color: #38e9c8;
+      box-shadow: 0 0 6px #38e9c8;
+      background: rgba(12, 64, 92, 0.9);
+    }
+
+    .initiative-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    .initiative-visual-wrap {
+      margin-top: 8px;
+      border: 1px solid rgba(56, 233, 200, 0.22);
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(10, 20, 42, 0.9), rgba(6, 11, 25, 0.72));
+      box-shadow: inset 0 0 16px rgba(56, 233, 200, 0.05);
+      padding: 6px;
+      min-height: 168px;
+      overflow: hidden;
+    }
+
+    #initiative-flow-svg {
+      width: 100%;
+      height: 152px;
+      display: block;
+    }
+
+    .initiative-flow-track {
+      fill: rgba(8, 18, 40, 0.72);
+      stroke: #38e9c8;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .initiative-flow-track-shadow {
+      fill: none;
+      stroke: rgba(56, 233, 200, 0.12);
+      stroke-width: 9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .initiative-flow-text {
+      fill: #eef7ff;
+      font-size: 11px;
+      font-weight: 600;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      pointer-events: none;
+    }
+
+    .initiative-flow-meta {
+      fill: #a9c9ea;
+      font-size: 9px;
+      font-weight: 600;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      pointer-events: none;
+    }
+
+    .initiative-flow-empty {
+      fill: #8f98ae;
+      font-size: 12px;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+
+    .initiative-flow-link-arrow {
+      fill: #38e9c8;
+      stroke: rgba(156, 247, 235, 0.75);
+      stroke-width: 1;
+      filter: drop-shadow(0 0 4px rgba(56, 233, 200, 0.28));
+    }
+
+    .utility-panel {
+      width: 260px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .dice-panel h3,
+    .timer-panel h3 {
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+    }
+
+    .dice-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 4px;
+      font-size: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    #dice-result {
+      font-weight: 600;
+      color: #38e9c8;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    #dice-log {
+      font-size: 0.7rem;
+      max-height: 60px;
+      overflow-y: auto;
+      border-top: 1px solid #32425f;
+      padding-top: 3px;
+      margin-top: 4px;
+    }
+
+    .timer-display {
+      font-family: "Courier New", monospace;
+      font-size: 1rem;
+      margin: 4px 0;
+    }
+
+    #main {
+      display: grid;
+      grid-template-columns: minmax(260px, 1.2fr) minmax(260px, 1.2fr) minmax(180px, 0.7fr);
+      gap: 10px;
+    }
+
+    .column {
+      min-height: 200px;
+    }
+
+    .column h2 {
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #9ecbff;
+    }
+
+    #heroes-list,
+    #enemies-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 450px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .card {
+      background: radial-gradient(circle at top, rgba(56, 84, 144, 0.8), rgba(9, 12, 28, 0.95));
+      border-radius: 10px;
+      padding: 6px;
+      border: 1px solid #32425f;
+      font-size: 0.8rem;
+      position: relative;
+    }
+
+    .enemy-card {
+      border-width: 2px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+      font-size: 0.82rem;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 0.65rem;
+      padding: 1px 4px;
+      border-radius: 999px;
+      border: 1px solid #32425f;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .card-details {
+      margin-bottom: 4px;
+      padding-top: 4px;
+      border-top: 1px solid rgba(80, 110, 170, 0.35);
+    }
+
+    .card-details summary {
+      cursor: pointer;
+      font-size: 0.74rem;
+      color: #9ecbff;
+      list-style: none;
+      user-select: none;
+    }
+
+    .card-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .card-details summary::before {
+      content: "▸ ";
+      opacity: 0.8;
+    }
+
+    .card-details[open] summary::before {
+      content: "▾ ";
+    }
+
+    .card-details[open] summary {
+      margin-bottom: 6px;
+    }
+
+    .card-body {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+
+    .stat-line {
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .stat-label {
+      opacity: 0.8;
+    }
+
+    .stat-value {
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    .value-buff {
+      color: #38e9c8;
+    }
+
+    .value-debuff {
+      color: #ff6b6b;
+    }
+
+    .small-buttons {
+      display: flex;
+      gap: 2px;
+    }
+
+    .small-buttons button {
+      padding: 1px 4px;
+      font-size: 0.7rem;
+    }
+
+    .inline-input {
+      width: 60px;
+      font-size: 0.7rem;
+      padding: 1px 3px;
+    }
+
+    .card-footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: flex-end;
+    }
+
+    .hp-summary {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 0 6px;
+      padding: 4px 6px;
+      border: 1px solid rgba(80, 110, 170, 0.35);
+      border-radius: 8px;
+      background: rgba(8, 18, 40, 0.45);
+    }
+
+    .hp-summary-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ecbff;
+      white-space: nowrap;
+    }
+
+    .hp-summary-main {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .hp-summary-value {
+      font-size: 0.78rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      min-width: 58px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .hp-bar {
+      position: relative;
+      flex: 1 1 auto;
+      min-width: 90px;
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(7, 12, 24, 0.9);
+      border: 1px solid rgba(120, 140, 190, 0.3);
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.35);
+    }
+
+    .hp-bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      transition: width 140ms ease;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    .card-textarea {
+      width: 100%;
+      min-height: 58px;
+      resize: vertical;
+      line-height: 1.25;
+      font-size: 0.72rem;
+    }
+
+    .card-subdetails {
+      margin-top: 4px;
+      margin-left: 12px;
+      padding-top: 4px;
+      padding-left: 10px;
+      border-top: 1px dashed rgba(80, 110, 170, 0.28);
+      border-left: 1px dashed rgba(80, 110, 170, 0.24);
+    }
+
+    .card-subdetails summary {
+      cursor: pointer;
+      font-size: 0.7rem;
+      color: #c6ddff;
+      list-style: none;
+      user-select: none;
+    }
+
+    .card-subdetails summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .card-subdetails summary::before {
+      content: "▸ ";
+      opacity: 0.78;
+    }
+
+    .card-subdetails[open] summary::before {
+      content: "▾ ";
+    }
+
+    .card-subdetails[open] summary {
+      margin-bottom: 4px;
+    }
+
+    .skill-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .skill-add-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: stretch;
+      align-items: stretch;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(96, 110, 138, 0.24);
+    }
+
+    .skill-add-row button {
+      flex: 1 1 150px;
+      min-height: 34px;
+      margin: 0;
+      padding: 7px 10px;
+      border-radius: 9px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      background: linear-gradient(180deg, rgba(20, 38, 70, 0.96), rgba(10, 18, 34, 0.98));
+      border: 1px solid rgba(56, 233, 200, 0.42);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03), 0 6px 14px rgba(0,0,0,0.22);
+    }
+
+    .skill-add-row button:hover {
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), 0 0 10px rgba(56, 233, 200, 0.18), 0 8px 18px rgba(0,0,0,0.24);
+      transform: translateY(-1px);
+    }
+
+    .skill-add-row button.skill-delete-btn,
+    .skill-add-row button[data-danger="true"] {
+      border-color: rgba(255, 107, 107, 0.52);
+      background: linear-gradient(180deg, rgba(72, 24, 30, 0.96), rgba(34, 12, 16, 0.98));
+    }
+
+    .skill-entry {
+      background: linear-gradient(180deg, rgba(28, 31, 39, 0.96), rgba(20, 22, 30, 0.96));
+      border: 1px solid rgba(96, 110, 138, 0.45);
+      border-radius: 14px;
+      padding: 10px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02), 0 10px 18px rgba(0,0,0,0.18);
+    }
+
+    .skill-entry-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .skill-entry-title {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #9ecbff;
+      font-weight: 700;
+    }
+
+    .skill-delete-btn {
+      border-color: rgba(255, 107, 107, 0.6);
+      box-shadow: none;
+    }
+
+    .skill-entry-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(84px, 0.75fr);
+      gap: 10px;
+    }
+
+    .item-entry-grid {
+      grid-template-columns: minmax(0, 1.35fr) minmax(84px, 0.8fr) minmax(68px, 0.55fr);
+    }
+
+    .skill-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .skill-field-label {
+      font-size: 0.7rem;
+      color: #d6e7ff;
+      font-weight: 600;
+      opacity: 0.95;
+    }
+
+    .skill-value-input {
+      text-align: left;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .skill-entry-description {
+      margin-top: 10px;
+    }
+
+    .status-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 0 0 6px;
+      padding: 5px 8px;
+      border: 1px solid rgba(80, 110, 170, 0.28);
+      border-radius: 8px;
+      background: rgba(8, 18, 40, 0.32);
+    }
+
+    .status-toggle-row.active {
+      border-color: rgba(255, 214, 102, 0.55);
+      background: rgba(98, 74, 18, 0.24);
+      box-shadow: inset 0 0 10px rgba(255, 214, 102, 0.08);
+    }
+
+    .status-toggle-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ecbff;
+      font-weight: 600;
+    }
+
+    .status-toggle-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 0.76rem;
+      color: #e0ecff;
+    }
+
+    .status-toggle-control input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: #ffd666;
+      cursor: pointer;
+    }
+
+    .equipped-summary {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin: 0 0 4px;
+      padding: 2px 4px;
+      border: 1px solid rgba(255, 214, 102, 0.18);
+      border-radius: 6px;
+      background: rgba(62, 49, 14, 0.10);
+      min-height: 0;
+    }
+
+    .equipped-summary-title {
+      display: inline-flex;
+      align-items: center;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: rgba(255, 214, 102, 0.12);
+      color: #ffd666;
+      font-size: 0.56rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      line-height: 1;
+      margin: 0;
+    }
+
+    .equipped-summary-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .equipped-summary-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+      max-width: 100%;
+      padding: 1px 5px;
+      border-radius: 999px;
+      background: rgba(8, 18, 40, 0.38);
+      border: 1px solid rgba(255, 214, 102, 0.10);
+      min-height: 18px;
+    }
+
+    .equipped-summary-name,
+    .equipped-summary-value,
+    .equipped-summary-category {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1;
+    }
+
+    .equipped-summary-name {
+      font-size: 0.63rem;
+      font-weight: 600;
+      color: #eef7ff;
+      max-width: 110px;
+    }
+
+    .equipped-summary-value {
+      font-size: 0.6rem;
+      color: #cfe7ff;
+      font-variant-numeric: tabular-nums;
+      max-width: 80px;
+    }
+
+    .equipped-summary-category {
+      font-size: 0.54rem;
+      color: #ffd666;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      max-width: 74px;
+      opacity: 0.9;
+    }
+
+    .equipped-summary-row.category-waffe {
+      background: rgba(130, 42, 42, 0.22);
+      border-color: rgba(255, 120, 120, 0.22);
+    }
+
+    .equipped-summary-row.category-ruestung {
+      background: rgba(46, 92, 126, 0.22);
+      border-color: rgba(115, 198, 255, 0.22);
+    }
+
+    .equipped-summary-row.category-item {
+      background: rgba(72, 96, 44, 0.22);
+      border-color: rgba(179, 230, 109, 0.22);
+    }
+
+    .equipped-summary-category.category-waffe {
+      color: #ff8d8d;
+    }
+
+    .equipped-summary-category.category-ruestung {
+      color: #7fd8ff;
+    }
+
+    .equipped-summary-category.category-item {
+      color: #b8ef79;
+    }
+
+    .effect-summary {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin: 0 0 6px;
+      padding: 2px 4px;
+      border: 1px solid rgba(180, 120, 255, 0.18);
+      border-radius: 6px;
+      background: rgba(46, 22, 78, 0.12);
+    }
+
+    .effect-summary-title {
+      display: inline-flex;
+      align-items: center;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: rgba(180, 120, 255, 0.12);
+      color: #d8b6ff;
+      font-size: 0.56rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      line-height: 1;
+      margin: 0;
+    }
+
+    .effect-summary-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .effect-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+      max-width: 100%;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(73, 34, 116, 0.34);
+      border: 1px solid rgba(203, 156, 255, 0.16);
+      min-height: 18px;
+    }
+
+    .effect-tag-name,
+    .effect-tag-rounds {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1;
+    }
+
+    .effect-tag-name {
+      font-size: 0.63rem;
+      font-weight: 600;
+      color: #f3e8ff;
+      max-width: 130px;
+    }
+
+    .effect-tag-rounds {
+      font-size: 0.55rem;
+      color: #d8b6ff;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      opacity: 0.95;
+    }
+
+    .effect-builder {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .effect-builder-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 92px;
+      gap: 8px;
+    }
+
+    .effect-change-entry {
+      background: linear-gradient(180deg, rgba(35, 25, 52, 0.92), rgba(21, 16, 34, 0.96));
+      border: 1px solid rgba(172, 128, 232, 0.24);
+      border-radius: 12px;
+      padding: 8px;
+    }
+
+    .effect-change-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) 88px auto;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .effect-change-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 30px;
+      font-size: 0.72rem;
+      color: #e7d6ff;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .effect-change-toggle input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      margin: 0;
+      accent-color: #c08cff;
+      cursor: pointer;
+    }
+
+    .effect-builder-note {
+      font-size: 0.68rem;
+      color: #d8b6ff;
+      opacity: 0.88;
+      line-height: 1.25;
+      padding: 2px 0;
+    }
+
+    .effect-change-extra {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(172, 128, 232, 0.2);
+    }
+
+    .json-import {
+      margin-top: 6px;
+      font-size: 0.75rem;
+    }
+
+    .json-import label {
+      opacity: 0.8;
+    }
+
+    .sidebar {
+      font-size: 0.8rem;
+    }
+
+    .sidebar-section {
+      margin-bottom: 8px;
+      border-top: 1px solid #32425f;
+      padding-top: 4px;
+    }
+
+    .sidebar-section:first-of-type {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .sidebar-section h3 {
+      font-size: 0.8rem;
+      margin-bottom: 3px;
+      color: #9ecbff;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .sidebar li {
+      padding: 2px 0;
+      opacity: 0.9;
+    }
+
+    .sidebar li a {
+      color: inherit;
+      text-decoration: none;
+      display: inline-block;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .sidebar li a:hover {
+      color: #38e9c8;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 1100px) {
+      #top-bar {
+        flex-direction: column;
+      }
+
+      .utility-panel {
+        width: auto;
+      }
+
+      #main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="top-bar">
+      <div class="panel initiative-panel">
+        <div class="initiative-header">
+          <span><strong>Initiative-Leiste</strong> (1W10 + Handeln)</span>
+          <span>Runde: <span id="round-counter">1</span></span>
+        </div>
+        <div id="initiative-list"></div>
+        <div class="initiative-controls">
+          <button id="roll-initiative-btn" type="button">Initiative würfeln</button>
+          <button id="next-turn-btn" type="button">Nächster dran</button>
+          <button id="reset-initiative-btn" type="button">Ini + Runde reset</button>
+        </div>
+        <div class="initiative-visual-wrap">
+          <svg id="initiative-flow-svg" viewBox="0 0 1000 140" preserveAspectRatio="xMidYMid meet" aria-label="Initiative-Ablaufplan"></svg>
+        </div>
+      </div>
+
+      <div class="utility-panel">
+        <div class="panel dice-panel">
+          <h3>Würfelsimulator (verdeckt)</h3>
+          <div class="dice-row">
+            <span>Anzahl:</span>
+            <input type="number" id="dice-count" value="1" min="1" style="width: 50px;" />
+            <span>W</span>
+            <select id="dice-select">
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="6">6</option>
+              <option value="8">8</option>
+              <option value="10">10</option>
+              <option value="12">12</option>
+              <option value="20">20</option>
+              <option value="100" selected>100</option>
+            </select>
+            <span>+ Mod:</span>
+            <input type="number" id="dice-mod" value="0" style="width: 50px;" />
+          </div>
+          <div class="dice-row">
+            <button id="roll-dice-btn" type="button">Würfeln</button>
+            <span>Ergebnis:</span>
+            <span id="dice-result">–</span>
+          </div>
+          <div id="dice-log"></div>
+        </div>
+
+        <div class="panel timer-panel">
+          <h3>Timer</h3>
+          <div class="timer-display" id="timer-display">00:00</div>
+          <div>
+            <button id="timer-start-btn" type="button">Start</button>
+            <button id="timer-pause-btn" type="button">Pause</button>
+            <button id="timer-reset-btn" type="button">Reset</button>
+          </div>
+          <div class="dice-row" style="margin-top:4px;">
+            <span>Preset:</span>
+            <select id="timer-preset">
+              <option value="0">–</option>
+              <option value="30">30 Sek</option>
+              <option value="60">60 Sek</option>
+              <option value="120">120 Sek</option>
+              <option value="300">5 Min</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="main">
+      <div class="panel column hero-column">
+        <h2>Helden (HTBAH)</h2>
+        <div id="heroes-list"></div>
+        <button id="add-hero-btn" type="button">Held hinzufügen</button>
+        <div class="json-import">
+          <label for="hero-json-input">
+            Helden-JSON-Import (Array, Einzelobjekt oder { heroes: [...] }):
+          </label>
+          <textarea id="hero-json-input" rows="8" placeholder=""></textarea>
+          <button id="import-hero-json-btn" type="button">Helden JSON importieren</button>
+        </div>
+      </div>
+
+      <div class="panel column enemy-column">
+        <h2>Gegner (HTBAH)</h2>
+        <div id="enemies-list"></div>
+        <div class="enemy-buttons">
+          <button id="add-enemy-btn" type="button">Gegner hinzufügen</button>
+          <button id="clear-enemies-btn" type="button">Clear Enemies</button>
+        </div>
+        <div class="json-import">
+          <label for="json-input">
+            JSON-Import (Array, Einzelobjekt oder { enemies: [...] }):
+          </label>
+          <textarea id="json-input" rows="8" placeholder=""></textarea>
+          <button id="import-json-btn" type="button">JSON importieren</button>
+        </div>
+      </div>
+
+      <div class="panel column sidebar">
+        <h2>Schnellzugriff</h2>
+
+        <div class="sidebar-section">
+          <h3>Regelwerk</h3>
+          <ul>
+            <li><a href="https://howtobeahero.de/index.php/Hauptseite" target="_blank" rel="noopener noreferrer">🏠 Hauptseite</a></li>
+            <li><a href="https://howtobeahero.de/index.php/Kategorie:Regelwerk" target="_blank" rel="noopener noreferrer">📘 Grundregelwerk</a></li>
+            <li><a href="https://howtobeahero.de/index.php/Kategorie:Charaktererstellung" target="_blank" rel="noopener noreferrer">🧬 Charaktererstellung</a></li>
+            <li><a href="https://howtobeahero.de/index.php/Charakterbogen" target="_blank" rel="noopener noreferrer">📝 Charakterbogen</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>Kampfrelevant</h3>
+          <ul>
+            <li><a href="https://howtobeahero.de/index.php/Kampf" target="_blank" rel="noopener noreferrer">⚔️ Kampf</a></li>
+            <li><a href="https://howtobeahero.de/index.php/Lebenspunkte" target="_blank" rel="noopener noreferrer">❤️ Lebenspunkte</a></li>
+            <li><a href="https://howtobeahero.de/index.php/Geistesblitzpunkte" target="_blank" rel="noopener noreferrer">💡 Geistesblitzpunkte</a></li>
+            <li><a href="https://howtobeahero.de/index.php/W%C3%BCrfelarten" target="_blank" rel="noopener noreferrer">🎲 Würfelarten</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>Begabungen</h3>
+          <ul>
+            <li><a href="https://howtobeahero.de/index.php/Handeln" target="_blank" rel="noopener noreferrer">🏃 Handeln</a></li>
+            <li><a href="https://howtobeahero.de/index.php/Wissen" target="_blank" rel="noopener noreferrer">📚 Wissen</a></li>
+            <li><a href="https://howtobeahero.de/index.php/Soziales" target="_blank" rel="noopener noreferrer">🗣️ Soziales</a></li>
+            <li><a href="https://howtobeahero.de/index.php/F%C3%A4higkeiten" target="_blank" rel="noopener noreferrer">🛠️ Fähigkeiten</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>Material</h3>
+          <ul>
+            <li><a href="https://howtobeahero.de/index.php/Kategorie:Module" target="_blank" rel="noopener noreferrer">🧩 Module</a></li>
+            <li><a href="https://howtobeahero.de/index.php/Kategorie:Abenteuer" target="_blank" rel="noopener noreferrer">🗺️ Abenteuer</a></li>
+            <li><a href="https://howtobeahero.de/index.php/Kategorie:Settings" target="_blank" rel="noopener noreferrer">🌍 Settings / Universen</a></li>
+            <li><a href="https://howtobeahero.de/index.php/Kategorie:Tipps_und_Tricks" target="_blank" rel="noopener noreferrer">🧠 Tipps & Tricks</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const heroColors = ["#1e88e5", "#43a047", "#fbc02d", "#8e24aa", "#00acc1", "#b0bec5"];
+
+    let heroes = [];
+    let enemies = [];
+    let heroIdCounter = 1;
+    let enemyIdCounter = 1;
+
+    let initiativeOrder = [];
+    let currentTurnIndex = -1;
+    let roundCounter = 1;
+
+    let timerSeconds = 0;
+    let timerInterval = null;
+    let timerRunning = false;
+    let appInitialized = false;
+    let effectIdCounter = 1;
+
+    const EFFECT_TARGET_OPTIONS = [
+      { value: "hp", label: "LP" },
+      { value: "handelnCurrent", label: "Handeln" },
+      { value: "wissen", label: "Wissen" },
+      { value: "soziales", label: "Soziales" }
+    ];
+
+    const EFFECT_TARGET_LABELS = {
+      hp: "LP",
+      handelnCurrent: "Handeln",
+      wissen: "Wissen",
+      soziales: "Soziales"
+    };
+
+    const HERO_IMPORT_PLACEHOLDER = `[
+  {
+    "name": "Captain Mira",
+    "hp": 100,
+    "maxHp": 100,
+    "handelnBase": 55,
+    "handelnCurrent": 55,
+    "wissen": 45,
+    "wissenBase": 45,
+    "soziales": 60,
+    "sozialesBase": 60,
+    "color": "#1e88e5",
+    "skillActionList": [
+      { "name": "Schießen", "value": 65 }
+    ],
+    "skillKnowledgeList": [
+      { "name": "Wahrnehmung", "value": 58 }
+    ],
+    "skillSocialList": [
+      { "name": "Überreden", "value": 62 }
+    ]
+  }
+]`;
+
+    const ENEMY_IMPORT_PLACEHOLDER = `[
+  {
+    "name": "Piraten-Minion",
+    "type": "Minion",
+    "hp": 100,
+    "maxHp": 100,
+    "handelnBase": 35,
+    "handelnCurrent": 35,
+    "wissen": 20,
+    "wissenBase": 20,
+    "soziales": 15,
+    "sozialesBase": 15,
+    "skillActionList": [
+      { "name": "Schlagen", "value": 50 }
+    ],
+    "noteLink": "https://..."
+  }
+]`;
+
+    function isGasRuntime() {
+      return typeof google !== "undefined" && !!google.script;
+    }
+
+    function callServer(functionName) {
+      const args = Array.prototype.slice.call(arguments, 1);
+      return new Promise((resolve, reject) => {
+        if (!isGasRuntime() || !google.script.run || typeof google.script.run[functionName] !== "function") {
+          resolve(null);
+          return;
+        }
+
+        google.script.run
+          .withSuccessHandler(resolve)
+          .withFailureHandler(reject)[functionName].apply(google.script.run, args);
+      });
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function clampPercent(value) {
+      if (isNaN(value)) return 0;
+      if (value < 0) return 0;
+      if (value > 100) return 100;
+      return value;
+    }
+
+    function clampHp(value, maxHp) {
+      if (isNaN(value)) return 0;
+      if (value < 0) return 0;
+      if (typeof maxHp === "number" && value > maxHp) return maxHp;
+      return value;
+    }
+
+    function parseBoundedInt(value, fallback, min, max) {
+      let parsed = parseInt(value, 10);
+      if (isNaN(parsed)) parsed = fallback;
+      if (typeof min === "number") parsed = Math.max(min, parsed);
+      if (typeof max === "number") parsed = Math.min(max, parsed);
+      return parsed;
+    }
+
+    function updateRoundDisplay() {
+      document.getElementById("round-counter").textContent = roundCounter;
+    }
+
+    function getCombatant(entry) {
+      if (!entry) return null;
+      const source = entry.type === "hero" ? heroes : enemies;
+      return source.find(item => item.id === entry.id) || null;
+    }
+
+    function getCombatantName(entry) {
+      const combatant = getCombatant(entry);
+      if (combatant && combatant.name && combatant.name.trim()) {
+        return combatant.name.trim();
+      }
+      return entry.type === "hero" ? `Held #${entry.id}` : `Gegner #${entry.id}`;
+    }
+
+    function createSvgElement(tagName, attributes) {
+      const el = document.createElementNS("http://www.w3.org/2000/svg", tagName);
+      Object.entries(attributes || {}).forEach(([key, value]) => {
+        el.setAttribute(key, String(value));
+      });
+      return el;
+    }
+
+    function truncateInitiativeLabel(text, maxLen) {
+      if (typeof text !== "string") return "";
+      return text.length > maxLen ? `${text.slice(0, Math.max(1, maxLen - 1))}…` : text;
+    }
+
+    function hexToRgba(hex, alpha) {
+      if (typeof hex !== "string") {
+        return `rgba(56, 233, 200, ${alpha})`;
+      }
+
+      let value = hex.trim();
+      if (!value.startsWith("#")) {
+        return value;
+      }
+
+      value = value.slice(1);
+      if (value.length === 3) {
+        value = value.split("").map(char => char + char).join("");
+      }
+
+      if (!/^[0-9a-fA-F]{6}$/.test(value)) {
+        return `rgba(56, 233, 200, ${alpha})`;
+      }
+
+      const r = parseInt(value.slice(0, 2), 16);
+      const g = parseInt(value.slice(2, 4), 16);
+      const b = parseInt(value.slice(4, 6), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function getInitiativeNodeStyle(entry, isActive) {
+      if (entry.type === "hero") {
+        const hero = getCombatant(entry);
+        const heroColor = hero && hero.color ? hero.color : "#38e9c8";
+        return {
+          fill: hexToRgba(heroColor, isActive ? 0.34 : 0.18),
+          stroke: heroColor,
+          strokeWidth: isActive ? 3.2 : 2.4,
+          filter: `drop-shadow(0 0 ${isActive ? 8 : 5}px ${hexToRgba(heroColor, isActive ? 0.6 : 0.34)})`
+        };
+      }
+
+      return {
+        fill: isActive ? "rgba(122, 32, 56, 0.9)" : "rgba(74, 20, 34, 0.72)",
+        stroke: isActive ? "#ffb3bf" : "#ff7b8f",
+        strokeWidth: isActive ? 3 : 2.2,
+        filter: isActive ? "drop-shadow(0 0 7px rgba(255, 123, 143, 0.3))" : "none"
+      };
+    }
+
+    function pruneInitiativeOrder() {
+      initiativeOrder = initiativeOrder.filter(entry => !!getCombatant(entry));
+      if (initiativeOrder.length === 0) {
+        currentTurnIndex = -1;
+      } else if (currentTurnIndex >= initiativeOrder.length) {
+        currentTurnIndex = 0;
+      }
+    }
+
+    function safeOpenLink(url) {
+      if (!url) return;
+      try {
+        const parsed = new URL(url, window.location.href);
+        if (!["http:", "https:"].includes(parsed.protocol)) return;
+
+        const link = document.createElement("a");
+        link.href = parsed.href;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } catch (err) {
+        console.error("Ungültiger Link:", err);
+      }
+    }
+
+    function createCardTextarea(initialValue, onInput, placeholder) {
+      const textarea = document.createElement("textarea");
+      textarea.className = "card-textarea";
+      textarea.rows = 3;
+      textarea.value = initialValue || "";
+      if (placeholder) textarea.placeholder = placeholder;
+      textarea.addEventListener("input", () => onInput(textarea.value));
+      return textarea;
+    }
+
+    function normalizeSkillList(value) {
+      if (Array.isArray(value)) {
+        return value
+          .map(entry => {
+            if (entry && typeof entry === "object") {
+              return {
+                name: typeof entry.name === "string" ? entry.name.trim() : "",
+                value: parseBoundedInt(entry.value, 0, 0, 9999)
+              };
+            }
+            if (typeof entry === "string") {
+              const trimmed = entry.trim();
+              return trimmed ? { name: trimmed, value: 0 } : null;
+            }
+            return null;
+          })
+          .filter(entry => entry && entry.name);
+      }
+
+      if (value && typeof value === "object") {
+        return Object.keys(value)
+          .map(key => ({
+            name: String(key).trim(),
+            value: parseBoundedInt(value[key], 0, 0, 9999)
+          }))
+          .filter(entry => entry.name);
+      }
+
+      if (typeof value !== "string") {
+        return [];
+      }
+
+      const carriageReturn = String.fromCharCode(13);
+      const lineFeed = String.fromCharCode(10);
+      const normalizedText = value.split(carriageReturn).join("");
+      const splitLines = normalizedText.split(lineFeed);
+
+      return splitLines
+        .map(line => line.trim())
+        .filter(Boolean)
+        .map(line => {
+          const separatorIndex = line.indexOf(":");
+          if (separatorIndex < 0) {
+            return { name: line, value: 0 };
+          }
+
+          const name = line.slice(0, separatorIndex).trim();
+          const rawValue = line.slice(separatorIndex + 1).replace(/%/g, "").trim();
+          return {
+            name: name || line,
+            value: parseBoundedInt(rawValue, 0, 0, 9999)
+          };
+        });
+    }
+
+    function normalizeItemList(value) {
+      if (Array.isArray(value)) {
+        return value
+          .map(entry => {
+            if (entry && typeof entry === "object") {
+              return {
+                name: typeof entry.name === "string" ? entry.name.trim() : "",
+                value: entry.value !== undefined && entry.value !== null ? String(entry.value).trim() : "",
+                amount: parseBoundedInt(entry.amount, 1, 0, 9999),
+                description: typeof entry.description === "string" ? entry.description : "",
+                angelegt: !!entry.angelegt
+              };
+            }
+            if (typeof entry === "string") {
+              const trimmed = entry.trim();
+              return trimmed ? { name: trimmed, value: "", amount: 1, description: "", angelegt: false } : null;
+            }
+            return null;
+          })
+          .filter(entry => entry && entry.name);
+      }
+
+      if (value && typeof value === "object") {
+        return Object.keys(value)
+          .map(key => ({
+            name: String(key).trim(),
+            value: value[key] !== undefined && value[key] !== null ? String(value[key]).trim() : "",
+            amount: 1,
+            description: "",
+            angelegt: false
+          }))
+          .filter(entry => entry.name);
+      }
+
+      if (typeof value !== "string") {
+        return [];
+      }
+
+      const carriageReturn = String.fromCharCode(13);
+      const lineFeed = String.fromCharCode(10);
+      const normalizedText = value.split(carriageReturn).join("");
+      const splitLines = normalizedText.split(lineFeed);
+
+      return splitLines
+        .map(line => line.trim())
+        .filter(Boolean)
+        .map(line => {
+          const separatorIndex = line.indexOf(":");
+          if (separatorIndex < 0) {
+            return { name: line, value: "", amount: 1, description: "", angelegt: false };
+          }
+
+          const name = line.slice(0, separatorIndex).trim();
+          const rawValue = line.slice(separatorIndex + 1).trim();
+          return {
+            name: name || line,
+            value: rawValue,
+            amount: 1,
+            description: "",
+            angelegt: false
+          };
+        });
+    }
+
+    function buildStatControl(entity, currentKey, baseKey, label, onAfterChange) {
+      const wrap = document.createElement("div");
+      wrap.className = "stat-line";
+
+      const statLabel = document.createElement("span");
+      statLabel.className = "stat-label";
+      statLabel.textContent = label;
+
+      const valueGroup = document.createElement("div");
+      valueGroup.style.display = "flex";
+      valueGroup.style.alignItems = "center";
+      valueGroup.style.gap = "4px";
+
+      const currentInput = document.createElement("input");
+      currentInput.type = "number";
+      currentInput.className = "inline-input stat-value";
+      currentInput.value = entity[currentKey] ?? "";
+
+      const baseValue = entity[baseKey];
+      if (typeof baseValue === "number" && typeof entity[currentKey] === "number") {
+        if (entity[currentKey] > baseValue) currentInput.classList.add("value-buff");
+        if (entity[currentKey] < baseValue) currentInput.classList.add("value-debuff");
+      }
+
+      currentInput.addEventListener("change", () => {
+        const fallback = entity[currentKey] ?? 0;
+        if (currentKey === "hp") {
+          entity[currentKey] = clampHp(parseBoundedInt(currentInput.value, fallback, 0), entity.maxHp);
+        } else if (currentKey === "handelnCurrent" && currentInput.value === "") {
+          entity[currentKey] = null;
+        } else {
+          entity[currentKey] = clampPercent(parseBoundedInt(currentInput.value, fallback, 0, 100));
+        }
+        onAfterChange();
+      });
+
+      const baseText = document.createElement("span");
+      if (currentKey === "hp") {
+        baseText.textContent = `(${entity.maxHp})`;
+      } else {
+        baseText.textContent = baseValue != null ? `(${baseValue})` : "(-)";
+      }
+
+      valueGroup.appendChild(currentInput);
+      valueGroup.appendChild(baseText);
+
+      const buttons = document.createElement("div");
+      buttons.className = "small-buttons";
+
+      const minusBtn = document.createElement("button");
+      minusBtn.type = "button";
+      minusBtn.textContent = "-";
+      minusBtn.addEventListener("click", () => {
+        const current = entity[currentKey] ?? 0;
+        if (currentKey === "hp") {
+          entity[currentKey] = Math.max(0, current - 5);
+        } else {
+          entity[currentKey] = Math.max(0, current - 5);
+        }
+        onAfterChange();
+      });
+
+      const plusBtn = document.createElement("button");
+      plusBtn.type = "button";
+      plusBtn.textContent = "+";
+      plusBtn.addEventListener("click", () => {
+        const current = entity[currentKey] ?? 0;
+        if (currentKey === "hp") {
+          entity[currentKey] = Math.min(entity.maxHp, current + 5);
+        } else {
+          entity[currentKey] = Math.min(100, current + 5);
+        }
+        onAfterChange();
+      });
+
+      buttons.appendChild(minusBtn);
+      buttons.appendChild(plusBtn);
+
+      wrap.appendChild(statLabel);
+      wrap.appendChild(valueGroup);
+      wrap.appendChild(buttons);
+      return wrap;
+    }
+
+    function buildBaseControl(entity, baseKey, label, onAfterChange) {
+      const wrap = document.createElement("div");
+      wrap.className = "stat-line";
+
+      const baseLabel = document.createElement("span");
+      baseLabel.className = "stat-label";
+      baseLabel.textContent = label;
+
+      const input = document.createElement("input");
+      input.type = "number";
+      input.className = "inline-input";
+      input.min = baseKey === "maxHp" ? "1" : "0";
+      input.max = baseKey === "maxHp" ? "9999" : "100";
+      input.value = entity[baseKey] ?? "";
+
+      input.addEventListener("change", () => {
+        if (baseKey === "maxHp") {
+          entity.maxHp = parseBoundedInt(input.value, entity.maxHp, 1, 9999);
+          entity.hp = clampHp(entity.hp, entity.maxHp);
+        } else if (baseKey === "handelnBase" && input.value === "") {
+          entity.handelnBase = null;
+        } else {
+          entity[baseKey] = clampPercent(parseBoundedInt(input.value, entity[baseKey] ?? 0, 0, 100));
+          if (baseKey === "handelnBase" && entity.handelnCurrent == null) {
+            entity.handelnCurrent = entity.handelnBase;
+          }
+        }
+        onAfterChange();
+      });
+
+      wrap.appendChild(baseLabel);
+      wrap.appendChild(input);
+      return wrap;
+    }
+
+    function createHpSummary(entity, accentColor) {
+      const wrap = document.createElement("div");
+      wrap.className = "hp-summary";
+
+      const label = document.createElement("span");
+      label.className = "hp-summary-label";
+      label.textContent = "LP";
+
+      const main = document.createElement("div");
+      main.className = "hp-summary-main";
+
+      const value = document.createElement("span");
+      value.className = "hp-summary-value";
+      value.textContent = `${entity.hp} / ${entity.maxHp}`;
+
+      const bar = document.createElement("div");
+      bar.className = "hp-bar";
+
+      const fill = document.createElement("div");
+      fill.className = "hp-bar-fill";
+      const percent = entity.maxHp > 0 ? Math.max(0, Math.min(100, (entity.hp / entity.maxHp) * 100)) : 0;
+      const hue = Math.round((percent / 100) * 120);
+      const colorStart = `hsl(${hue} 90% 50%)`;
+      const colorEnd = `hsl(${Math.max(0, hue - 10)} 88% 38%)`;
+      fill.style.width = `${percent}%`;
+      fill.style.background = `linear-gradient(90deg, ${colorStart}, ${colorEnd})`;
+      fill.style.color = colorStart;
+
+      bar.appendChild(fill);
+      main.appendChild(value);
+      main.appendChild(bar);
+      wrap.appendChild(label);
+      wrap.appendChild(main);
+      return wrap;
+    }
+
+    function getEffectTargetLabel(target) {
+      return EFFECT_TARGET_LABELS[target] || target;
+    }
+
+    function createDefaultEffectDraftChange() {
+      return {
+        id: `draft_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+        target: "hp",
+        amount: -5,
+        perRound: true,
+        resetToBaseOnExpire: false
+      };
+    }
+
+    function createDefaultEffectDraft() {
+      return {
+        id: `effect_draft_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+        name: "",
+        durationRounds: 3,
+        changes: [createDefaultEffectDraftChange()],
+        open: true
+      };
+    }
+
+    function applyEffectDeltaToEntity(entity, target, amount) {
+      const delta = parseBoundedInt(amount, 0, -9999, 9999);
+      if (!delta) return;
+
+      if (target === "hp") {
+        entity.hp = clampHp((entity.hp ?? 0) + delta, entity.maxHp);
+        return;
+      }
+
+      if (target === "handelnCurrent") {
+        const current = entity.handelnCurrent != null ? entity.handelnCurrent : (entity.handelnBase ?? 0);
+        entity.handelnCurrent = clampPercent(current + delta);
+        return;
+      }
+
+      if (target === "wissen") {
+        entity.wissen = clampPercent((entity.wissen ?? 0) + delta);
+        return;
+      }
+
+      if (target === "soziales") {
+        entity.soziales = clampPercent((entity.soziales ?? 0) + delta);
+      }
+    }
+
+    function resetEffectTargetToBase(entity, target) {
+      if (target === "hp") {
+        entity.hp = clampHp(entity.maxHp ?? 0, entity.maxHp);
+        return;
+      }
+
+      if (target === "handelnCurrent") {
+        entity.handelnCurrent = clampPercent(entity.handelnBase ?? 0);
+        return;
+      }
+
+      if (target === "wissen") {
+        entity.wissen = clampPercent(entity.wissenBase ?? 0);
+        return;
+      }
+
+      if (target === "soziales") {
+        entity.soziales = clampPercent(entity.sozialesBase ?? 0);
+      }
+    }
+
+    function getEffectRemainingRounds(effect) {
+      return Math.max(0, effect.durationRounds - (roundCounter - effect.startRound));
+    }
+
+    function getEffectTooltip(effect) {
+      const changeParts = (effect.changes || []).map(change => {
+        const mode = change.perRound ? "pro Runde" : "einmalig";
+        const sign = change.amount >= 0 ? "+" : "";
+        const resetInfo = change.resetToBaseOnExpire ? " → Reset Basis" : "";
+        return `${getEffectTargetLabel(change.target)} ${sign}${change.amount} (${mode}${resetInfo})`;
+      });
+      return `${effect.name} | ${getEffectRemainingRounds(effect)} R | ${changeParts.join(" • ")}`;
+    }
+
+    function createEffectSummary(entity) {
+      const activeEffects = (entity.activeEffects || []).filter(effect => getEffectRemainingRounds(effect) > 0);
+      if (activeEffects.length === 0) {
+        return null;
+      }
+
+      const wrap = document.createElement("div");
+      wrap.className = "effect-summary";
+
+      const title = document.createElement("div");
+      title.className = "effect-summary-title";
+      title.textContent = "Aktive Effekte";
+      wrap.appendChild(title);
+
+      const list = document.createElement("div");
+      list.className = "effect-summary-list";
+
+      activeEffects.forEach(effect => {
+        const tag = document.createElement("div");
+        tag.className = "effect-tag";
+        tag.title = getEffectTooltip(effect);
+
+        const name = document.createElement("span");
+        name.className = "effect-tag-name";
+        name.textContent = effect.name || "Effekt";
+
+        const rounds = document.createElement("span");
+        rounds.className = "effect-tag-rounds";
+        rounds.textContent = `${getEffectRemainingRounds(effect)}R`;
+
+        tag.appendChild(name);
+        tag.appendChild(rounds);
+        list.appendChild(tag);
+      });
+
+      wrap.appendChild(list);
+      return wrap;
+    }
+
+    function applyActiveEffectsForNewRound(entity) {
+      if (!Array.isArray(entity.activeEffects) || entity.activeEffects.length === 0) return;
+
+      entity.activeEffects.forEach(effect => {
+        const stillActive = (roundCounter - effect.startRound) < effect.durationRounds;
+        if (!stillActive) return;
+
+        effect.changes.forEach(change => {
+          if (!change.perRound) return;
+          if (change.lastAppliedRound === roundCounter) return;
+          applyEffectDeltaToEntity(entity, change.target, change.amount);
+          change.lastAppliedRound = roundCounter;
+        });
+      });
+
+      entity.activeEffects = entity.activeEffects.filter(effect => {
+        const expired = (roundCounter - effect.startRound) >= effect.durationRounds;
+        if (!expired) return true;
+
+        effect.changes.forEach(change => {
+          if (change.resetToBaseOnExpire) {
+            resetEffectTargetToBase(entity, change.target);
+            return;
+          }
+          if (!change.perRound) {
+            applyEffectDeltaToEntity(entity, change.target, -change.amount);
+          }
+        });
+        return false;
+      });
+    }
+
+    function clearAllEffectsForEntity(entity) {
+      if (!Array.isArray(entity.activeEffects)) {
+        entity.activeEffects = [];
+        return;
+      }
+
+      entity.activeEffects.forEach(effect => {
+        effect.changes.forEach(change => {
+          if (change.resetToBaseOnExpire) {
+            resetEffectTargetToBase(entity, change.target);
+            return;
+          }
+          if (!change.perRound) {
+            applyEffectDeltaToEntity(entity, change.target, -change.amount);
+          }
+        });
+      });
+      entity.activeEffects = [];
+    }
+
+    function applyEffectDraftByIndex(entity, effectIndex, rerenderFn) {
+      const draft = Array.isArray(entity.effectDrafts) ? entity.effectDrafts[effectIndex] : null;
+      if (!draft) return;
+
+      const name = typeof draft.name === "string" ? draft.name.trim() : "";
+      const durationRounds = parseBoundedInt(draft.durationRounds, 1, 1, 999);
+      const normalizedChanges = (Array.isArray(draft.changes) ? draft.changes : [])
+        .map(change => ({
+          target: EFFECT_TARGET_LABELS[change.target] ? change.target : "hp",
+          amount: parseBoundedInt(change.amount, 0, -9999, 9999),
+          perRound: !!change.perRound,
+          resetToBaseOnExpire: !!change.resetToBaseOnExpire,
+          lastAppliedRound: null
+        }))
+        .filter(change => change.amount !== 0);
+
+      if (!name) {
+        alert("Effektname fehlt.");
+        return;
+      }
+      if (normalizedChanges.length === 0) {
+        alert("Mindestens eine gültige Effekt-Änderung angeben.");
+        return;
+      }
+
+      const effect = {
+        id: `effect_${effectIdCounter++}`,
+        name,
+        startRound: roundCounter,
+        durationRounds,
+        changes: normalizedChanges
+      };
+
+      effect.changes.forEach(change => {
+        applyEffectDeltaToEntity(entity, change.target, change.amount);
+        if (change.perRound) {
+          change.lastAppliedRound = roundCounter;
+        }
+      });
+
+      if (!Array.isArray(entity.activeEffects)) entity.activeEffects = [];
+      entity.activeEffects.push(effect);
+      entity.effectDrafts.splice(effectIndex, 1);
+      entity.effectsOpen = true;
+      rerenderFn();
+    }
+
+    function createEffectDraftEntryCard(effectDraft, changeIndex, rerenderFn) {
+      const entry = effectDraft.changes[changeIndex];
+      const card = document.createElement("div");
+      card.className = "effect-change-entry";
+
+      const head = document.createElement("div");
+      head.className = "skill-entry-head";
+
+      const title = document.createElement("div");
+      title.className = "skill-entry-title";
+      title.textContent = "Änderung";
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "skill-delete-btn";
+      deleteBtn.textContent = "Delete";
+      deleteBtn.addEventListener("click", () => {
+        effectDraft.changes.splice(changeIndex, 1);
+        rerenderFn();
+      });
+
+      head.appendChild(title);
+      head.appendChild(deleteBtn);
+      card.appendChild(head);
+
+      const grid = document.createElement("div");
+      grid.className = "effect-change-grid";
+
+      const targetField = document.createElement("div");
+      targetField.className = "skill-field";
+      const targetLabel = document.createElement("span");
+      targetLabel.className = "skill-field-label";
+      targetLabel.textContent = "Attribut";
+      const targetSelect = document.createElement("select");
+      EFFECT_TARGET_OPTIONS.forEach(option => {
+        const opt = document.createElement("option");
+        opt.value = option.value;
+        opt.textContent = option.label;
+        if (entry.target === option.value) opt.selected = true;
+        targetSelect.appendChild(opt);
+      });
+      targetSelect.addEventListener("change", () => {
+        entry.target = targetSelect.value;
+      });
+      targetField.appendChild(targetLabel);
+      targetField.appendChild(targetSelect);
+
+      const amountField = document.createElement("div");
+      amountField.className = "skill-field";
+      const amountLabel = document.createElement("span");
+      amountLabel.className = "skill-field-label";
+      amountLabel.textContent = "Wert";
+      const amountInput = document.createElement("input");
+      amountInput.type = "number";
+      amountInput.value = entry.amount ?? 0;
+      amountInput.addEventListener("input", () => {
+        entry.amount = parseBoundedInt(amountInput.value, entry.amount ?? 0, -9999, 9999);
+      });
+      amountField.appendChild(amountLabel);
+      amountField.appendChild(amountInput);
+
+      const toggleWrap = document.createElement("label");
+      toggleWrap.className = "effect-change-toggle";
+      const toggleInput = document.createElement("input");
+      toggleInput.type = "checkbox";
+      toggleInput.checked = !!entry.perRound;
+      toggleInput.addEventListener("change", () => {
+        entry.perRound = toggleInput.checked;
+      });
+      const toggleText = document.createElement("span");
+      toggleText.textContent = "Pro Runde";
+      toggleWrap.appendChild(toggleInput);
+      toggleWrap.appendChild(toggleText);
+
+      grid.appendChild(targetField);
+      grid.appendChild(amountField);
+      grid.appendChild(toggleWrap);
+      card.appendChild(grid);
+
+      const extra = document.createElement("div");
+      extra.className = "effect-change-extra";
+      const resetWrap = document.createElement("label");
+      resetWrap.className = "effect-change-toggle";
+      const resetInput = document.createElement("input");
+      resetInput.type = "checkbox";
+      resetInput.checked = !!entry.resetToBaseOnExpire;
+      resetInput.addEventListener("change", () => {
+        entry.resetToBaseOnExpire = resetInput.checked;
+      });
+      const resetText = document.createElement("span");
+      resetText.textContent = "Bei Ablauf auf Basis / LP max zurücksetzen";
+      resetWrap.appendChild(resetInput);
+      resetWrap.appendChild(resetText);
+      extra.appendChild(resetWrap);
+      card.appendChild(extra);
+      return card;
+    }
+
+    function createEffectDraftCard(entity, effectDraft, effectIndex, rerenderFn) {
+      const details = document.createElement("details");
+      details.className = "card-subdetails";
+      details.open = effectDraft.open !== false;
+      details.addEventListener("toggle", () => {
+        effectDraft.open = details.open;
+      });
+
+      const summary = document.createElement("summary");
+      const effectName = typeof effectDraft.name === "string" && effectDraft.name.trim()
+        ? effectDraft.name.trim()
+        : `Effekt ${effectIndex + 1}`;
+      summary.textContent = effectName;
+      details.appendChild(summary);
+
+      const baseGrid = document.createElement("div");
+      baseGrid.className = "effect-builder-grid";
+
+      const nameField = document.createElement("div");
+      nameField.className = "skill-field";
+      const nameLabel = document.createElement("span");
+      nameLabel.className = "skill-field-label";
+      nameLabel.textContent = "Name";
+      const nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.placeholder = "z. B. Gift";
+      nameInput.value = effectDraft.name || "";
+      nameInput.addEventListener("input", () => {
+        effectDraft.name = nameInput.value;
+        summary.textContent = effectDraft.name.trim() || `Effekt ${effectIndex + 1}`;
+      });
+      nameField.appendChild(nameLabel);
+      nameField.appendChild(nameInput);
+
+      const durationField = document.createElement("div");
+      durationField.className = "skill-field";
+      const durationLabel = document.createElement("span");
+      durationLabel.className = "skill-field-label";
+      durationLabel.textContent = "Runden";
+      const durationInput = document.createElement("input");
+      durationInput.type = "number";
+      durationInput.min = "1";
+      durationInput.max = "999";
+      durationInput.value = effectDraft.durationRounds ?? 3;
+      durationInput.addEventListener("input", () => {
+        effectDraft.durationRounds = parseBoundedInt(durationInput.value, effectDraft.durationRounds ?? 3, 1, 999);
+      });
+      durationField.appendChild(durationLabel);
+      durationField.appendChild(durationInput);
+
+      baseGrid.appendChild(nameField);
+      baseGrid.appendChild(durationField);
+      details.appendChild(baseGrid);
+
+      const note = document.createElement("div");
+      note.className = "effect-builder-note";
+      note.textContent = "Innerhalb dieses Effekts können mehrere Änderungen gleichzeitig gestapelt werden.";
+      details.appendChild(note);
+
+      const changeList = document.createElement("div");
+      changeList.className = "skill-list";
+      if (!Array.isArray(effectDraft.changes)) effectDraft.changes = [createDefaultEffectDraftChange()];
+      effectDraft.changes.forEach((change, changeIndex) => {
+        changeList.appendChild(createEffectDraftEntryCard(effectDraft, changeIndex, rerenderFn));
+      });
+      details.appendChild(changeList);
+
+      const actionRow = document.createElement("div");
+      actionRow.className = "skill-add-row";
+
+      const addChangeBtn = document.createElement("button");
+      addChangeBtn.type = "button";
+      addChangeBtn.textContent = "Änderung hinzufügen";
+      addChangeBtn.addEventListener("click", () => {
+        effectDraft.open = true;
+        effectDraft.changes.push(createDefaultEffectDraftChange());
+        rerenderFn();
+      });
+
+      const applyBtn = document.createElement("button");
+      applyBtn.type = "button";
+      applyBtn.textContent = "Effekt anwenden";
+      applyBtn.addEventListener("click", () => {
+        applyEffectDraftByIndex(entity, effectIndex, rerenderFn);
+      });
+
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.textContent = "Effekt entfernen";
+      removeBtn.dataset.danger = "true";
+      removeBtn.addEventListener("click", () => {
+        entity.effectDrafts.splice(effectIndex, 1);
+        rerenderFn();
+      });
+
+      actionRow.appendChild(addChangeBtn);
+      actionRow.appendChild(applyBtn);
+      actionRow.appendChild(removeBtn);
+      details.appendChild(actionRow);
+
+      return details;
+    }
+
+    function createEffectsDetails(entity, rerenderFn) {
+      const details = document.createElement("details");
+      details.className = "card-details";
+      details.open = !!entity.effectsOpen;
+      details.addEventListener("toggle", () => {
+        entity.effectsOpen = details.open;
+      });
+
+      const summary = document.createElement("summary");
+      summary.textContent = "Effekte";
+      details.appendChild(summary);
+
+      if (!Array.isArray(entity.effectDrafts)) entity.effectDrafts = [];
+
+      const draftList = document.createElement("div");
+      draftList.className = "skill-list";
+      entity.effectDrafts.forEach((effectDraft, effectIndex) => {
+        draftList.appendChild(createEffectDraftCard(entity, effectDraft, effectIndex, rerenderFn));
+      });
+      details.appendChild(draftList);
+
+      const addRow = document.createElement("div");
+      addRow.className = "skill-add-row";
+      const addBtn = document.createElement("button");
+      addBtn.type = "button";
+      addBtn.textContent = "Effekt hinzufügen";
+      addBtn.addEventListener("click", () => {
+        entity.effectsOpen = true;
+        entity.effectDrafts.push(createDefaultEffectDraft());
+        rerenderFn();
+      });
+      addRow.appendChild(addBtn);
+      details.appendChild(addRow);
+
+      return details;
+    }
+
+    function createAngelegtItemsSummary(entity) {
+      const equippedItems = [];
+
+      (entity.itemWeaponList || []).forEach(item => {
+        if (item && item.angelegt) equippedItems.push({ name: item.name || "–", value: item.value || "–", amount: item.amount ?? 1, category: "Waffe" });
+      });
+      (entity.itemArmorList || []).forEach(item => {
+        if (item && item.angelegt) equippedItems.push({ name: item.name || "–", value: item.value || "–", amount: item.amount ?? 1, category: "Rüstung" });
+      });
+      (entity.itemOtherList || []).forEach(item => {
+        if (item && item.angelegt) equippedItems.push({ name: item.name || "–", value: item.value || "–", amount: item.amount ?? 1, category: "Item" });
+      });
+
+      if (equippedItems.length === 0) {
+        return null;
+      }
+
+      const wrap = document.createElement("div");
+      wrap.className = "equipped-summary";
+
+      const title = document.createElement("div");
+      title.className = "equipped-summary-title";
+      title.textContent = "Angelegt";
+      wrap.appendChild(title);
+
+      const list = document.createElement("div");
+      list.className = "equipped-summary-list";
+
+      equippedItems.forEach(item => {
+        const categoryClass = item.category === "Waffe"
+          ? "category-waffe"
+          : item.category === "Rüstung"
+            ? "category-ruestung"
+            : "category-item";
+
+        const row = document.createElement("div");
+        row.className = `equipped-summary-row ${categoryClass}`;
+        row.title = `${item.category} | ${item.name} | ${item.value} (${item.amount})`;
+
+        const name = document.createElement("span");
+        name.className = "equipped-summary-name";
+        name.textContent = item.name;
+
+        const value = document.createElement("span");
+        value.className = "equipped-summary-value";
+        value.textContent = `${item.value} (${item.amount})`;
+
+        const category = document.createElement("span");
+        category.className = `equipped-summary-category ${categoryClass}`;
+        category.textContent = item.category;
+
+        row.appendChild(category);
+        row.appendChild(name);
+        row.appendChild(value);
+        list.appendChild(row);
+      });
+
+      wrap.appendChild(list);
+      return wrap;
+    }
+
+    function syncEquippedSummaryForCard(cardEl, entity) {
+      if (!cardEl) return;
+
+      const currentSummary = cardEl.querySelector(":scope > .equipped-summary");
+      const nextSummary = createAngelegtItemsSummary(entity);
+      const effectSummary = cardEl.querySelector(":scope > .effect-summary");
+      const attributeBlock = cardEl.querySelector(":scope > .card-details");
+      const insertionPoint = effectSummary || attributeBlock;
+
+      if (!nextSummary) {
+        if (currentSummary) currentSummary.remove();
+        return;
+      }
+
+      if (currentSummary) {
+        currentSummary.replaceWith(nextSummary);
+        return;
+      }
+
+      if (insertionPoint) {
+        cardEl.insertBefore(nextSummary, insertionPoint);
+      } else {
+        cardEl.appendChild(nextSummary);
+      }
+    }
+
+    function syncEquippedSummaryFromNode(node, entity) {
+      if (!node) return;
+      const cardEl = node.closest(".card");
+      syncEquippedSummaryForCard(cardEl, entity);
+    }
+
+    function createAttributeDetails(entity, rerenderFn, needsInitiativeRefresh) {
+      const details = document.createElement("details");
+      details.className = "card-details";
+      details.open = !!entity.attributeOpen;
+      details.addEventListener("toggle", () => {
+        entity.attributeOpen = details.open;
+      });
+
+      const summary = document.createElement("summary");
+      summary.textContent = "Attribute";
+      details.appendChild(summary);
+
+      const body = document.createElement("div");
+      body.className = "card-body";
+
+      const doRender = () => {
+        rerenderFn();
+        if (needsInitiativeRefresh) renderInitiative();
+      };
+
+      body.appendChild(buildStatControl(entity, "hp", "maxHp", "LP", rerenderFn));
+      body.appendChild(buildStatControl(entity, "handelnCurrent", "handelnBase", "Handeln", doRender));
+      body.appendChild(buildStatControl(entity, "wissen", "wissenBase", "Wissen", rerenderFn));
+      body.appendChild(buildStatControl(entity, "soziales", "sozialesBase", "Soziales", rerenderFn));
+      body.appendChild(buildBaseControl(entity, "maxHp", "LP max", rerenderFn));
+      body.appendChild(buildBaseControl(entity, "handelnBase", "Handeln Basis", doRender));
+      body.appendChild(buildBaseControl(entity, "wissenBase", "Wissen Basis", rerenderFn));
+      body.appendChild(buildBaseControl(entity, "sozialesBase", "Soziales Basis", rerenderFn));
+
+      details.appendChild(body);
+      return details;
+    }
+
+    function createSkillEntryCard(entity, listKey, entry, index, rerenderFn) {
+      const card = document.createElement("div");
+      card.className = "skill-entry";
+
+      const head = document.createElement("div");
+      head.className = "skill-entry-head";
+
+      const title = document.createElement("div");
+      title.className = "skill-entry-title";
+      title.textContent = "Skill";
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "skill-delete-btn";
+      deleteBtn.textContent = "Delete";
+      deleteBtn.addEventListener("click", () => {
+        entity[listKey].splice(index, 1);
+        rerenderFn();
+      });
+
+      head.appendChild(title);
+      head.appendChild(deleteBtn);
+      card.appendChild(head);
+
+      const grid = document.createElement("div");
+      grid.className = "skill-entry-grid";
+
+      const nameField = document.createElement("div");
+      nameField.className = "skill-field";
+      const nameLabel = document.createElement("span");
+      nameLabel.className = "skill-field-label";
+      nameLabel.textContent = "Name";
+      const nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.value = entry.name || "";
+      nameInput.placeholder = "z. B. Schleichen";
+      nameInput.addEventListener("input", () => {
+        entry.name = nameInput.value;
+      });
+      nameField.appendChild(nameLabel);
+      nameField.appendChild(nameInput);
+
+      const valueField = document.createElement("div");
+      valueField.className = "skill-field";
+      const valueLabel = document.createElement("span");
+      valueLabel.className = "skill-field-label";
+      valueLabel.textContent = "Wert";
+      const valueInput = document.createElement("input");
+      valueInput.type = "number";
+      valueInput.className = "skill-value-input";
+      valueInput.min = "0";
+      valueInput.max = "9999";
+      valueInput.value = entry.value ?? 0;
+      valueInput.addEventListener("input", () => {
+        entry.value = parseBoundedInt(valueInput.value, entry.value ?? 0, 0, 9999);
+      });
+      valueField.appendChild(valueLabel);
+      valueField.appendChild(valueInput);
+
+      grid.appendChild(nameField);
+      grid.appendChild(valueField);
+      card.appendChild(grid);
+      return card;
+    }
+
+    function createSkillSubsection(entity, openKey, listKey, title, rerenderFn) {
+      const details = document.createElement("details");
+      details.className = "card-subdetails";
+      details.open = !!entity[openKey];
+      details.addEventListener("toggle", () => {
+        entity[openKey] = details.open;
+      });
+
+      const summary = document.createElement("summary");
+      summary.textContent = title;
+      details.appendChild(summary);
+
+      if (!Array.isArray(entity[listKey])) entity[listKey] = [];
+
+      const list = document.createElement("div");
+      list.className = "skill-list";
+      entity[listKey].forEach((entry, index) => {
+        list.appendChild(createSkillEntryCard(entity, listKey, entry, index, rerenderFn));
+      });
+      details.appendChild(list);
+
+      const addRow = document.createElement("div");
+      addRow.className = "skill-add-row";
+      const addBtn = document.createElement("button");
+      addBtn.type = "button";
+      addBtn.textContent = "Fähigkeit hinzufügen";
+      addBtn.addEventListener("click", () => {
+        entity.skillsOpen = true;
+        entity[openKey] = true;
+        entity[listKey].push({ name: "", value: 0 });
+        rerenderFn();
+      });
+      addRow.appendChild(addBtn);
+      details.appendChild(addRow);
+
+      return details;
+    }
+
+    function createSkillsDetails(entity, rerenderFn) {
+      const details = document.createElement("details");
+      details.className = "card-details";
+      details.open = !!entity.skillsOpen;
+      details.addEventListener("toggle", () => {
+        entity.skillsOpen = details.open;
+      });
+
+      const summary = document.createElement("summary");
+      summary.textContent = "Fähigkeiten";
+      details.appendChild(summary);
+
+      details.appendChild(createSkillSubsection(entity, "skillActionOpen", "skillActionList", "Handeln", rerenderFn));
+      details.appendChild(createSkillSubsection(entity, "skillKnowledgeOpen", "skillKnowledgeList", "Wissen", rerenderFn));
+      details.appendChild(createSkillSubsection(entity, "skillSocialOpen", "skillSocialList", "Soziales", rerenderFn));
+
+      return details;
+    }
+
+    function createItemEntryCard(entity, listKey, entry, index, rerenderFn) {
+      const card = document.createElement("div");
+      card.className = "skill-entry";
+
+      const head = document.createElement("div");
+      head.className = "skill-entry-head";
+
+      const title = document.createElement("div");
+      title.className = "skill-entry-title";
+      title.textContent = "Item";
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "skill-delete-btn";
+      deleteBtn.textContent = "Delete";
+      deleteBtn.addEventListener("click", () => {
+        entity[listKey].splice(index, 1);
+        rerenderFn();
+      });
+
+      head.appendChild(title);
+      head.appendChild(deleteBtn);
+      card.appendChild(head);
+
+      const statusRow = document.createElement("div");
+      statusRow.className = `status-toggle-row${entry.angelegt ? " active" : ""}`;
+      statusRow.style.marginTop = "0";
+      statusRow.style.marginBottom = "10px";
+
+      const statusLabel = document.createElement("span");
+      statusLabel.className = "status-toggle-label";
+      statusLabel.textContent = "Status";
+
+      const statusControl = document.createElement("label");
+      statusControl.className = "status-toggle-control";
+      const statusCheckbox = document.createElement("input");
+      statusCheckbox.type = "checkbox";
+      statusCheckbox.checked = !!entry.angelegt;
+      statusCheckbox.addEventListener("change", () => {
+        entry.angelegt = statusCheckbox.checked;
+        statusRow.className = `status-toggle-row${entry.angelegt ? " active" : ""}`;
+        statusRow.style.marginTop = "0";
+        statusRow.style.marginBottom = "10px";
+        syncEquippedSummaryFromNode(card, entity);
+      });
+      const statusText = document.createElement("span");
+      statusText.textContent = "Angelegt";
+      statusControl.appendChild(statusCheckbox);
+      statusControl.appendChild(statusText);
+      statusRow.appendChild(statusLabel);
+      statusRow.appendChild(statusControl);
+      card.appendChild(statusRow);
+
+      const grid = document.createElement("div");
+      grid.className = "skill-entry-grid item-entry-grid";
+
+      const nameField = document.createElement("div");
+      nameField.className = "skill-field";
+      const nameLabel = document.createElement("span");
+      nameLabel.className = "skill-field-label";
+      nameLabel.textContent = "Name";
+      const nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.value = entry.name || "";
+      nameInput.placeholder = "z. B. Pistole";
+      nameInput.addEventListener("input", () => {
+        entry.name = nameInput.value;
+        syncEquippedSummaryFromNode(card, entity);
+      });
+      nameField.appendChild(nameLabel);
+      nameField.appendChild(nameInput);
+
+      const valueField = document.createElement("div");
+      valueField.className = "skill-field";
+      const valueLabel = document.createElement("span");
+      valueLabel.className = "skill-field-label";
+      valueLabel.textContent = "Wert";
+      const valueInput = document.createElement("input");
+      valueInput.type = "text";
+      valueInput.className = "skill-value-input";
+      valueInput.value = entry.value ?? "";
+      valueInput.placeholder = "z. B. 1W6+5";
+      valueInput.addEventListener("input", () => {
+        entry.value = valueInput.value;
+        syncEquippedSummaryFromNode(card, entity);
+      });
+      valueField.appendChild(valueLabel);
+      valueField.appendChild(valueInput);
+
+      const amountField = document.createElement("div");
+      amountField.className = "skill-field";
+      const amountLabel = document.createElement("span");
+      amountLabel.className = "skill-field-label";
+      amountLabel.textContent = "Anzahl";
+      const amountInput = document.createElement("input");
+      amountInput.type = "number";
+      amountInput.className = "skill-value-input";
+      amountInput.min = "0";
+      amountInput.max = "9999";
+      amountInput.value = entry.amount ?? 1;
+      amountInput.addEventListener("input", () => {
+        entry.amount = parseBoundedInt(amountInput.value, entry.amount ?? 1, 0, 9999);
+        syncEquippedSummaryFromNode(card, entity);
+      });
+      amountField.appendChild(amountLabel);
+      amountField.appendChild(amountInput);
+
+      grid.appendChild(nameField);
+      grid.appendChild(valueField);
+      grid.appendChild(amountField);
+      card.appendChild(grid);
+
+      const descriptionField = document.createElement("div");
+      descriptionField.className = "skill-field skill-entry-description";
+      const descriptionLabel = document.createElement("span");
+      descriptionLabel.className = "skill-field-label";
+      descriptionLabel.textContent = "Beschreibung";
+      const descriptionInput = createCardTextarea(entry.description || "", value => {
+        entry.description = value;
+      }, "Freitext / Details zum Item");
+      descriptionInput.rows = 3;
+      descriptionField.appendChild(descriptionLabel);
+      descriptionField.appendChild(descriptionInput);
+      card.appendChild(descriptionField);
+
+      return card;
+    }
+
+    function createItemSubsection(entity, openKey, listKey, title, rerenderFn) {
+      const details = document.createElement("details");
+      details.className = "card-subdetails";
+      details.open = !!entity[openKey];
+      details.addEventListener("toggle", () => {
+        entity[openKey] = details.open;
+      });
+
+      const summary = document.createElement("summary");
+      summary.textContent = title;
+      details.appendChild(summary);
+
+      if (!Array.isArray(entity[listKey])) entity[listKey] = [];
+
+      const list = document.createElement("div");
+      list.className = "skill-list";
+      entity[listKey].forEach((entry, index) => {
+        list.appendChild(createItemEntryCard(entity, listKey, entry, index, rerenderFn));
+      });
+      details.appendChild(list);
+
+      const addRow = document.createElement("div");
+      addRow.className = "skill-add-row";
+      const addBtn = document.createElement("button");
+      addBtn.type = "button";
+      addBtn.textContent = "Item hinzufügen";
+      addBtn.addEventListener("click", () => {
+        entity.itemsOpen = true;
+        entity[openKey] = true;
+        entity[listKey].push({ name: "", value: "", amount: 1, description: "", angelegt: false });
+        rerenderFn();
+      });
+      addRow.appendChild(addBtn);
+      details.appendChild(addRow);
+
+      return details;
+    }
+
+    function createItemsDetails(entity, rerenderFn) {
+      const details = document.createElement("details");
+      details.className = "card-details";
+      details.open = !!entity.itemsOpen;
+      details.addEventListener("toggle", () => {
+        entity.itemsOpen = details.open;
+      });
+
+      const summary = document.createElement("summary");
+      summary.textContent = "Items";
+      details.appendChild(summary);
+
+      details.appendChild(createItemSubsection(entity, "itemWeaponOpen", "itemWeaponList", "Waffen", rerenderFn));
+      details.appendChild(createItemSubsection(entity, "itemArmorOpen", "itemArmorList", "Rüstung/Kleidung", rerenderFn));
+      details.appendChild(createItemSubsection(entity, "itemOtherOpen", "itemOtherList", "Sonstige Items", rerenderFn));
+
+      return details;
+    }
+
+    function renderHeroes() {
+      const container = document.getElementById("heroes-list");
+      container.innerHTML = "";
+
+      heroes.forEach((hero, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.borderColor = hero.color;
+        card.style.boxShadow = `0 0 8px ${hero.color}33`;
+
+        const header = document.createElement("div");
+        header.className = "card-header";
+
+        const nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.value = hero.name;
+        nameInput.style.flex = "1";
+        nameInput.addEventListener("input", () => {
+          hero.name = nameInput.value;
+          renderInitiative();
+        });
+
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = "Held";
+
+        header.appendChild(nameInput);
+        header.appendChild(tag);
+        card.appendChild(header);
+        card.appendChild(createHpSummary(hero, hero.color || "#38e9c8"));
+        const heroEquippedSummary = createAngelegtItemsSummary(hero);
+        if (heroEquippedSummary) card.appendChild(heroEquippedSummary);
+        const heroEffectSummary = createEffectSummary(hero);
+        if (heroEffectSummary) card.appendChild(heroEffectSummary);
+        card.appendChild(createAttributeDetails(hero, renderHeroes, true));
+        card.appendChild(createSkillsDetails(hero, renderHeroes));
+        card.appendChild(createItemsDetails(hero, renderHeroes));
+        card.appendChild(createEffectsDetails(hero, renderHeroes));
+
+        const footer = document.createElement("div");
+        footer.className = "card-footer";
+
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.textContent = "Entfernen";
+        removeBtn.addEventListener("click", () => {
+          heroes.splice(index, 1);
+          pruneInitiativeOrder();
+          renderHeroes();
+          renderInitiative();
+        });
+
+        footer.appendChild(removeBtn);
+        card.appendChild(footer);
+        container.appendChild(card);
+      });
+    }
+
+    function getEnemyDangerColor(maxHp) {
+      if (maxHp <= 15) return "#5b1111";
+      if (maxHp <= 40) return "#7f1b1b";
+      return "#a52727";
+    }
+
+    function renderEnemies() {
+      const container = document.getElementById("enemies-list");
+      container.innerHTML = "";
+
+      enemies.forEach((enemy, index) => {
+        const card = document.createElement("div");
+        card.className = "card enemy-card";
+        const bgColor = getEnemyDangerColor(enemy.maxHp || enemy.hp || 10);
+        card.style.borderColor = bgColor;
+        card.style.boxShadow = `0 0 8px ${bgColor}55`;
+        card.style.background = "linear-gradient(135deg, rgba(80,0,0,0.4), rgba(10,0,0,0.95))";
+
+        const header = document.createElement("div");
+        header.className = "card-header";
+
+        const nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.value = enemy.name;
+        nameInput.style.flex = "1";
+        nameInput.addEventListener("input", () => {
+          enemy.name = nameInput.value;
+          renderInitiative();
+        });
+
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = enemy.type || "Gegner";
+
+        header.appendChild(nameInput);
+        header.appendChild(tag);
+        card.appendChild(header);
+        card.appendChild(createHpSummary(enemy, bgColor));
+        const enemyEquippedSummary = createAngelegtItemsSummary(enemy);
+        if (enemyEquippedSummary) card.appendChild(enemyEquippedSummary);
+        const enemyEffectSummary = createEffectSummary(enemy);
+        if (enemyEffectSummary) card.appendChild(enemyEffectSummary);
+        card.appendChild(createAttributeDetails(enemy, renderEnemies, true));
+        card.appendChild(createSkillsDetails(enemy, renderEnemies));
+        card.appendChild(createItemsDetails(enemy, renderEnemies));
+        card.appendChild(createEffectsDetails(enemy, renderEnemies));
+
+        const footer = document.createElement("div");
+        footer.className = "card-footer";
+
+        if (enemy.noteLink) {
+          const noteBtn = document.createElement("button");
+          noteBtn.type = "button";
+          noteBtn.textContent = "Notiz öffnen";
+          noteBtn.addEventListener("click", () => {
+            safeOpenLink(enemy.noteLink);
+          });
+          footer.appendChild(noteBtn);
+        }
+
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.textContent = "Entfernen";
+        removeBtn.addEventListener("click", () => {
+          enemies.splice(index, 1);
+          pruneInitiativeOrder();
+          renderEnemies();
+          renderInitiative();
+        });
+        footer.appendChild(removeBtn);
+
+        card.appendChild(footer);
+        container.appendChild(card);
+      });
+    }
+
+    function rollInitiative() {
+      initiativeOrder = [];
+
+      heroes.forEach(hero => {
+        const handeln = hero.handelnCurrent ?? hero.handelnBase ?? 0;
+        initiativeOrder.push({
+          type: "hero",
+          id: hero.id,
+          ini: randomInt(1, 10) + handeln
+        });
+      });
+
+      enemies.forEach(enemy => {
+        const handeln = enemy.handelnCurrent ?? enemy.handelnBase ?? 0;
+        initiativeOrder.push({
+          type: "enemy",
+          id: enemy.id,
+          ini: randomInt(1, 10) + handeln
+        });
+      });
+
+      initiativeOrder.sort((a, b) => b.ini - a.ini);
+      currentTurnIndex = initiativeOrder.length > 0 ? 0 : -1;
+      roundCounter = 1;
+      updateRoundDisplay();
+      renderInitiative();
+    }
+
+    function computeFlowRowMetrics(nodeCount, laneWidth) {
+      const maxBoxWidth = 126;
+      const minBoxWidth = 58;
+      const preferredGap = 18;
+      const minGap = 12;
+
+      if (nodeCount <= 0) {
+        return { nodeCount, boxWidth: maxBoxWidth, gap: preferredGap, valid: true };
+      }
+
+      if (nodeCount === 1) {
+        return { nodeCount, boxWidth: Math.min(maxBoxWidth, laneWidth), gap: 0, valid: true };
+      }
+
+      let boxWidth = (laneWidth - (preferredGap * (nodeCount - 1))) / nodeCount;
+      if (boxWidth > maxBoxWidth) boxWidth = maxBoxWidth;
+
+      const actualGap = (laneWidth - (boxWidth * nodeCount)) / (nodeCount - 1);
+      return {
+        nodeCount,
+        boxWidth,
+        gap: actualGap,
+        valid: boxWidth >= minBoxWidth && actualGap >= minGap
+      };
+    }
+
+    function resolveFlowRows(totalCount, laneWidth) {
+      const singleRow = computeFlowRowMetrics(totalCount, laneWidth);
+      if (singleRow.valid) {
+        return [{ count: totalCount, metrics: singleRow, direction: "ltr", lineY: "top" }];
+      }
+
+      const startTopCount = Math.ceil(totalCount / 2);
+      let bestSplit = null;
+
+      for (let topCount = startTopCount; topCount < totalCount; topCount += 1) {
+        const bottomCount = totalCount - topCount;
+        const topMetrics = computeFlowRowMetrics(topCount, laneWidth);
+        const bottomMetrics = computeFlowRowMetrics(bottomCount, laneWidth);
+        if (!topMetrics.valid || !bottomMetrics.valid) continue;
+
+        const score = Math.min(topMetrics.boxWidth, bottomMetrics.boxWidth) + Math.min(topMetrics.gap, bottomMetrics.gap);
+        if (!bestSplit || score > bestSplit.score) {
+          bestSplit = {
+            score,
+            rows: [
+              { count: topCount, metrics: topMetrics, direction: "ltr", lineY: "top" },
+              { count: bottomCount, metrics: bottomMetrics, direction: "rtl", lineY: "bottom" }
+            ]
+          };
+        }
+      }
+
+      if (bestSplit) return bestSplit.rows;
+
+      const fallbackTopCount = Math.ceil(totalCount / 2);
+      return [
+        { count: fallbackTopCount, metrics: computeFlowRowMetrics(fallbackTopCount, laneWidth), direction: "ltr", lineY: "top" },
+        { count: totalCount - fallbackTopCount, metrics: computeFlowRowMetrics(totalCount - fallbackTopCount, laneWidth), direction: "rtl", lineY: "bottom" }
+      ];
+    }
+
+    function buildFlowRowLayouts(entries, rowConfig, laneStartX, laneEndX, topY, bottomY, boxHeight) {
+      const layouts = [];
+      const { count, metrics, direction, lineY } = rowConfig;
+      const boxWidth = Math.max(48, Math.min(126, metrics.boxWidth));
+      const gap = count > 1 ? Math.max(6, metrics.gap) : 0;
+      const yLine = lineY === "top" ? topY : bottomY;
+      const boxY = yLine - (boxHeight / 2);
+
+      for (let i = 0; i < count; i += 1) {
+        const entry = entries[i];
+        if (!entry) break;
+
+        let x;
+        if (count === 1) {
+          x = laneStartX + ((laneEndX - laneStartX - boxWidth) / 2);
+        } else if (direction === "ltr") {
+          x = laneStartX + (i * (boxWidth + gap));
+        } else {
+          x = laneEndX - boxWidth - (i * (boxWidth + gap));
+        }
+
+        layouts.push({
+          entry,
+          x,
+          rightX: x + boxWidth,
+          centerX: x + (boxWidth / 2),
+          boxWidth,
+          boxHeight,
+          boxY,
+          flowLineY: yLine,
+          direction
+        });
+      }
+
+      return layouts;
+    }
+
+    function drawFlowLinkArrow(svg, fromLayout, toLayout, rightCurveX, middleY) {
+      if (!fromLayout || !toLayout) return;
+
+      if (fromLayout.flowLineY === toLayout.flowLineY) {
+        const gap = toLayout.direction === "ltr"
+          ? toLayout.x - fromLayout.rightX
+          : fromLayout.x - toLayout.rightX;
+        if (gap < 12) return;
+
+        const arrowLength = Math.max(10, Math.min(18, gap - 4));
+        const arrowHeight = 8;
+        const flowLineY = fromLayout.flowLineY;
+        let tipX;
+        let baseX;
+
+        if (toLayout.direction === "ltr") {
+          const centerX = fromLayout.rightX + (gap / 2);
+          tipX = centerX + (arrowLength / 2);
+          baseX = centerX - (arrowLength / 2);
+        } else {
+          const centerX = toLayout.rightX + (gap / 2);
+          tipX = centerX - (arrowLength / 2);
+          baseX = centerX + (arrowLength / 2);
+        }
+
+        const arrow = createSvgElement("polygon", {
+          points: `${baseX},${flowLineY - arrowHeight} ${tipX},${flowLineY} ${baseX},${flowLineY + arrowHeight}`,
+          class: "initiative-flow-link-arrow"
+        });
+        const title = createSvgElement("title", {});
+        title.textContent = `${getCombatantName(fromLayout.entry)} → ${getCombatantName(toLayout.entry)}`;
+        arrow.appendChild(title);
+        svg.appendChild(arrow);
+        return;
+      }
+
+      const arrowHalfWidth = 13;
+      const arrowHeight = 18;
+      const tipX = rightCurveX - 2;
+      const tipY = middleY;
+      const baseY = tipY - arrowHeight;
+      const arrow = createSvgElement("polygon", {
+        points: `${tipX - arrowHalfWidth},${baseY} ${tipX + arrowHalfWidth},${baseY} ${tipX},${tipY}`,
+        class: "initiative-flow-link-arrow"
+      });
+      const title = createSvgElement("title", {});
+      title.textContent = `${getCombatantName(fromLayout.entry)} → ${getCombatantName(toLayout.entry)}`;
+      arrow.appendChild(title);
+      svg.appendChild(arrow);
+    }
+
+    function renderInitiativeFlow() {
+      const svg = document.getElementById("initiative-flow-svg");
+      if (!svg) return;
+
+      const width = 1000;
+      const height = 152;
+      const leftStraightX = 92;
+      const leftCurveX = 26;
+      const rightStraightX = 878;
+      const rightCurveX = 944;
+      const topY = 40;
+      const middleY = 79;
+      const bottomY = 118;
+      const trackPath = `M ${leftStraightX} ${topY} L ${rightStraightX} ${topY} Q ${rightCurveX} ${topY} ${rightCurveX} ${middleY} Q ${rightCurveX} ${bottomY} ${rightStraightX} ${bottomY} L ${leftStraightX} ${bottomY} Q ${leftCurveX} ${bottomY} ${leftCurveX} ${middleY} Q ${leftCurveX} ${topY} ${leftStraightX} ${topY} Z`;
+
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.innerHTML = "";
+
+      const trackShadow = createSvgElement("path", { d: trackPath, class: "initiative-flow-track-shadow" });
+      const track = createSvgElement("path", { d: trackPath, class: "initiative-flow-track" });
+      svg.appendChild(trackShadow);
+      svg.appendChild(track);
+
+      if (initiativeOrder.length === 0) {
+        const emptyText = createSvgElement("text", {
+          x: width / 2,
+          y: middleY,
+          class: "initiative-flow-empty"
+        });
+        emptyText.textContent = "Initiative würfeln, um den Ablaufplan zu füllen";
+        svg.appendChild(emptyText);
+        return;
+      }
+
+      const laneStartX = leftStraightX + 28;
+      const laneEndX = rightStraightX - 18;
+      const laneWidth = laneEndX - laneStartX;
+      const boxHeight = 36;
+      const rowConfigs = resolveFlowRows(initiativeOrder.length, laneWidth);
+      const layouts = [];
+      let offset = 0;
+
+      rowConfigs.forEach(rowConfig => {
+        const rowEntries = initiativeOrder.slice(offset, offset + rowConfig.count);
+        const rowLayouts = buildFlowRowLayouts(rowEntries, rowConfig, laneStartX, laneEndX, topY, bottomY, boxHeight);
+        layouts.push(...rowLayouts);
+        offset += rowConfig.count;
+      });
+
+      layouts.forEach((layout, index) => {
+        drawFlowLinkArrow(svg, layout, layouts[index + 1], rightCurveX, middleY);
+      });
+
+      layouts.forEach((layout, index) => {
+        const { entry, x, boxWidth, boxY, boxHeight } = layout;
+        const isActive = index === currentTurnIndex;
+        const nodeStyle = getInitiativeNodeStyle(entry, isActive);
+        const node = createSvgElement("rect", {
+          x,
+          y: boxY,
+          width: boxWidth,
+          height: boxHeight,
+          rx: 8,
+          ry: 8,
+          class: `initiative-flow-node ${entry.type === "enemy" ? "enemy" : "hero"}${isActive ? " active" : ""}`,
+          fill: nodeStyle.fill,
+          stroke: nodeStyle.stroke,
+          "stroke-width": nodeStyle.strokeWidth,
+          filter: nodeStyle.filter
+        });
+
+        const fullName = getCombatantName(entry);
+        const maxLen = boxWidth < 64 ? 5 : boxWidth < 76 ? 6 : boxWidth < 92 ? 8 : 12;
+        const name = truncateInitiativeLabel(fullName, maxLen);
+        const typeTag = entry.type === "hero" ? "H" : "G";
+
+        const title = createSvgElement("title", {});
+        title.textContent = `${fullName} (${typeTag}) [${entry.ini}]`;
+        node.appendChild(title);
+
+        const nameText = createSvgElement("text", {
+          x: x + boxWidth / 2,
+          y: boxY + 13,
+          class: "initiative-flow-text"
+        });
+        nameText.textContent = name;
+
+        const metaText = createSvgElement("text", {
+          x: x + boxWidth / 2,
+          y: boxY + 27,
+          class: "initiative-flow-meta"
+        });
+        metaText.textContent = `${typeTag} • ${entry.ini}`;
+
+        svg.appendChild(node);
+        svg.appendChild(nameText);
+        svg.appendChild(metaText);
+      });
+    }
+
+    function renderInitiative() {
+      pruneInitiativeOrder();
+      const list = document.getElementById("initiative-list");
+      list.innerHTML = "";
+
+      initiativeOrder.forEach((entry, index) => {
+        const chip = document.createElement("span");
+        chip.className = "initiative-chip";
+        if (index === currentTurnIndex) chip.classList.add("active");
+        const typeTag = entry.type === "hero" ? "H" : "G";
+        chip.textContent = `${getCombatantName(entry)} (${typeTag}) [${entry.ini}]`;
+        list.appendChild(chip);
+      });
+
+      renderInitiativeFlow();
+    }
+
+    function nextTurn() {
+      if (initiativeOrder.length === 0) return;
+      if (currentTurnIndex === -1) {
+        currentTurnIndex = 0;
+      } else {
+        currentTurnIndex += 1;
+        if (currentTurnIndex >= initiativeOrder.length) {
+          currentTurnIndex = 0;
+          roundCounter += 1;
+          updateRoundDisplay();
+
+          heroes.forEach(applyActiveEffectsForNewRound);
+          enemies.forEach(applyActiveEffectsForNewRound);
+          renderHeroes();
+          renderEnemies();
+        }
+      }
+      renderInitiative();
+    }
+
+    function resetInitiative() {
+      heroes.forEach(clearAllEffectsForEntity);
+      enemies.forEach(clearAllEffectsForEntity);
+      initiativeOrder = [];
+      currentTurnIndex = -1;
+      roundCounter = 1;
+      updateRoundDisplay();
+      renderHeroes();
+      renderEnemies();
+      renderInitiative();
+    }
+
+    function updateDiceLog(text) {
+      const log = document.getElementById("dice-log");
+      const entry = document.createElement("div");
+      entry.textContent = text;
+      log.prepend(entry);
+      while (log.childNodes.length > 8) {
+        log.removeChild(log.lastChild);
+      }
+    }
+
+    function rollDice() {
+      const count = parseInt(document.getElementById("dice-count").value, 10) || 1;
+      const sides = parseInt(document.getElementById("dice-select").value, 10) || 100;
+      const mod = parseInt(document.getElementById("dice-mod").value, 10) || 0;
+
+      let total = 0;
+      const rolls = [];
+      for (let i = 0; i < count; i += 1) {
+        const roll = randomInt(1, sides);
+        rolls.push(roll);
+        total += roll;
+      }
+      total += mod;
+
+      document.getElementById("dice-result").textContent = total;
+      updateDiceLog(`${count}W${sides} + ${mod} → [${rolls.join(", ")}] = ${total}`);
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+    }
+
+    function updateTimerDisplay() {
+      document.getElementById("timer-display").textContent = formatTime(timerSeconds);
+    }
+
+    function startTimer() {
+      if (timerRunning) return;
+      timerRunning = true;
+      if (!timerInterval) {
+        timerInterval = setInterval(() => {
+          if (timerSeconds > 0) {
+            timerSeconds -= 1;
+            updateTimerDisplay();
+            if (timerSeconds === 0) pauseTimer();
+          } else {
+            pauseTimer();
+          }
+        }, 1000);
+      }
+    }
+
+    function pauseTimer() {
+      timerRunning = false;
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function resetTimer() {
+      timerSeconds = 0;
+      updateTimerDisplay();
+    }
+
+    function applyTimerPreset() {
+      const preset = parseInt(document.getElementById("timer-preset").value, 10) || 0;
+      timerSeconds = preset;
+      updateTimerDisplay();
+    }
+
+    function normalizeImportedHero(rawHero) {
+      if (!rawHero || typeof rawHero !== "object" || Array.isArray(rawHero)) return null;
+
+      const name = typeof rawHero.name === "string" && rawHero.name.trim() ? rawHero.name.trim() : "Neuer Held";
+
+      let maxHp = parseInt(rawHero.maxHp, 10);
+      let hp = parseInt(rawHero.hp, 10);
+      if (isNaN(maxHp) || maxHp < 1) maxHp = !isNaN(hp) && hp > 0 ? hp : 100;
+      if (isNaN(hp) || hp < 0) hp = maxHp;
+      hp = clampHp(hp, maxHp);
+
+      let handelnBase = parseInt(rawHero.handelnBase ?? rawHero.geistBase, 10);
+      if (isNaN(handelnBase)) handelnBase = 50;
+      handelnBase = clampPercent(handelnBase);
+
+      let handelnCurrent = parseInt(rawHero.handelnCurrent ?? rawHero.geistCurrent, 10);
+      if (isNaN(handelnCurrent)) handelnCurrent = handelnBase;
+      handelnCurrent = clampPercent(handelnCurrent);
+
+      const fallbackColor = heroColors[(heroIdCounter - 1) % heroColors.length];
+      const color = typeof rawHero.color === "string" && rawHero.color.trim() ? rawHero.color.trim() : fallbackColor;
+
+      return {
+        id: heroIdCounter++,
+        name,
+        hp,
+        maxHp,
+        handelnBase,
+        handelnCurrent,
+        color,
+        wissen: clampPercent(parseInt(rawHero.wissen ?? rawHero.body, 10) || 50),
+        wissenBase: clampPercent(parseInt(rawHero.wissenBase ?? rawHero.bodyBase, 10) || parseInt(rawHero.wissen ?? rawHero.body, 10) || 50),
+        soziales: clampPercent(parseInt(rawHero.soziales ?? rawHero.charisma, 10) || 30),
+        sozialesBase: clampPercent(parseInt(rawHero.sozialesBase ?? rawHero.charismaBase, 10) || parseInt(rawHero.soziales ?? rawHero.charisma, 10) || 30),
+        attributeOpen: false,
+        skillsOpen: false,
+        skillSocialOpen: false,
+        skillKnowledgeOpen: false,
+        skillCombatOpen: false,
+        skillMiscOpen: false,
+        skillSocialList: normalizeSkillList(rawHero.skillSocialList !== undefined ? rawHero.skillSocialList : rawHero.skillSocialText),
+        skillKnowledgeList: normalizeSkillList(rawHero.skillKnowledgeList !== undefined ? rawHero.skillKnowledgeList : rawHero.skillKnowledgeText),
+        skillActionList: normalizeSkillList(rawHero.skillActionList !== undefined ? rawHero.skillActionList : (rawHero.skillCombatList !== undefined ? rawHero.skillCombatList : rawHero.skillActionText ?? rawHero.skillCombatText ?? rawHero.skillMiscText)),
+        itemsOpen: false,
+        itemWeaponOpen: false,
+        itemArmorOpen: false,
+        itemOtherOpen: false,
+        itemWeaponList: normalizeItemList(rawHero.itemWeaponList !== undefined ? rawHero.itemWeaponList : rawHero.weaponItemsText),
+        itemArmorList: normalizeItemList(rawHero.itemArmorList !== undefined ? rawHero.itemArmorList : rawHero.armorItemsText),
+        itemOtherList: normalizeItemList(rawHero.itemOtherList !== undefined ? rawHero.itemOtherList : rawHero.otherItemsText),
+        activeEffects: [],
+        effectsOpen: false,
+        effectDrafts: [],
+        angelegt: !!rawHero.angelegt
+      };
+    }
+
+    function normalizeImportedEnemy(rawEnemy) {
+      if (!rawEnemy || typeof rawEnemy !== "object" || Array.isArray(rawEnemy)) return null;
+
+      const name = typeof rawEnemy.name === "string" && rawEnemy.name.trim() ? rawEnemy.name.trim() : "Gegner";
+      const type = typeof rawEnemy.type === "string" && rawEnemy.type.trim() ? rawEnemy.type.trim() : "Gegner";
+
+      let maxHp = parseInt(rawEnemy.maxHp, 10);
+      let hp = parseInt(rawEnemy.hp, 10);
+      if (isNaN(maxHp) || maxHp < 1) maxHp = !isNaN(hp) && hp > 0 ? hp : 10;
+      if (isNaN(hp) || hp < 0) hp = maxHp;
+      hp = clampHp(hp, maxHp);
+
+      let handelnBase = null;
+      if (rawEnemy.handelnBase !== undefined || rawEnemy.geistBase !== undefined) {
+        const rawHandelnBase = rawEnemy.handelnBase ?? rawEnemy.geistBase;
+        if (rawHandelnBase !== null && rawHandelnBase !== "") {
+          handelnBase = clampPercent(parseInt(rawHandelnBase, 10) || 0);
+        }
+      }
+
+      let handelnCurrent = null;
+      const rawHandelnCurrent = rawEnemy.handelnCurrent ?? rawEnemy.geistCurrent;
+      if (rawHandelnCurrent !== undefined && rawHandelnCurrent !== null && rawHandelnCurrent !== "") {
+        handelnCurrent = clampPercent(parseInt(rawHandelnCurrent, 10) || 0);
+      } else if (handelnBase != null) {
+        handelnCurrent = handelnBase;
+      }
+
+      const noteLink = typeof rawEnemy.noteLink === "string" && rawEnemy.noteLink.trim() ? rawEnemy.noteLink.trim() : null;
+
+      return {
+        id: enemyIdCounter++,
+        name,
+        type,
+        hp,
+        maxHp,
+        handelnBase,
+        handelnCurrent,
+        noteLink,
+        wissen: clampPercent(parseInt(rawEnemy.wissen ?? rawEnemy.body, 10) || 50),
+        wissenBase: clampPercent(parseInt(rawEnemy.wissenBase ?? rawEnemy.bodyBase, 10) || parseInt(rawEnemy.wissen ?? rawEnemy.body, 10) || 50),
+        soziales: clampPercent(parseInt(rawEnemy.soziales ?? rawEnemy.charisma, 10) || 20),
+        sozialesBase: clampPercent(parseInt(rawEnemy.sozialesBase ?? rawEnemy.charismaBase, 10) || parseInt(rawEnemy.soziales ?? rawEnemy.charisma, 10) || 20),
+        attributeOpen: false,
+        skillsOpen: false,
+        skillSocialOpen: false,
+        skillKnowledgeOpen: false,
+        skillCombatOpen: false,
+        skillMiscOpen: false,
+        skillSocialList: normalizeSkillList(rawEnemy.skillSocialList !== undefined ? rawEnemy.skillSocialList : rawEnemy.skillSocialText),
+        skillKnowledgeList: normalizeSkillList(rawEnemy.skillKnowledgeList !== undefined ? rawEnemy.skillKnowledgeList : rawEnemy.skillKnowledgeText),
+        skillActionList: normalizeSkillList(rawEnemy.skillActionList !== undefined ? rawEnemy.skillActionList : (rawEnemy.skillCombatList !== undefined ? rawEnemy.skillCombatList : rawEnemy.skillActionText ?? rawEnemy.skillCombatText ?? rawEnemy.skillMiscText)),
+        itemsOpen: false,
+        itemWeaponOpen: false,
+        itemArmorOpen: false,
+        itemOtherOpen: false,
+        itemWeaponList: normalizeItemList(rawEnemy.itemWeaponList !== undefined ? rawEnemy.itemWeaponList : rawEnemy.weaponItemsText),
+        itemArmorList: normalizeItemList(rawEnemy.itemArmorList !== undefined ? rawEnemy.itemArmorList : rawEnemy.armorItemsText),
+        itemOtherList: normalizeItemList(rawEnemy.itemOtherList !== undefined ? rawEnemy.itemOtherList : rawEnemy.otherItemsText),
+        activeEffects: [],
+        effectsOpen: false,
+        effectDrafts: [],
+        angelegt: !!rawEnemy.angelegt
+      };
+    }
+
+    function parseJsonImport(text, arrayKey, unsupportedMessage) {
+      let parsed;
+      try {
+        parsed = JSON.parse(text);
+      } catch (err) {
+        console.error("Ungültiges JSON:", err);
+        alert("Ungültiges JSON. Bitte Syntax prüfen.");
+        return null;
+      }
+
+      if (Array.isArray(parsed)) return parsed;
+      if (parsed && Array.isArray(parsed[arrayKey])) return parsed[arrayKey];
+      if (parsed && typeof parsed === "object") return [parsed];
+
+      alert(unsupportedMessage);
+      return null;
+    }
+
+    function importHeroJson() {
+      const text = document.getElementById("hero-json-input").value.trim();
+      if (!text) return;
+
+      const rawHeroes = parseJsonImport(
+        text,
+        "heroes",
+        "JSON-Format nicht unterstützt. Erwarte ein Objekt, ein Array oder { heroes: [...] }."
+      );
+      if (!rawHeroes) return;
+
+      const normalizedHeroes = rawHeroes.map(normalizeImportedHero).filter(Boolean);
+      if (normalizedHeroes.length === 0) {
+        alert("Keine gültigen Heldendaten gefunden.");
+        return;
+      }
+
+      heroes.push(...normalizedHeroes);
+      document.getElementById("hero-json-input").value = "";
+      renderHeroes();
+      renderInitiative();
+    }
+
+    function importJson() {
+      const text = document.getElementById("json-input").value.trim();
+      if (!text) return;
+
+      const rawEnemies = parseJsonImport(
+        text,
+        "enemies",
+        "JSON-Format nicht unterstützt. Erwarte ein Objekt, ein Array oder { enemies: [...] }."
+      );
+      if (!rawEnemies) return;
+
+      const normalizedEnemies = rawEnemies.map(normalizeImportedEnemy).filter(Boolean);
+      if (normalizedEnemies.length === 0) {
+        alert("Keine gültigen Gegnerdaten gefunden.");
+        return;
+      }
+
+      enemies.push(...normalizedEnemies);
+      document.getElementById("json-input").value = "";
+      renderEnemies();
+      renderInitiative();
+    }
+
+    function addHero() {
+      heroes.push({
+        id: heroIdCounter++,
+        name: "Neuer Held",
+        hp: 100,
+        maxHp: 100,
+        handelnBase: 50,
+        handelnCurrent: 50,
+        color: heroColors[(heroIdCounter - 2) % heroColors.length],
+        wissen: 50,
+        wissenBase: 50,
+        soziales: 30,
+        sozialesBase: 30,
+        attributeOpen: false,
+        skillsOpen: false,
+        skillSocialOpen: false,
+        skillKnowledgeOpen: false,
+        skillActionOpen: false,
+        skillSocialList: [],
+        skillKnowledgeList: [],
+        skillActionList: [],
+        itemsOpen: false,
+        itemWeaponOpen: false,
+        itemArmorOpen: false,
+        itemOtherOpen: false,
+        itemWeaponList: [],
+        itemArmorList: [],
+        itemOtherList: [],
+        activeEffects: [],
+        effectsOpen: false,
+        effectDrafts: [],
+        angelegt: false
+      });
+      renderHeroes();
+      renderInitiative();
+    }
+
+    function addEnemy() {
+      enemies.push({
+        id: enemyIdCounter++,
+        name: "Neuer Gegner",
+        type: "Gegner",
+        hp: 10,
+        maxHp: 10,
+        handelnBase: null,
+        handelnCurrent: null,
+        noteLink: null,
+        wissen: 50,
+        wissenBase: 50,
+        soziales: 20,
+        sozialesBase: 20,
+        attributeOpen: false,
+        skillsOpen: false,
+        skillSocialOpen: false,
+        skillKnowledgeOpen: false,
+        skillActionOpen: false,
+        skillSocialList: [],
+        skillKnowledgeList: [],
+        skillActionList: [],
+        itemsOpen: false,
+        itemWeaponOpen: false,
+        itemArmorOpen: false,
+        itemOtherOpen: false,
+        itemWeaponList: [],
+        itemArmorList: [],
+        itemOtherList: [],
+        activeEffects: [],
+        effectsOpen: false,
+        effectDrafts: [],
+        angelegt: false
+      });
+      renderEnemies();
+      renderInitiative();
+    }
+
+    function clearEnemies() {
+      enemies = [];
+      pruneInitiativeOrder();
+      renderEnemies();
+      renderInitiative();
+    }
+
+    async function bootstrapAppsScript() {
+      try {
+        await callServer("ping");
+      } catch (err) {
+        console.warn("Apps Script Bridge nicht verfügbar:", err);
+      }
+    }
+
+    function runDevSelfChecks() {
+      const testHero = normalizeImportedHero({ name: "T", hp: 50, maxHp: 70, geistBase: 10, body: 40, charisma: 20 });
+      console.assert(testHero !== null, "Test hero should normalize");
+      console.assert(testHero.body === 40, "Hero body should normalize to 40");
+      console.assert(testHero.bodyBase === 40, "Hero bodyBase should default to body");
+      console.assert(testHero.charismaBase === 20, "Hero charismaBase should default to charisma");
+      console.assert(Array.isArray(testHero.skillActionList), "Hero skillActionList should be an array");
+      console.assert(testHero.skillActionList.length === 0, "Hero skillActionList should default to empty array");
+      console.assert(Array.isArray(testHero.itemWeaponList), "Hero itemWeaponList should be an array");
+      console.assert(testHero.itemWeaponList.length === 0, "Hero itemWeaponList should default to empty array");
+      console.assert(testHero.angelegt === false, "Hero angelegt should default to false");
+      console.assert(Array.isArray(testHero.activeEffects) && testHero.activeEffects.length === 0, "Hero activeEffects should default to empty array");
+      console.assert(Array.isArray(testHero.effectDrafts) && testHero.effectDrafts.length === 0, "Hero effectDrafts should default to empty array");
+      const parsedItems = normalizeItemList([{ name: "Pistole", value: "1W6+5", amount: 3, description: "Geladene Seitenwaffe", angelegt: true }]);
+      console.assert(parsedItems[0].value === "1W6+5", "Item value should preserve free text formulas");
+      console.assert(parsedItems[0].amount === 3, "Item amount should be preserved during normalization");
+      console.assert(parsedItems[0].description === "Geladene Seitenwaffe", "Item description should be preserved during normalization");
+      console.assert(parsedItems[0].angelegt === true, "Item angelegt should be preserved during normalization");
+
+      const testEnemy = normalizeImportedEnemy({ name: "E", type: "Minion", hp: 8, geistBase: 5, bodyBase: 55, charisma: 11 });
+      console.assert(testEnemy !== null, "Test enemy should normalize");
+      console.assert(testEnemy.bodyBase === 55, "Enemy bodyBase should normalize to 55");
+      console.assert(testEnemy.body === 50, "Enemy body should default to 50 when omitted");
+      console.assert(testEnemy.charismaBase === 11, "Enemy charismaBase should default to charisma");
+      console.assert(Array.isArray(testEnemy.skillActionList), "Enemy skillActionList should be an array");
+      console.assert(testEnemy.skillActionList.length === 0, "Enemy skillActionList should default to empty array");
+      console.assert(Array.isArray(testEnemy.itemArmorList), "Enemy itemArmorList should be an array");
+      console.assert(testEnemy.itemArmorList.length === 0, "Enemy itemArmorList should default to empty array");
+      console.assert(testEnemy.angelegt === false, "Enemy angelegt should default to false");
+      console.assert(Array.isArray(testEnemy.activeEffects) && testEnemy.activeEffects.length === 0, "Enemy activeEffects should default to empty array");
+      console.assert(Array.isArray(testEnemy.effectDrafts) && testEnemy.effectDrafts.length === 0, "Enemy effectDrafts should default to empty array");
+
+      const draftChange = createDefaultEffectDraftChange();
+      console.assert(draftChange.resetToBaseOnExpire === false, "Effect draft change should default resetToBaseOnExpire to false");
+
+      const parsedSkills = normalizeSkillList("Schleichen: 12\nWahrnehmung: 7%");
+      console.assert(parsedSkills.length === 2, "String skill list should parse into two entries");
+      console.assert(parsedSkills[0].name === "Schleichen" && parsedSkills[0].value === 12, "First parsed skill should match name/value");
+
+      const heroInput = document.getElementById("hero-json-input");
+      const enemyInput = document.getElementById("json-input");
+      console.assert(heroInput && heroInput.placeholder.includes('"name": "Captain Mira"'), "Hero placeholder should be assigned via JS");
+      console.assert(enemyInput && enemyInput.placeholder.includes('"type": "Minion"'), "Enemy placeholder should be assigned via JS");
+    }
+
+    function init() {
+      if (appInitialized) return;
+      appInitialized = true;
+
+      document.getElementById("add-hero-btn").addEventListener("click", addHero);
+      document.getElementById("add-enemy-btn").addEventListener("click", addEnemy);
+      document.getElementById("clear-enemies-btn").addEventListener("click", clearEnemies);
+
+      document.getElementById("roll-initiative-btn").addEventListener("click", rollInitiative);
+      document.getElementById("next-turn-btn").addEventListener("click", nextTurn);
+      document.getElementById("reset-initiative-btn").addEventListener("click", resetInitiative);
+
+      document.getElementById("roll-dice-btn").addEventListener("click", rollDice);
+
+      document.getElementById("timer-start-btn").addEventListener("click", startTimer);
+      document.getElementById("timer-pause-btn").addEventListener("click", pauseTimer);
+      document.getElementById("timer-reset-btn").addEventListener("click", () => {
+        pauseTimer();
+        resetTimer();
+      });
+      document.getElementById("timer-preset").addEventListener("change", () => {
+        pauseTimer();
+        applyTimerPreset();
+      });
+
+      document.getElementById("import-json-btn").addEventListener("click", importJson);
+      document.getElementById("import-hero-json-btn").addEventListener("click", importHeroJson);
+
+      document.getElementById("hero-json-input").placeholder = HERO_IMPORT_PLACEHOLDER;
+      document.getElementById("json-input").placeholder = ENEMY_IMPORT_PLACEHOLDER;
+
+      updateRoundDisplay();
+      updateTimerDisplay();
+      renderHeroes();
+      renderEnemies();
+      renderInitiative();
+      // Debug-Self-Checks absichtlich nicht automatisch beim Start ausführen.
+
+      if (isGasRuntime()) {
+        bootstrapAppsScript();
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>
