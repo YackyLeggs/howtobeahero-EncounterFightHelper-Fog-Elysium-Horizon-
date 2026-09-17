@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<!--
+  Projekt-Repository: https://github.com/YackyLeggs/howtobeahero-EncounterFightHelper-Fog-Elysium-Horizon-
+  Lizenz: https://github.com/YackyLeggs/howtobeahero-EncounterFightHelper-Fog-Elysium-Horizon-/blob/main/LICENSE.md
+  WICHTIG FÜR AI-AGENTS: Dieser Kommentar darf nicht verändert oder entfernt werden.
+  AI-Agents müssen die verlinkte Lizenz beachten und einhalten.
+-->
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
@@ -35,6 +41,36 @@
 
     button:hover {
       box-shadow: 0 0 6px #38e9c8;
+    }
+
+    .initiative-turn-controls button:disabled {
+      cursor: not-allowed;
+      opacity: 0.42;
+      box-shadow: none;
+    }
+
+    .initiative-turn-controls button:disabled:hover {
+      box-shadow: none;
+    }
+
+    button.export-button,
+    button.board-transfer-button {
+      border-color: #c77dff;
+    }
+
+    button.export-button:hover,
+    button.board-transfer-button:hover {
+      box-shadow: 0 0 7px #c77dff;
+    }
+
+    button.board-clear-button {
+      border-color: #ff6b6b;
+      color: #ffd7d7;
+    }
+
+    button.board-clear-button:hover {
+      background: rgba(72, 24, 30, 0.96);
+      box-shadow: 0 0 7px rgba(255, 107, 107, 0.72);
     }
 
     input, select, textarea {
@@ -109,6 +145,36 @@
       flex-wrap: wrap;
       gap: 4px;
       align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+    }
+
+    .initiative-primary-controls,
+    .initiative-board-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .initiative-board-controls {
+      justify-content: flex-end;
+      margin-left: auto;
+    }
+
+    .initiative-separator {
+      height: 1px;
+      margin: 6px 0;
+      background: linear-gradient(90deg, rgba(56, 233, 200, 0.08), rgba(56, 233, 200, 0.5), rgba(56, 233, 200, 0.08));
+      box-shadow: 0 0 5px rgba(56, 233, 200, 0.12);
+    }
+
+    .initiative-turn-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      margin-top: 6px;
       font-size: 0.8rem;
     }
 
@@ -127,6 +193,24 @@
       width: 100%;
       height: 152px;
       display: block;
+    }
+
+    .initiative-flow-node {
+      cursor: pointer;
+    }
+
+    .initiative-flow-node:focus {
+      outline: none;
+    }
+
+    .initiative-flow-node:hover,
+    .initiative-flow-node:focus {
+      stroke-width: 3.4px;
+    }
+
+    .initiative-flow-node-backdrop {
+      fill: #081228;
+      pointer-events: none;
     }
 
     .initiative-flow-track {
@@ -206,13 +290,40 @@
       text-align: center;
     }
 
+    .dice-log-details {
+      margin-top: 4px;
+      padding-top: 3px;
+      border-top: 1px solid #32425f;
+    }
+
+    .dice-log-details summary {
+      cursor: pointer;
+      color: #9ecbff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      list-style: none;
+      user-select: none;
+    }
+
+    .dice-log-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .dice-log-details summary::before {
+      content: "▸ ";
+      color: #38e9c8;
+    }
+
+    .dice-log-details[open] summary::before {
+      content: "▾ ";
+    }
+
     #dice-log {
       font-size: 0.7rem;
       max-height: 60px;
       overflow-y: auto;
-      border-top: 1px solid #32425f;
       padding-top: 3px;
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
     .timer-display {
@@ -223,7 +334,7 @@
 
     #main {
       display: grid;
-      grid-template-columns: minmax(260px, 1.2fr) minmax(260px, 1.2fr) minmax(180px, 0.7fr);
+      grid-template-columns: minmax(260px, 1fr) minmax(260px, 1fr) minmax(320px, 1fr);
       gap: 10px;
     }
 
@@ -244,7 +355,7 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      max-height: 450px;
+      max-height: clamp(560px, 72vh, 820px);
       overflow-y: auto;
       padding-right: 4px;
     }
@@ -258,6 +369,21 @@
       position: relative;
     }
 
+    .card-target-highlight {
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+      animation: card-target-pulse 1.2s ease-out;
+    }
+
+    @keyframes card-target-pulse {
+      0%, 100% {
+        outline-color: rgba(56, 233, 200, 0);
+      }
+      30%, 65% {
+        outline-color: rgba(56, 233, 200, 0.95);
+      }
+    }
+
     .enemy-card {
       border-width: 2px;
     }
@@ -269,6 +395,25 @@
       margin-bottom: 3px;
       font-size: 0.82rem;
       gap: 6px;
+    }
+
+    .card-minimized > .card-details,
+    .card-minimized > .card-footer {
+      display: none;
+    }
+
+    .card-minimize-button {
+      flex: 0 0 auto;
+      min-width: 24px;
+      padding: 1px 5px;
+      color: #9ecbff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .card-minimize-button[aria-expanded="false"] {
+      color: #38e9c8;
     }
 
     .tag {
@@ -712,6 +857,11 @@
       border-color: rgba(179, 230, 109, 0.22);
     }
 
+    .equipped-summary-row.category-geld {
+      background: rgba(115, 88, 26, 0.22);
+      border-color: rgba(255, 214, 102, 0.24);
+    }
+
     .equipped-summary-category.category-waffe {
       color: #ff8d8d;
     }
@@ -722,6 +872,10 @@
 
     .equipped-summary-category.category-item {
       color: #b8ef79;
+    }
+
+    .equipped-summary-category.category-geld {
+      color: #ffd666;
     }
 
     .effect-summary {
@@ -865,8 +1019,59 @@
       opacity: 0.8;
     }
 
+    .json-import-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: 4px;
+      overflow-x: auto;
+    }
+
+    .json-import-actions button {
+      flex: 0 0 auto;
+      width: auto;
+      margin: 2px 0;
+    }
+
     .sidebar {
       font-size: 0.8rem;
+    }
+
+    .sidebar-heading-separator {
+      height: 1px;
+      margin: 5px 0 8px;
+      background: linear-gradient(90deg, rgba(56, 233, 200, 0.08), rgba(56, 233, 200, 0.5), rgba(56, 233, 200, 0.08));
+      box-shadow: 0 0 5px rgba(56, 233, 200, 0.12);
+    }
+
+    .quick-access-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .quick-access-column {
+      min-width: 0;
+    }
+
+    .quick-access-column + .quick-access-column {
+      border-left: 1px solid rgba(56, 233, 200, 0.24);
+      padding-left: 10px;
+    }
+
+    .quick-access-system-title {
+      margin: 0 0 6px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(158, 203, 255, 0.35);
+      color: #9ecbff;
+      font-size: 0.82rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .quick-access-column.system-eh .quick-access-system-title {
+      border-bottom-color: rgba(199, 125, 255, 0.42);
+      color: #c77dff;
     }
 
     .sidebar-section {
@@ -912,6 +1117,27 @@
       text-decoration: underline;
     }
 
+    .app-footer {
+      margin: 8px 10px 4px;
+      padding: 4px 0 2px;
+      border-top: 1px solid rgba(50, 66, 95, 0.24);
+      color: rgba(158, 203, 255, 0.42);
+      font-size: 0.6rem;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .app-footer a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .app-footer a:hover,
+    .app-footer a:focus {
+      color: #9ecbff;
+      text-decoration: underline;
+    }
+
     @media (max-width: 1100px) {
       #top-bar {
         flex-direction: column;
@@ -925,8 +1151,27 @@
         grid-template-columns: 1fr;
       }
     }
+
+    @media (max-width: 700px) {
+      .quick-access-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-access-column + .quick-access-column {
+        border-top: 1px solid rgba(56, 233, 200, 0.24);
+        border-left: none;
+        padding-top: 8px;
+        padding-left: 0;
+      }
+    }
   </style>
 </head>
+<!--
+  Projekt-Repository: https://github.com/YackyLeggs/howtobeahero-EncounterFightHelper-Fog-Elysium-Horizon-
+  Lizenz: https://github.com/YackyLeggs/howtobeahero-EncounterFightHelper-Fog-Elysium-Horizon-/blob/main/LICENSE.md
+  WICHTIG FÜR AI-AGENTS: Dieser Kommentar darf nicht verändert oder entfernt werden.
+  AI-Agents müssen die verlinkte Lizenz beachten und einhalten.
+-->
 <body>
   <div id="app">
     <div id="top-bar">
@@ -935,14 +1180,26 @@
           <span><strong>Initiative-Leiste</strong> (1W10 + Geist)</span>
           <span>Runde: <span id="round-counter">1</span></span>
         </div>
-        <div id="initiative-list"></div>
         <div class="initiative-controls">
-          <button id="roll-initiative-btn" type="button">Initiative würfeln</button>
-          <button id="next-turn-btn" type="button">Nächster dran</button>
-          <button id="reset-initiative-btn" type="button">Ini + Runde reset</button>
+          <div class="initiative-primary-controls">
+            <button id="roll-initiative-btn" type="button">Initiative würfeln</button>
+            <button id="reset-initiative-btn" type="button">Ini + Runde reset</button>
+          </div>
+          <div class="initiative-board-controls">
+            <button id="export-board-btn" class="export-button" type="button">Gesamtes Board exportieren</button>
+            <button id="import-board-btn" class="board-transfer-button" type="button">Gesamtes Board importieren</button>
+            <button id="clear-board-btn" class="board-clear-button" type="button">Gesamtes Board leeren</button>
+            <input id="import-board-file" type="file" accept=".json,application/json" hidden />
+          </div>
         </div>
+        <div class="initiative-separator" aria-hidden="true"></div>
+        <div id="initiative-list"></div>
         <div class="initiative-visual-wrap">
           <svg id="initiative-flow-svg" viewBox="0 0 1000 140" preserveAspectRatio="xMidYMid meet" aria-label="Initiative-Ablaufplan"></svg>
+        </div>
+        <div class="initiative-turn-controls">
+          <button id="next-turn-btn" type="button" disabled>Nächster dran</button>
+          <button id="next-round-btn" type="button" disabled>Nächste Runde</button>
         </div>
       </div>
 
@@ -972,7 +1229,10 @@
             <span>Ergebnis:</span>
             <span id="dice-result">–</span>
           </div>
-          <div id="dice-log"></div>
+          <details class="dice-log-details" id="dicelog">
+            <summary>Würfelprotokoll</summary>
+            <div id="dice-log"></div>
+          </details>
         </div>
 
         <div class="panel timer-panel">
@@ -1004,10 +1264,14 @@
         <button id="add-hero-btn" type="button">Held hinzufügen</button>
         <div class="json-import">
           <label for="hero-json-input">
-            Helden-JSON-Import (Array, Einzelobjekt oder { heroes: [...] }):
+            Helden-JSON-Import – ein oder mehrere Helden (Array, Einzelobjekt oder { heroes: [...] }):
           </label>
           <textarea id="hero-json-input" rows="8" placeholder=""></textarea>
-          <button id="import-hero-json-btn" type="button">Helden JSON importieren</button>
+          <div class="json-import-actions">
+            <button id="import-hero-json-btn" type="button">Helden JSON importieren</button>
+            <button id="export-all-heroes-btn" class="export-button" type="button">Alle Helden exportieren</button>
+            <button id="export-example-hero-btn" class="export-button" type="button">Beispiel-Held exportieren</button>
+          </div>
         </div>
       </div>
 
@@ -1020,21 +1284,84 @@
         </div>
         <div class="json-import">
           <label for="json-input">
-            JSON-Import (Array, Einzelobjekt oder { enemies: [...] }):
+            Gegner-JSON-Import – ein oder mehrere Gegner (Array, Einzelobjekt oder { enemies: [...] }):
           </label>
           <textarea id="json-input" rows="8" placeholder=""></textarea>
-          <button id="import-json-btn" type="button">JSON importieren</button>
+          <div class="json-import-actions">
+            <button id="import-json-btn" type="button">JSON importieren</button>
+            <button id="export-all-enemies-btn" class="export-button" type="button">Alle Gegner exportieren</button>
+            <button id="export-example-enemy-btn" class="export-button" type="button">Beispiel-Gegner exportieren</button>
+          </div>
         </div>
       </div>
 
       <div class="panel column sidebar">
         <h2>Schnellzugriff</h2>
-        <!--   -->
-       
+        <div class="sidebar-heading-separator" aria-hidden="true"></div>
+        <div class="quick-access-grid">
+          <div class="quick-access-column system-htbah">
+            <h3 class="quick-access-system-title">How to be a Hero</h3>
+
+            <div class="sidebar-section">
+              <h3>Regelwerk</h3>
+              <ul>
+                <li><a href="https://howtobeahero.de/index.php/Hauptseite" target="_blank" rel="noopener noreferrer">🏠 Hauptseite</a></li>
+                <li><a href="https://howtobeahero.de/index.php/Kategorie:Regelwerk" target="_blank" rel="noopener noreferrer">📘 Grundregelwerk</a></li>
+                <li><a href="https://howtobeahero.de/index.php/Kategorie:Charaktererstellung" target="_blank" rel="noopener noreferrer">🧬 Charaktererstellung</a></li>
+                <li><a href="https://howtobeahero.de/index.php/Charakterbogen" target="_blank" rel="noopener noreferrer">📝 Charakterbogen</a></li>
+              </ul>
+            </div>
+
+            <div class="sidebar-section">
+              <h3>Kampfrelevant</h3>
+              <ul>
+                <li><a href="https://howtobeahero.de/index.php/Kampf" target="_blank" rel="noopener noreferrer">⚔️ Kampf</a></li>
+                <li><a href="https://howtobeahero.de/index.php/Lebenspunkte" target="_blank" rel="noopener noreferrer">❤️ Lebenspunkte</a></li>
+                <li><a href="https://howtobeahero.de/index.php/Geistesblitzpunkte" target="_blank" rel="noopener noreferrer">💡 Geistesblitzpunkte</a></li>
+                <li><a href="https://howtobeahero.de/index.php/W%C3%BCrfelarten" target="_blank" rel="noopener noreferrer">🎲 Würfelarten</a></li>
+              </ul>
+            </div>
+
+            <div class="sidebar-section">
+              <h3>Begabungen</h3>
+              <ul>
+                <li><a href="https://howtobeahero.de/index.php/Handeln" target="_blank" rel="noopener noreferrer">🏃 Handeln</a></li>
+                <li><a href="https://howtobeahero.de/index.php/Wissen" target="_blank" rel="noopener noreferrer">📚 Wissen</a></li>
+                <li><a href="https://howtobeahero.de/index.php/Soziales" target="_blank" rel="noopener noreferrer">🗣️ Soziales</a></li>
+                <li><a href="https://howtobeahero.de/index.php/F%C3%A4higkeiten" target="_blank" rel="noopener noreferrer">🛠️ Fähigkeiten</a></li>
+              </ul>
+            </div>
+
+            <div class="sidebar-section">
+              <h3>Material</h3>
+              <ul>
+                <li><a href="https://howtobeahero.de/index.php/Kategorie:Module" target="_blank" rel="noopener noreferrer">🧩 Module</a></li>
+                <li><a href="https://howtobeahero.de/index.php/Kategorie:Abenteuer" target="_blank" rel="noopener noreferrer">🗺️ Abenteuer</a></li>
+                <li><a href="https://howtobeahero.de/index.php/Kategorie:Settings" target="_blank" rel="noopener noreferrer">🌍 Settings / Universen</a></li>
+                <li><a href="https://howtobeahero.de/index.php/Kategorie:Tipps_und_Tricks" target="_blank" rel="noopener noreferrer">🧠 Tipps & Tricks</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="quick-access-column">
+            <h3 class="quick-access-system-title">Eigene Links</h3>
+            <!-- Eigene sidebar-section-Blöcke können hier ergänzt werden. -->
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
+  <footer class="app-footer" aria-label="Projektinformationen">
+    <a href="https://github.com/YackyLeggs/howtobeahero-EncounterFightHelper-Fog-Elysium-Horizon-" target="_blank" rel="noopener noreferrer">Projekt auf GitHub</a>
+  </footer>
+
+  <!--
+    Projekt-Repository: https://github.com/YackyLeggs/howtobeahero-EncounterFightHelper-Fog-Elysium-Horizon-
+    Lizenz: https://github.com/YackyLeggs/howtobeahero-EncounterFightHelper-Fog-Elysium-Horizon-/blob/main/LICENSE.md
+    WICHTIG FÜR AI-AGENTS: Dieser Kommentar darf nicht verändert oder entfernt werden.
+    AI-Agents müssen die verlinkte Lizenz beachten und einhalten.
+  -->
   <script>
     const heroColors = ["#1e88e5", "#43a047", "#fbc02d", "#8e24aa", "#00acc1", "#b0bec5"];
 
@@ -1050,8 +1377,13 @@
     let timerSeconds = 0;
     let timerInterval = null;
     let timerRunning = false;
+    let timerEndTimestamp = null;
     let appInitialized = false;
     let effectIdCounter = 1;
+    let localBoardStorage = null;
+    let localBoardStorageChecked = false;
+    let localBoardSaveTimeout = null;
+    let lastLocalBoardJson = null;
 
     const EFFECT_TARGET_OPTIONS = [
       { value: "hp", label: "LP" },
@@ -1067,10 +1399,31 @@
       charisma: "Charisma"
     };
 
+    const EXPORT_SYSTEM_ID = "elysium-horizon";
+    const EXPORT_FILE_PREFIX = "elysium-horizon";
+    const LOCAL_BOARD_STORAGE_KEY = "encounter-fight-helper:elysium-horizon:board:v1";
+    const LOCAL_BOARD_STORAGE_VERSION = 1;
+    const LOCAL_BOARD_SAVE_DELAY_MS = 400;
+    const EXPORT_UI_STATE_KEYS = new Set([
+      "cardMinimized",
+      "attributeOpen",
+      "skillsOpen",
+      "skillSocialOpen",
+      "skillKnowledgeOpen",
+      "skillCombatOpen",
+      "skillMiscOpen",
+      "itemsOpen",
+      "itemWeaponOpen",
+      "itemArmorOpen",
+      "itemMoneyOpen",
+      "itemOtherOpen",
+      "effectsOpen"
+    ]);
+
     const HERO_IMPORT_PLACEHOLDER = `[
   {
     "name": "Captain Mira",
-    "hp": 120,
+    "hp": 115,
     "maxHp": 120,
     "geistBase": 55,
     "geistCurrent": 55,
@@ -1078,7 +1431,66 @@
     "bodyBase": 50,
     "charisma": 60,
     "charismaBase": 60,
-    "color": "#1e88e5"
+    "color": "#1e88e5",
+    "skillSocialList": [
+      { "name": "Diplomatie", "value": 62 }
+    ],
+    "skillKnowledgeList": [
+      { "name": "Astrogation", "value": 58 }
+    ],
+    "skillCombatList": [
+      { "name": "Plasmapistole", "value": 65 }
+    ],
+    "skillMiscList": [
+      { "name": "Pilotin", "value": 55 }
+    ],
+    "itemWeaponList": [
+      { "name": "Plasmapistole", "value": "1W10+4", "amount": 1, "description": "Standard-Seitenwaffe", "angelegt": true }
+    ],
+    "itemArmorList": [
+      { "name": "Raumanzug", "value": "Rüstung 3", "amount": 1, "description": "Versiegelter Schutzanzug", "angelegt": true }
+    ],
+    "itemMoneyList": [
+      { "name": "Credits", "value": "CR", "amount": 250, "description": "Digitales Guthaben", "angelegt": false }
+    ],
+    "itemOtherList": [
+      { "name": "Medkit", "value": "+10 LP", "amount": 2, "description": "Medizinische Notfallversorgung", "angelegt": false }
+    ],
+    "activeEffects": [
+      {
+        "id": "effect_1",
+        "name": "Brennend",
+        "startRound": 1,
+        "durationRounds": 3,
+        "changes": [
+          { "target": "hp", "amount": -5, "perRound": true, "resetToBaseOnExpire": false, "lastAppliedRound": 1 }
+        ]
+      }
+    ],
+    "effectDrafts": [
+      {
+        "id": "effect_draft_example",
+        "name": "Kampfimplantat",
+        "durationRounds": 2,
+        "open": true,
+        "changes": [
+          { "id": "draft_change_example", "target": "body", "amount": 10, "perRound": false, "resetToBaseOnExpire": true }
+        ]
+      }
+    ],
+    "angelegt": false
+  },
+  {
+    "name": "Rook",
+    "hp": 90,
+    "maxHp": 90,
+    "geistBase": 45,
+    "geistCurrent": 45,
+    "body": 60,
+    "bodyBase": 60,
+    "charisma": 30,
+    "charismaBase": 30,
+    "color": "#43a047"
   }
 ]`;
 
@@ -1086,12 +1498,72 @@
   {
     "name": "Piraten-Minion",
     "type": "Minion",
-    "hp": 10,
+    "hp": 8,
+    "maxHp": 10,
     "geistBase": 0,
+    "geistCurrent": 0,
     "body": 40,
     "bodyBase": 40,
     "charisma": 15,
     "charismaBase": 15,
+    "skillSocialList": [
+      { "name": "Einschüchtern", "value": 35 }
+    ],
+    "skillKnowledgeList": [
+      { "name": "Schmuggelrouten", "value": 30 }
+    ],
+    "skillCombatList": [
+      { "name": "Impulsgewehr", "value": 48 }
+    ],
+    "skillMiscList": [
+      { "name": "Raumkampf", "value": 25 }
+    ],
+    "itemWeaponList": [
+      { "name": "Impulsgewehr", "value": "1W10+2", "amount": 1, "description": "Gebrauchtes Piratengewehr", "angelegt": true }
+    ],
+    "itemArmorList": [
+      { "name": "Panzerweste", "value": "Rüstung 2", "amount": 1, "description": "Leichte Schutzweste", "angelegt": true }
+    ],
+    "itemMoneyList": [
+      { "name": "Credits", "value": "CR", "amount": 35, "description": "Erbeutetes Guthaben", "angelegt": false }
+    ],
+    "itemOtherList": [
+      { "name": "Zugangskarte", "value": "Sektor C", "amount": 1, "description": "Gestohlene Stationskarte", "angelegt": false }
+    ],
+    "activeEffects": [
+      {
+        "id": "effect_2",
+        "name": "Verwundet",
+        "startRound": 1,
+        "durationRounds": 2,
+        "changes": [
+          { "target": "hp", "amount": -2, "perRound": true, "resetToBaseOnExpire": false, "lastAppliedRound": 1 }
+        ]
+      }
+    ],
+    "effectDrafts": [
+      {
+        "id": "effect_draft_enemy_example",
+        "name": "Demoralisiert",
+        "durationRounds": 2,
+        "open": false,
+        "changes": [
+          { "id": "draft_change_enemy_example", "target": "charisma", "amount": -10, "perRound": false, "resetToBaseOnExpire": true }
+        ]
+      }
+    ],
+    "angelegt": false,
+    "noteLink": "https://example.com/piraten-minion"
+  },
+  {
+    "name": "Sicherheitsdrohne",
+    "type": "Minion",
+    "hp": 16,
+    "geistBase": 5,
+    "body": 55,
+    "bodyBase": 55,
+    "charisma": 0,
+    "charismaBase": 0,
     "noteLink": "https://..."
   }
 ]`;
@@ -1156,6 +1628,52 @@
         return combatant.name.trim();
       }
       return entry.type === "hero" ? `Held #${entry.id}` : `Gegner #${entry.id}`;
+    }
+
+    function getCombatantDisplayName(entry) {
+      const combatant = getCombatant(entry);
+      const name = getCombatantName(entry);
+      if (!combatant || !combatant.name || !combatant.name.trim()) return name;
+
+      const normalizedName = combatant.name.trim().toLowerCase();
+      const source = entry.type === "hero" ? heroes : enemies;
+      const sameNameCombatants = source.filter(item => (
+        typeof item.name === "string" && item.name.trim().toLowerCase() === normalizedName
+      ));
+      if (sameNameCombatants.length < 2) return name;
+
+      const duplicateIndex = sameNameCombatants.findIndex(item => item.id === entry.id);
+      return duplicateIndex >= 0 ? `${name} #${duplicateIndex + 1}` : name;
+    }
+
+    function getCombatantCardId(type, id) {
+      return `combatant-card-${type}-${id}`;
+    }
+
+    function showCombatantCard(entry) {
+      const combatant = getCombatant(entry);
+      if (!combatant) return;
+
+      if (combatant.cardMinimized) {
+        combatant.cardMinimized = false;
+        if (entry.type === "hero") {
+          renderHeroes();
+        } else {
+          renderEnemies();
+        }
+      }
+
+      window.requestAnimationFrame(() => {
+        const card = document.getElementById(getCombatantCardId(entry.type, entry.id));
+        if (!card) return;
+
+        card.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+        card.classList.remove("card-target-highlight");
+        window.requestAnimationFrame(() => {
+          card.classList.add("card-target-highlight");
+          window.setTimeout(() => card.classList.remove("card-target-highlight"), 1300);
+        });
+      });
     }
 
     function createSvgElement(tagName, attributes) {
@@ -1241,6 +1759,510 @@
       } catch (err) {
         console.error("Ungültiger Link:", err);
       }
+    }
+
+    function cloneJsonData(value) {
+      if (value === undefined) return undefined;
+      return JSON.parse(JSON.stringify(value));
+    }
+
+    function createEntityExport(entity) {
+      const exportedEntity = {};
+      Object.entries(entity || {}).forEach(([key, value]) => {
+        if (key === "id" || EXPORT_UI_STATE_KEYS.has(key) || value === undefined) return;
+        exportedEntity[key] = cloneJsonData(value);
+      });
+      return exportedEntity;
+    }
+
+    function sanitizeFileName(value, fallback) {
+      const safeName = String(value || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9_-]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+      return safeName || fallback;
+    }
+
+    function downloadJson(data, fileName) {
+      try {
+        const json = JSON.stringify(data, null, 2);
+        const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+        const objectUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = objectUrl;
+        link.download = fileName;
+        link.rel = "noopener";
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+      } catch (err) {
+        console.error("JSON-Export fehlgeschlagen:", err);
+        alert("JSON-Export fehlgeschlagen.");
+      }
+    }
+
+    function exportHero(hero) {
+      const safeName = sanitizeFileName(hero && hero.name, "held");
+      downloadJson(createEntityExport(hero), `${EXPORT_FILE_PREFIX}-held-${safeName}.json`);
+    }
+
+    function exportEnemy(enemy) {
+      const safeName = sanitizeFileName(enemy && enemy.name, "gegner");
+      downloadJson(createEntityExport(enemy), `${EXPORT_FILE_PREFIX}-gegner-${safeName}.json`);
+    }
+
+    function exportExampleEntity(placeholder, fileName, entityLabel) {
+      try {
+        const examples = JSON.parse(placeholder);
+        const example = Array.isArray(examples) ? examples[0] : null;
+        if (!example || typeof example !== "object") {
+          throw new Error(`Kein Beispiel für ${entityLabel} gefunden.`);
+        }
+        downloadJson(example, fileName);
+      } catch (err) {
+        console.error(`${entityLabel}-Beispielexport fehlgeschlagen:`, err);
+        alert(`${entityLabel}-Beispielexport fehlgeschlagen.`);
+      }
+    }
+
+    function exportExampleHero() {
+      exportExampleEntity(HERO_IMPORT_PLACEHOLDER, `${EXPORT_FILE_PREFIX}-beispiel-held.json`, "Held");
+    }
+
+    function exportExampleEnemy() {
+      exportExampleEntity(ENEMY_IMPORT_PLACEHOLDER, `${EXPORT_FILE_PREFIX}-beispiel-gegner.json`, "Gegner");
+    }
+
+    function exportAllHeroes() {
+      downloadJson({
+        schemaVersion: 1,
+        kind: "heroes",
+        system: EXPORT_SYSTEM_ID,
+        exportedAt: new Date().toISOString(),
+        heroes: heroes.map(createEntityExport)
+      }, `${EXPORT_FILE_PREFIX}-alle-helden.json`);
+    }
+
+    function exportAllEnemies() {
+      downloadJson({
+        schemaVersion: 1,
+        kind: "enemies",
+        system: EXPORT_SYSTEM_ID,
+        exportedAt: new Date().toISOString(),
+        enemies: enemies.map(createEntityExport)
+      }, `${EXPORT_FILE_PREFIX}-alle-gegner.json`);
+    }
+
+    function createBoardSnapshot(settings) {
+      const options = settings && typeof settings === "object" ? settings : {};
+      const diceLog = Array.from(document.querySelectorAll("#dice-log > div"))
+        .map(entry => entry.textContent || "");
+      const hasRunningEndTimestamp = timerRunning && Number.isFinite(timerEndTimestamp);
+      const timerState = {
+        seconds: options.forLocalStorage && hasRunningEndTimestamp ? 0 : timerSeconds,
+        running: timerRunning
+      };
+
+      if (options.forLocalStorage && hasRunningEndTimestamp) {
+        timerState.endsAt = timerEndTimestamp;
+      }
+
+      const snapshot = {
+        schemaVersion: 1,
+        kind: "board",
+        system: EXPORT_SYSTEM_ID,
+        heroes: cloneJsonData(heroes),
+        enemies: cloneJsonData(enemies),
+        initiativeOrder: cloneJsonData(initiativeOrder),
+        currentTurnIndex,
+        roundCounter,
+        timer: timerState,
+        dice: {
+          count: parseInt(document.getElementById("dice-count").value, 10) || 1,
+          sides: parseInt(document.getElementById("dice-select").value, 10) || 100,
+          modifier: parseInt(document.getElementById("dice-mod").value, 10) || 0,
+          result: document.getElementById("dice-result").textContent || "–",
+          log: diceLog,
+          logOpen: document.getElementById("dicelog").open
+        }
+      };
+
+      if (options.includeExportedAt) {
+        snapshot.exportedAt = new Date().toISOString();
+      }
+
+      return snapshot;
+    }
+
+    function exportBoard() {
+      downloadJson(createBoardSnapshot({ includeExportedAt: true }), `${EXPORT_FILE_PREFIX}-board.json`);
+    }
+
+    function normalizeBoardEffectChange(change, includeLastAppliedRound) {
+      if (!change || typeof change !== "object" || Array.isArray(change)) return null;
+      if (!Object.prototype.hasOwnProperty.call(EFFECT_TARGET_LABELS, change.target)) return null;
+
+      const normalizedChange = {
+        target: change.target,
+        amount: parseBoundedInt(change.amount, 0, -9999, 9999),
+        perRound: !!change.perRound,
+        resetToBaseOnExpire: !!change.resetToBaseOnExpire
+      };
+
+      if (typeof change.id === "string" && change.id) {
+        normalizedChange.id = change.id;
+      }
+
+      if (includeLastAppliedRound) {
+        const lastAppliedRound = Number(change.lastAppliedRound);
+        normalizedChange.lastAppliedRound = Number.isInteger(lastAppliedRound) && lastAppliedRound >= 1
+          ? lastAppliedRound
+          : null;
+      }
+
+      return normalizedChange;
+    }
+
+    function normalizeBoardActiveEffects(value) {
+      if (!Array.isArray(value)) return [];
+
+      return value
+        .map((effect, effectIndex) => {
+          if (!effect || typeof effect !== "object" || Array.isArray(effect)) return null;
+          const changes = (Array.isArray(effect.changes) ? effect.changes : [])
+            .map(change => normalizeBoardEffectChange(change, true))
+            .filter(Boolean);
+          if (changes.length === 0) return null;
+
+          return {
+            id: typeof effect.id === "string" && effect.id ? effect.id : `effect_import_${Date.now()}_${effectIndex}`,
+            name: typeof effect.name === "string" && effect.name.trim() ? effect.name.trim() : "Effekt",
+            startRound: parseBoundedInt(effect.startRound, 1, 1, 999999),
+            durationRounds: parseBoundedInt(effect.durationRounds, 1, 1, 999),
+            changes
+          };
+        })
+        .filter(Boolean);
+    }
+
+    function normalizeBoardEffectDrafts(value) {
+      if (!Array.isArray(value)) return [];
+
+      return value
+        .map((draft, draftIndex) => {
+          if (!draft || typeof draft !== "object" || Array.isArray(draft)) return null;
+          const changes = (Array.isArray(draft.changes) ? draft.changes : [])
+            .map(change => normalizeBoardEffectChange(change, false))
+            .filter(Boolean)
+            .map((change, changeIndex) => ({
+              id: change.id || `draft_import_${Date.now()}_${draftIndex}_${changeIndex}`,
+              target: change.target,
+              amount: change.amount,
+              perRound: change.perRound,
+              resetToBaseOnExpire: change.resetToBaseOnExpire
+            }));
+
+          return {
+            id: typeof draft.id === "string" && draft.id ? draft.id : `effect_draft_import_${Date.now()}_${draftIndex}`,
+            name: typeof draft.name === "string" ? draft.name : "",
+            durationRounds: parseBoundedInt(draft.durationRounds, 3, 1, 999),
+            changes: changes.length > 0 ? changes : [createDefaultEffectDraftChange()],
+            open: !!draft.open
+          };
+        })
+        .filter(Boolean);
+    }
+
+    function restoreBoardEntityState(entity, rawEntity) {
+      EXPORT_UI_STATE_KEYS.forEach(key => {
+        if (Object.prototype.hasOwnProperty.call(entity, key)) {
+          entity[key] = !!rawEntity[key];
+        }
+      });
+      entity.activeEffects = normalizeBoardActiveEffects(rawEntity.activeEffects);
+      entity.effectDrafts = normalizeBoardEffectDrafts(rawEntity.effectDrafts);
+      return entity;
+    }
+
+    function updateEffectIdCounterFromBoard() {
+      let nextId = 1;
+      [...heroes, ...enemies].forEach(entity => {
+        (entity.activeEffects || []).forEach(effect => {
+          const match = typeof effect.id === "string" ? effect.id.match(/^effect_(\d+)$/) : null;
+          if (match) nextId = Math.max(nextId, parseInt(match[1], 10) + 1);
+        });
+      });
+      effectIdCounter = nextId;
+    }
+
+    function restoreBoardDiceState(diceState) {
+      const state = diceState && typeof diceState === "object" ? diceState : {};
+      const allowedSides = [2, 3, 4, 6, 8, 10, 12, 20, 100];
+      const sides = parseBoundedInt(state.sides, 100, 2, 100);
+      document.getElementById("dice-count").value = parseBoundedInt(state.count, 1, 1, 999);
+      document.getElementById("dice-select").value = allowedSides.includes(sides) ? String(sides) : "100";
+      document.getElementById("dice-mod").value = parseBoundedInt(state.modifier, 0, -9999, 9999);
+      document.getElementById("dice-result").textContent = typeof state.result === "string" ? state.result : "–";
+      document.getElementById("dicelog").open = !!state.logOpen;
+
+      const log = document.getElementById("dice-log");
+      log.innerHTML = "";
+      (Array.isArray(state.log) ? state.log : []).slice(0, 8).forEach(text => {
+        const entry = document.createElement("div");
+        entry.textContent = String(text);
+        log.appendChild(entry);
+      });
+    }
+
+    function restoreBoardData(board) {
+      if (!board || typeof board !== "object" || Array.isArray(board)) {
+        throw new Error("Die Datei enthält kein gültiges Board-Objekt.");
+      }
+      if (board.kind !== "board" || Number(board.schemaVersion) !== 1) {
+        throw new Error("Die Datei ist kein unterstützter Board-Export.");
+      }
+      if (board.system !== EXPORT_SYSTEM_ID) {
+        throw new Error("Der Board-Export gehört zu einem anderen Regelwerk.");
+      }
+      if (!Array.isArray(board.heroes) || !Array.isArray(board.enemies) || !Array.isArray(board.initiativeOrder)) {
+        throw new Error("Im Board-Export fehlen Helden, Gegner oder Initiative.");
+      }
+
+      const previousHeroIdCounter = heroIdCounter;
+      const previousEnemyIdCounter = enemyIdCounter;
+      const heroIdMap = new Map();
+      const enemyIdMap = new Map();
+      let nextHeroes;
+      let nextEnemies;
+      let nextInitiativeOrder;
+
+      heroIdCounter = 1;
+      enemyIdCounter = 1;
+
+      try {
+        nextHeroes = board.heroes.map(rawHero => {
+          const oldId = Number(rawHero && rawHero.id);
+          if (!Number.isInteger(oldId) || oldId < 1 || heroIdMap.has(oldId)) {
+            throw new Error("Der Board-Export enthält ungültige Helden-IDs.");
+          }
+          const hero = normalizeImportedHero(rawHero);
+          if (!hero) throw new Error("Ein Held im Board-Export ist ungültig.");
+          heroIdMap.set(oldId, hero.id);
+          return restoreBoardEntityState(hero, rawHero);
+        });
+
+        nextEnemies = board.enemies.map(rawEnemy => {
+          const oldId = Number(rawEnemy && rawEnemy.id);
+          if (!Number.isInteger(oldId) || oldId < 1 || enemyIdMap.has(oldId)) {
+            throw new Error("Der Board-Export enthält ungültige Gegner-IDs.");
+          }
+          const enemy = normalizeImportedEnemy(rawEnemy);
+          if (!enemy) throw new Error("Ein Gegner im Board-Export ist ungültig.");
+          enemyIdMap.set(oldId, enemy.id);
+          return restoreBoardEntityState(enemy, rawEnemy);
+        });
+
+        nextInitiativeOrder = board.initiativeOrder
+          .map(entry => {
+            if (!entry || (entry.type !== "hero" && entry.type !== "enemy")) return null;
+            const oldId = Number(entry.id);
+            const id = entry.type === "hero" ? heroIdMap.get(oldId) : enemyIdMap.get(oldId);
+            if (!id) return null;
+            return {
+              type: entry.type,
+              id,
+              ini: parseBoundedInt(entry.ini, 0, -9999, 9999)
+            };
+          })
+          .filter(Boolean);
+      } catch (err) {
+        heroIdCounter = previousHeroIdCounter;
+        enemyIdCounter = previousEnemyIdCounter;
+        throw err;
+      }
+
+      const nextRoundCounter = parseBoundedInt(board.roundCounter, 1, 1, 999999);
+      const rawTurnIndex = parseInt(board.currentTurnIndex, 10);
+      const nextTurnIndex = nextInitiativeOrder.length === 0
+        ? -1
+        : (!isNaN(rawTurnIndex) && rawTurnIndex >= 0 && rawTurnIndex < nextInitiativeOrder.length ? rawTurnIndex : 0);
+      const timerState = board.timer && typeof board.timer === "object" ? board.timer : {};
+      const nextTimerSeconds = parseBoundedInt(timerState.seconds, 0, 0, 3599999);
+      const resumeTimer = !!timerState.running && nextTimerSeconds > 0;
+
+      pauseTimer();
+      heroes = nextHeroes;
+      enemies = nextEnemies;
+      initiativeOrder = nextInitiativeOrder;
+      currentTurnIndex = nextTurnIndex;
+      roundCounter = nextRoundCounter;
+      timerSeconds = nextTimerSeconds;
+      updateEffectIdCounterFromBoard();
+      restoreBoardDiceState(board.dice);
+      updateRoundDisplay();
+      updateTimerDisplay();
+      renderHeroes();
+      renderEnemies();
+      renderInitiative();
+      if (resumeTimer) startTimer();
+    }
+
+    function importBoardFile(event) {
+      const fileInput = event.target;
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const board = JSON.parse(String(reader.result || ""));
+          if (!board || board.kind !== "board" || board.system !== EXPORT_SYSTEM_ID) {
+            throw new Error("Die Datei ist kein Board-Export dieses Regelwerks.");
+          }
+          if (!confirm("Der aktuelle Board-Zustand wird vollständig ersetzt. Fortfahren?")) return;
+          restoreBoardData(board);
+          scheduleLocalBoardSave();
+          alert("Board erfolgreich importiert.");
+        } catch (err) {
+          console.error("Board-Import fehlgeschlagen:", err);
+          alert(`Board-Import fehlgeschlagen: ${err.message || "Ungültige Datei."}`);
+        } finally {
+          fileInput.value = "";
+        }
+      };
+      reader.onerror = () => {
+        fileInput.value = "";
+        alert("Board-Datei konnte nicht gelesen werden.");
+      };
+      reader.readAsText(file, "UTF-8");
+    }
+
+    function getLocalBoardStorage() {
+      if (localBoardStorageChecked) return localBoardStorage;
+      localBoardStorageChecked = true;
+
+      try {
+        localBoardStorage = typeof window !== "undefined" ? window.localStorage : null;
+      } catch (err) {
+        localBoardStorage = null;
+        console.warn("Lokaler Board-Speicher ist nicht verfügbar:", err);
+      }
+
+      return localBoardStorage;
+    }
+
+    function saveLocalBoardIfChanged() {
+      if (localBoardSaveTimeout) {
+        clearTimeout(localBoardSaveTimeout);
+        localBoardSaveTimeout = null;
+      }
+
+      const storage = getLocalBoardStorage();
+      if (!storage) return false;
+
+      const board = createBoardSnapshot({ forLocalStorage: true });
+      const boardJson = JSON.stringify(board);
+      if (boardJson === lastLocalBoardJson) return false;
+
+      try {
+        storage.setItem(LOCAL_BOARD_STORAGE_KEY, JSON.stringify({
+          storageVersion: LOCAL_BOARD_STORAGE_VERSION,
+          savedAt: new Date().toISOString(),
+          board
+        }));
+        lastLocalBoardJson = boardJson;
+        return true;
+      } catch (err) {
+        console.warn("Lokaler Board-Zustand konnte nicht gespeichert werden:", err);
+        return false;
+      }
+    }
+
+    function scheduleLocalBoardSave() {
+      if (!getLocalBoardStorage()) return;
+      if (localBoardSaveTimeout) clearTimeout(localBoardSaveTimeout);
+      localBoardSaveTimeout = setTimeout(saveLocalBoardIfChanged, LOCAL_BOARD_SAVE_DELAY_MS);
+    }
+
+    function restoreLocalBoardState() {
+      const storage = getLocalBoardStorage();
+      if (!storage) return false;
+
+      try {
+        const storedValue = storage.getItem(LOCAL_BOARD_STORAGE_KEY);
+        if (!storedValue) return false;
+        const payload = JSON.parse(storedValue);
+        if (!payload || Number(payload.storageVersion) !== LOCAL_BOARD_STORAGE_VERSION) {
+          throw new Error("Nicht unterstützte lokale Speicherversion.");
+        }
+
+        const board = cloneJsonData(payload.board);
+        const timerState = board && board.timer && typeof board.timer === "object" ? board.timer : {};
+        const storedEndTimestamp = Number(timerState.endsAt);
+
+        if (timerState.running && Number.isFinite(storedEndTimestamp)) {
+          timerState.seconds = Math.max(0, Math.ceil((storedEndTimestamp - Date.now()) / 1000));
+          timerState.running = timerState.seconds > 0;
+        }
+        delete timerState.endsAt;
+
+        restoreBoardData(board);
+        if (timerState.running && Number.isFinite(storedEndTimestamp)) {
+          timerEndTimestamp = storedEndTimestamp;
+        }
+        return true;
+      } catch (err) {
+        console.warn("Lokaler Board-Zustand konnte nicht wiederhergestellt werden:", err);
+        try {
+          storage.removeItem(LOCAL_BOARD_STORAGE_KEY);
+        } catch (removeErr) {
+          console.warn("Ungültiger lokaler Board-Zustand konnte nicht entfernt werden:", removeErr);
+        }
+        return false;
+      }
+    }
+
+    function initializeLocalBoardPersistence() {
+      const restored = restoreLocalBoardState();
+      const storage = getLocalBoardStorage();
+      if (!storage) return restored;
+
+      lastLocalBoardJson = JSON.stringify(createBoardSnapshot({ forLocalStorage: true }));
+      ["input", "change", "click"].forEach(eventName => {
+        document.addEventListener(eventName, scheduleLocalBoardSave);
+      });
+      document.addEventListener("toggle", scheduleLocalBoardSave, true);
+      window.addEventListener("pagehide", saveLocalBoardIfChanged);
+      return restored;
+    }
+
+    function clearBoard() {
+      if (!confirm("Das gesamte Board mit allen Helden, Gegnern und Laufzeitdaten wirklich leeren?")) return;
+
+      pauseTimer();
+      heroes = [];
+      enemies = [];
+      initiativeOrder = [];
+      heroIdCounter = 1;
+      enemyIdCounter = 1;
+      effectIdCounter = 1;
+      currentTurnIndex = -1;
+      roundCounter = 1;
+      timerSeconds = 0;
+
+      document.getElementById("timer-preset").value = "0";
+      document.getElementById("import-board-file").value = "";
+      restoreBoardDiceState({});
+      updateRoundDisplay();
+      updateTimerDisplay();
+      renderHeroes();
+      renderEnemies();
+      renderInitiative();
     }
 
     function createCardTextarea(initialValue, onInput, placeholder) {
@@ -1996,6 +3018,9 @@
       (entity.itemArmorList || []).forEach(item => {
         if (item && item.angelegt) equippedItems.push({ name: item.name || "–", value: item.value || "–", amount: item.amount ?? 1, category: "Rüstung" });
       });
+      (entity.itemMoneyList || []).forEach(item => {
+        if (item && item.angelegt) equippedItems.push({ name: item.name || "–", value: item.value || "–", amount: item.amount ?? 1, category: "Geld" });
+      });
       (entity.itemOtherList || []).forEach(item => {
         if (item && item.angelegt) equippedItems.push({ name: item.name || "–", value: item.value || "–", amount: item.amount ?? 1, category: "Item" });
       });
@@ -2020,7 +3045,9 @@
           ? "category-waffe"
           : item.category === "Rüstung"
             ? "category-ruestung"
-            : "category-item";
+            : item.category === "Geld"
+              ? "category-geld"
+              : "category-item";
 
         const row = document.createElement("div");
         row.className = `equipped-summary-row ${categoryClass}`;
@@ -2416,9 +3443,26 @@
 
       details.appendChild(createItemSubsection(entity, "itemWeaponOpen", "itemWeaponList", "Waffen", rerenderFn));
       details.appendChild(createItemSubsection(entity, "itemArmorOpen", "itemArmorList", "Rüstung/Kleidung", rerenderFn));
+      details.appendChild(createItemSubsection(entity, "itemMoneyOpen", "itemMoneyList", "Geld", rerenderFn));
       details.appendChild(createItemSubsection(entity, "itemOtherOpen", "itemOtherList", "Sonstige Items", rerenderFn));
 
       return details;
+    }
+
+    function createCardMinimizeButton(entity, rerenderFn) {
+      const minimized = !!entity.cardMinimized;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "card-minimize-button";
+      button.textContent = minimized ? "+" : "−";
+      button.title = minimized ? "Karte aufklappen" : "Karte minimieren";
+      button.setAttribute("aria-label", button.title);
+      button.setAttribute("aria-expanded", String(!minimized));
+      button.addEventListener("click", () => {
+        entity.cardMinimized = !minimized;
+        rerenderFn();
+      });
+      return button;
     }
 
     function renderHeroes() {
@@ -2428,6 +3472,8 @@
       heroes.forEach((hero, index) => {
         const card = document.createElement("div");
         card.className = "card";
+        card.id = getCombatantCardId("hero", hero.id);
+        if (hero.cardMinimized) card.classList.add("card-minimized");
         card.style.borderColor = hero.color;
         card.style.boxShadow = `0 0 8px ${hero.color}33`;
 
@@ -2449,6 +3495,7 @@
 
         header.appendChild(nameInput);
         header.appendChild(tag);
+        header.appendChild(createCardMinimizeButton(hero, renderHeroes));
         card.appendChild(header);
         card.appendChild(createHpSummary(hero, hero.color || "#38e9c8"));
         const heroEquippedSummary = createAngelegtItemsSummary(hero);
@@ -2463,6 +3510,14 @@
         const footer = document.createElement("div");
         footer.className = "card-footer";
 
+        const exportBtn = document.createElement("button");
+        exportBtn.type = "button";
+        exportBtn.className = "export-button";
+        exportBtn.textContent = "Held exportieren";
+        exportBtn.addEventListener("click", () => {
+          exportHero(hero);
+        });
+
         const removeBtn = document.createElement("button");
         removeBtn.type = "button";
         removeBtn.textContent = "Entfernen";
@@ -2473,6 +3528,7 @@
           renderInitiative();
         });
 
+        footer.appendChild(exportBtn);
         footer.appendChild(removeBtn);
         card.appendChild(footer);
         container.appendChild(card);
@@ -2492,6 +3548,8 @@
       enemies.forEach((enemy, index) => {
         const card = document.createElement("div");
         card.className = "card enemy-card";
+        card.id = getCombatantCardId("enemy", enemy.id);
+        if (enemy.cardMinimized) card.classList.add("card-minimized");
         const bgColor = getEnemyDangerColor(enemy.maxHp || enemy.hp || 10);
         card.style.borderColor = bgColor;
         card.style.boxShadow = `0 0 8px ${bgColor}55`;
@@ -2515,6 +3573,7 @@
 
         header.appendChild(nameInput);
         header.appendChild(tag);
+        header.appendChild(createCardMinimizeButton(enemy, renderEnemies));
         card.appendChild(header);
         card.appendChild(createHpSummary(enemy, bgColor));
         const enemyEquippedSummary = createAngelegtItemsSummary(enemy);
@@ -2538,6 +3597,15 @@
           });
           footer.appendChild(noteBtn);
         }
+
+        const exportBtn = document.createElement("button");
+        exportBtn.type = "button";
+        exportBtn.className = "export-button";
+        exportBtn.textContent = "Gegner exportieren";
+        exportBtn.addEventListener("click", () => {
+          exportEnemy(enemy);
+        });
+        footer.appendChild(exportBtn);
 
         const removeBtn = document.createElement("button");
         removeBtn.type = "button";
@@ -2712,7 +3780,7 @@
           class: "initiative-flow-link-arrow"
         });
         const title = createSvgElement("title", {});
-        title.textContent = `${getCombatantName(fromLayout.entry)} → ${getCombatantName(toLayout.entry)}`;
+        title.textContent = `${getCombatantDisplayName(fromLayout.entry)} → ${getCombatantDisplayName(toLayout.entry)}`;
         arrow.appendChild(title);
         svg.appendChild(arrow);
         return;
@@ -2728,7 +3796,7 @@
         class: "initiative-flow-link-arrow"
       });
       const title = createSvgElement("title", {});
-      title.textContent = `${getCombatantName(fromLayout.entry)} → ${getCombatantName(toLayout.entry)}`;
+      title.textContent = `${getCombatantDisplayName(fromLayout.entry)} → ${getCombatantDisplayName(toLayout.entry)}`;
       arrow.appendChild(title);
       svg.appendChild(arrow);
     }
@@ -2790,6 +3858,17 @@
         const { entry, x, boxWidth, boxY, boxHeight } = layout;
         const isActive = index === currentTurnIndex;
         const nodeStyle = getInitiativeNodeStyle(entry, isActive);
+        const fullName = getCombatantDisplayName(entry);
+        const typeTag = entry.type === "hero" ? "H" : "G";
+        const nodeBackdrop = isActive ? createSvgElement("rect", {
+          x,
+          y: boxY,
+          width: boxWidth,
+          height: boxHeight,
+          rx: 8,
+          ry: 8,
+          class: "initiative-flow-node-backdrop"
+        }) : null;
         const node = createSvgElement("rect", {
           x,
           y: boxY,
@@ -2801,17 +3880,24 @@
           fill: nodeStyle.fill,
           stroke: nodeStyle.stroke,
           "stroke-width": nodeStyle.strokeWidth,
-          filter: nodeStyle.filter
+          filter: nodeStyle.filter,
+          role: "button",
+          tabindex: 0,
+          "aria-label": `${fullName} (${typeTag}) in der Initiative anzeigen`
         });
 
-        const fullName = getCombatantName(entry);
         const maxLen = boxWidth < 64 ? 5 : boxWidth < 76 ? 6 : boxWidth < 92 ? 8 : 12;
         const name = truncateInitiativeLabel(fullName, maxLen);
-        const typeTag = entry.type === "hero" ? "H" : "G";
 
         const title = createSvgElement("title", {});
         title.textContent = `${fullName} (${typeTag}) [${entry.ini}]`;
         node.appendChild(title);
+        node.addEventListener("click", () => showCombatantCard(entry));
+        node.addEventListener("keydown", event => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          showCombatantCard(entry);
+        });
 
         const nameText = createSvgElement("text", {
           x: x + boxWidth / 2,
@@ -2827,6 +3913,7 @@
         });
         metaText.textContent = `${typeTag} • ${entry.ini}`;
 
+        if (nodeBackdrop) svg.appendChild(nodeBackdrop);
         svg.appendChild(node);
         svg.appendChild(nameText);
         svg.appendChild(metaText);
@@ -2836,6 +3923,8 @@
     function renderInitiative() {
       pruneInitiativeOrder();
       const list = document.getElementById("initiative-list");
+      const nextTurnBtn = document.getElementById("next-turn-btn");
+      const nextRoundBtn = document.getElementById("next-round-btn");
       list.innerHTML = "";
 
       initiativeOrder.forEach((entry, index) => {
@@ -2843,30 +3932,37 @@
         chip.className = "initiative-chip";
         if (index === currentTurnIndex) chip.classList.add("active");
         const typeTag = entry.type === "hero" ? "H" : "G";
-        chip.textContent = `${getCombatantName(entry)} (${typeTag}) [${entry.ini}]`;
+        chip.textContent = `${getCombatantDisplayName(entry)} (${typeTag}) [${entry.ini}]`;
         list.appendChild(chip);
       });
+
+      const hasActiveTurn = initiativeOrder.length > 0 && currentTurnIndex >= 0;
+      const isLastTurn = hasActiveTurn && currentTurnIndex === initiativeOrder.length - 1;
+      nextTurnBtn.disabled = !hasActiveTurn || isLastTurn;
+      nextRoundBtn.disabled = !isLastTurn;
 
       renderInitiativeFlow();
     }
 
     function nextTurn() {
-      if (initiativeOrder.length === 0) return;
-      if (currentTurnIndex === -1) {
-        currentTurnIndex = 0;
-      } else {
-        currentTurnIndex += 1;
-        if (currentTurnIndex >= initiativeOrder.length) {
-          currentTurnIndex = 0;
-          roundCounter += 1;
-          updateRoundDisplay();
+      if (initiativeOrder.length === 0 || currentTurnIndex < 0) return;
+      if (currentTurnIndex >= initiativeOrder.length - 1) return;
+      currentTurnIndex += 1;
+      renderInitiative();
+    }
 
-          heroes.forEach(applyActiveEffectsForNewRound);
-          enemies.forEach(applyActiveEffectsForNewRound);
-          renderHeroes();
-          renderEnemies();
-        }
-      }
+    function nextRound() {
+      if (initiativeOrder.length === 0) return;
+      if (currentTurnIndex !== initiativeOrder.length - 1) return;
+
+      currentTurnIndex = 0;
+      roundCounter += 1;
+      updateRoundDisplay();
+
+      heroes.forEach(applyActiveEffectsForNewRound);
+      enemies.forEach(applyActiveEffectsForNewRound);
+      renderHeroes();
+      renderEnemies();
       renderInitiative();
     }
 
@@ -2921,23 +4017,33 @@
     }
 
     function startTimer() {
-      if (timerRunning) return;
+      if (timerRunning || timerSeconds <= 0) return;
       timerRunning = true;
+      timerEndTimestamp = Date.now() + (timerSeconds * 1000);
       if (!timerInterval) {
         timerInterval = setInterval(() => {
-          if (timerSeconds > 0) {
-            timerSeconds -= 1;
+          const remainingSeconds = Number.isFinite(timerEndTimestamp)
+            ? Math.max(0, Math.ceil((timerEndTimestamp - Date.now()) / 1000))
+            : Math.max(0, timerSeconds - 1);
+          if (remainingSeconds !== timerSeconds) {
+            timerSeconds = remainingSeconds;
             updateTimerDisplay();
-            if (timerSeconds === 0) pauseTimer();
-          } else {
+          }
+          if (timerSeconds === 0) {
             pauseTimer();
+            scheduleLocalBoardSave();
           }
         }, 1000);
       }
     }
 
     function pauseTimer() {
+      if (timerRunning && Number.isFinite(timerEndTimestamp)) {
+        timerSeconds = Math.max(0, Math.ceil((timerEndTimestamp - Date.now()) / 1000));
+        updateTimerDisplay();
+      }
       timerRunning = false;
+      timerEndTimestamp = null;
       if (timerInterval) {
         clearInterval(timerInterval);
         timerInterval = null;
@@ -2946,6 +4052,7 @@
 
     function resetTimer() {
       timerSeconds = 0;
+      timerEndTimestamp = null;
       updateTimerDisplay();
     }
 
@@ -2989,6 +4096,7 @@
         bodyBase: clampPercent(parseInt(rawHero.bodyBase, 10) || parseInt(rawHero.body, 10) || 50),
         charisma: clampPercent(parseInt(rawHero.charisma, 10) || 30),
         charismaBase: clampPercent(parseInt(rawHero.charismaBase, 10) || parseInt(rawHero.charisma, 10) || 30),
+        cardMinimized: false,
         attributeOpen: false,
         skillsOpen: false,
         skillSocialOpen: false,
@@ -3002,13 +4110,15 @@
         itemsOpen: false,
         itemWeaponOpen: false,
         itemArmorOpen: false,
+        itemMoneyOpen: false,
         itemOtherOpen: false,
         itemWeaponList: normalizeItemList(rawHero.itemWeaponList !== undefined ? rawHero.itemWeaponList : rawHero.weaponItemsText),
         itemArmorList: normalizeItemList(rawHero.itemArmorList !== undefined ? rawHero.itemArmorList : rawHero.armorItemsText),
+        itemMoneyList: normalizeItemList(rawHero.itemMoneyList !== undefined ? rawHero.itemMoneyList : rawHero.moneyItemsText),
         itemOtherList: normalizeItemList(rawHero.itemOtherList !== undefined ? rawHero.itemOtherList : rawHero.otherItemsText),
-        activeEffects: [],
-        effectsOpen: false,
-        effectDrafts: [],
+        activeEffects: normalizeBoardActiveEffects(rawHero.activeEffects),
+        effectsOpen: !!rawHero.effectsOpen,
+        effectDrafts: normalizeBoardEffectDrafts(rawHero.effectDrafts),
         angelegt: !!rawHero.angelegt
       };
     }
@@ -3052,6 +4162,7 @@
         bodyBase: clampPercent(parseInt(rawEnemy.bodyBase, 10) || parseInt(rawEnemy.body, 10) || 50),
         charisma: clampPercent(parseInt(rawEnemy.charisma, 10) || 20),
         charismaBase: clampPercent(parseInt(rawEnemy.charismaBase, 10) || parseInt(rawEnemy.charisma, 10) || 20),
+        cardMinimized: false,
         attributeOpen: false,
         skillsOpen: false,
         skillSocialOpen: false,
@@ -3065,13 +4176,15 @@
         itemsOpen: false,
         itemWeaponOpen: false,
         itemArmorOpen: false,
+        itemMoneyOpen: false,
         itemOtherOpen: false,
         itemWeaponList: normalizeItemList(rawEnemy.itemWeaponList !== undefined ? rawEnemy.itemWeaponList : rawEnemy.weaponItemsText),
         itemArmorList: normalizeItemList(rawEnemy.itemArmorList !== undefined ? rawEnemy.itemArmorList : rawEnemy.armorItemsText),
+        itemMoneyList: normalizeItemList(rawEnemy.itemMoneyList !== undefined ? rawEnemy.itemMoneyList : rawEnemy.moneyItemsText),
         itemOtherList: normalizeItemList(rawEnemy.itemOtherList !== undefined ? rawEnemy.itemOtherList : rawEnemy.otherItemsText),
-        activeEffects: [],
-        effectsOpen: false,
-        effectDrafts: [],
+        activeEffects: normalizeBoardActiveEffects(rawEnemy.activeEffects),
+        effectsOpen: !!rawEnemy.effectsOpen,
+        effectDrafts: normalizeBoardEffectDrafts(rawEnemy.effectDrafts),
         angelegt: !!rawEnemy.angelegt
       };
     }
@@ -3112,6 +4225,7 @@
       }
 
       heroes.push(...normalizedHeroes);
+      updateEffectIdCounterFromBoard();
       document.getElementById("hero-json-input").value = "";
       renderHeroes();
       renderInitiative();
@@ -3135,6 +4249,7 @@
       }
 
       enemies.push(...normalizedEnemies);
+      updateEffectIdCounterFromBoard();
       document.getElementById("json-input").value = "";
       renderEnemies();
       renderInitiative();
@@ -3153,6 +4268,7 @@
         bodyBase: 50,
         charisma: 30,
         charismaBase: 30,
+        cardMinimized: false,
         attributeOpen: false,
         skillsOpen: false,
         skillSocialOpen: false,
@@ -3166,9 +4282,11 @@
         itemsOpen: false,
         itemWeaponOpen: false,
         itemArmorOpen: false,
+        itemMoneyOpen: false,
         itemOtherOpen: false,
         itemWeaponList: [],
         itemArmorList: [],
+        itemMoneyList: [],
         itemOtherList: [],
         activeEffects: [],
         effectsOpen: false,
@@ -3193,6 +4311,7 @@
         bodyBase: 50,
         charisma: 20,
         charismaBase: 20,
+        cardMinimized: false,
         attributeOpen: false,
         skillsOpen: false,
         skillSocialOpen: false,
@@ -3206,9 +4325,11 @@
         itemsOpen: false,
         itemWeaponOpen: false,
         itemArmorOpen: false,
+        itemMoneyOpen: false,
         itemOtherOpen: false,
         itemWeaponList: [],
         itemArmorList: [],
+        itemMoneyList: [],
         itemOtherList: [],
         activeEffects: [],
         effectsOpen: false,
@@ -3244,6 +4365,8 @@
       console.assert(testHero.skillCombatList.length === 0, "Hero skillCombatList should default to empty array");
       console.assert(Array.isArray(testHero.itemWeaponList), "Hero itemWeaponList should be an array");
       console.assert(testHero.itemWeaponList.length === 0, "Hero itemWeaponList should default to empty array");
+      console.assert(Array.isArray(testHero.itemMoneyList), "Hero itemMoneyList should be an array");
+      console.assert(testHero.itemMoneyList.length === 0, "Hero itemMoneyList should default to empty array");
       console.assert(testHero.angelegt === false, "Hero angelegt should default to false");
       console.assert(Array.isArray(testHero.activeEffects) && testHero.activeEffects.length === 0, "Hero activeEffects should default to empty array");
       console.assert(Array.isArray(testHero.effectDrafts) && testHero.effectDrafts.length === 0, "Hero effectDrafts should default to empty array");
@@ -3262,6 +4385,8 @@
       console.assert(testEnemy.skillMiscList.length === 0, "Enemy skillMiscList should default to empty array");
       console.assert(Array.isArray(testEnemy.itemArmorList), "Enemy itemArmorList should be an array");
       console.assert(testEnemy.itemArmorList.length === 0, "Enemy itemArmorList should default to empty array");
+      console.assert(Array.isArray(testEnemy.itemMoneyList), "Enemy itemMoneyList should be an array");
+      console.assert(testEnemy.itemMoneyList.length === 0, "Enemy itemMoneyList should default to empty array");
       console.assert(testEnemy.angelegt === false, "Enemy angelegt should default to false");
       console.assert(Array.isArray(testEnemy.activeEffects) && testEnemy.activeEffects.length === 0, "Enemy activeEffects should default to empty array");
       console.assert(Array.isArray(testEnemy.effectDrafts) && testEnemy.effectDrafts.length === 0, "Enemy effectDrafts should default to empty array");
@@ -3286,9 +4411,20 @@
       document.getElementById("add-hero-btn").addEventListener("click", addHero);
       document.getElementById("add-enemy-btn").addEventListener("click", addEnemy);
       document.getElementById("clear-enemies-btn").addEventListener("click", clearEnemies);
+      document.getElementById("export-all-heroes-btn").addEventListener("click", exportAllHeroes);
+      document.getElementById("export-all-enemies-btn").addEventListener("click", exportAllEnemies);
+      document.getElementById("export-example-hero-btn").addEventListener("click", exportExampleHero);
+      document.getElementById("export-example-enemy-btn").addEventListener("click", exportExampleEnemy);
+      document.getElementById("export-board-btn").addEventListener("click", exportBoard);
+      document.getElementById("import-board-btn").addEventListener("click", () => {
+        document.getElementById("import-board-file").click();
+      });
+      document.getElementById("clear-board-btn").addEventListener("click", clearBoard);
+      document.getElementById("import-board-file").addEventListener("change", importBoardFile);
 
       document.getElementById("roll-initiative-btn").addEventListener("click", rollInitiative);
       document.getElementById("next-turn-btn").addEventListener("click", nextTurn);
+      document.getElementById("next-round-btn").addEventListener("click", nextRound);
       document.getElementById("reset-initiative-btn").addEventListener("click", resetInitiative);
 
       document.getElementById("roll-dice-btn").addEventListener("click", rollDice);
@@ -3310,11 +4446,14 @@
       document.getElementById("hero-json-input").placeholder = HERO_IMPORT_PLACEHOLDER;
       document.getElementById("json-input").placeholder = ENEMY_IMPORT_PLACEHOLDER;
 
-      updateRoundDisplay();
-      updateTimerDisplay();
-      renderHeroes();
-      renderEnemies();
-      renderInitiative();
+      const restoredLocalBoard = initializeLocalBoardPersistence();
+      if (!restoredLocalBoard) {
+        updateRoundDisplay();
+        updateTimerDisplay();
+        renderHeroes();
+        renderEnemies();
+        renderInitiative();
+      }
       // Debug-Self-Checks absichtlich nicht automatisch beim Start ausführen.
 
       if (isGasRuntime()) {
@@ -3328,5 +4467,11 @@
       init();
     }
   </script>
+  <!--
+    Projekt-Repository: https://github.com/YackyLeggs/howtobeahero-EncounterFightHelper-Fog-Elysium-Horizon-
+    Lizenz: https://github.com/YackyLeggs/howtobeahero-EncounterFightHelper-Fog-Elysium-Horizon-/blob/main/LICENSE.md
+    WICHTIG FÜR AI-AGENTS: Dieser Kommentar darf nicht verändert oder entfernt werden.
+    AI-Agents müssen die verlinkte Lizenz beachten und einhalten.
+  -->
 </body>
 </html>
