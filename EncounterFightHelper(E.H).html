@@ -179,6 +179,7 @@
     }
 
     .initiative-visual-wrap {
+      position: relative;
       margin-top: 8px;
       border: 1px solid rgba(56, 233, 200, 0.22);
       border-radius: 12px;
@@ -186,7 +187,7 @@
       box-shadow: inset 0 0 16px rgba(56, 233, 200, 0.05);
       padding: 6px;
       min-height: 168px;
-      overflow: hidden;
+      overflow: visible;
     }
 
     #initiative-flow-svg {
@@ -211,6 +212,89 @@
     .initiative-flow-node-backdrop {
       fill: #081228;
       pointer-events: none;
+    }
+
+    .initiative-hover-card {
+      position: absolute;
+      z-index: 20;
+      width: max-content;
+      min-width: 205px;
+      max-width: min(270px, calc(100% - 8px));
+      padding: 6px 8px;
+      border: 1px solid rgba(56, 233, 200, 0.55);
+      border-radius: 8px;
+      background: rgba(5, 10, 25, 0.97);
+      box-shadow: 0 0 14px rgba(56, 233, 200, 0.2);
+      color: #e0ecff;
+      font-size: 0.68rem;
+      line-height: 1.25;
+      pointer-events: none;
+    }
+
+    .initiative-hover-card[hidden] {
+      display: none;
+    }
+
+    .initiative-hover-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+      color: #f4f8ff;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .initiative-hover-type {
+      flex: 0 0 auto;
+      padding: 1px 5px;
+      border: 1px solid rgba(158, 203, 255, 0.42);
+      border-radius: 999px;
+      color: #9ecbff;
+      font-size: 0.61rem;
+      font-weight: 600;
+    }
+
+    .initiative-hover-grid {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 2px 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .initiative-hover-label {
+      color: #9ecbff;
+    }
+
+    .initiative-hover-value {
+      overflow-wrap: anywhere;
+      text-align: right;
+    }
+
+    .initiative-hover-value.available {
+      color: #38e9c8;
+    }
+
+    .initiative-hover-value.used {
+      color: #ff8a9a;
+      text-decoration: line-through;
+    }
+
+    .initiative-hover-detail {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 8px;
+      margin-top: 4px;
+      padding-top: 4px;
+      border-top: 1px solid rgba(158, 203, 255, 0.16);
+    }
+
+    .initiative-hover-detail-value {
+      min-width: 0;
+      color: #d6e7fa;
+      overflow-wrap: anywhere;
+      text-align: right;
     }
 
     .initiative-flow-track {
@@ -326,6 +410,136 @@
       margin-top: 3px;
     }
 
+    .comparison-check {
+      margin-top: 7px;
+      padding: 6px 7px;
+      border: 1px solid rgba(56, 233, 200, 0.38);
+      border-radius: 7px;
+      background: rgba(8, 24, 42, 0.72);
+      box-shadow: inset 0 0 10px rgba(56, 233, 200, 0.05);
+    }
+
+    .comparison-check summary {
+      cursor: pointer;
+      color: #eef7ff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      list-style: none;
+      user-select: none;
+    }
+
+    .comparison-check summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .comparison-check summary::before {
+      content: "▸ ";
+      color: #38e9c8;
+    }
+
+    .comparison-check[open] summary::before {
+      content: "▾ ";
+    }
+
+    .comparison-check-body {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 6px;
+    }
+
+    .comparison-check-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.72rem;
+    }
+
+    .comparison-check-row input {
+      width: 66px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .comparison-participant-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto auto;
+      gap: 4px;
+    }
+
+    .comparison-participant-label {
+      color: #eef7ff;
+      font-weight: 700;
+    }
+
+    .comparison-skill-inline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .comparison-skill-inline input,
+    .comparison-participant-row > input {
+      width: 52px;
+    }
+
+    .comparison-manual-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      color: #9ecbff;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .comparison-manual-toggle input {
+      width: auto;
+      margin: 0;
+    }
+
+    .comparison-participant-row > input[hidden] {
+      display: none;
+    }
+
+    .comparison-check-hint {
+      color: #9ecbff;
+      font-size: 0.64rem;
+      line-height: 1.3;
+    }
+
+    .comparison-check-result {
+      padding: 5px 6px;
+      border: 1px solid rgba(56, 233, 200, 0.18);
+      border-radius: 6px;
+      background: rgba(8, 18, 40, 0.42);
+      font-size: 0.7rem;
+      line-height: 1.4;
+    }
+
+    .comparison-check-result-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .comparison-grade.success {
+      color: #38e9c8;
+    }
+
+    .comparison-grade.failure {
+      color: #ff6b6b;
+    }
+
+    #comparison-check-winner {
+      margin-top: 4px;
+      color: #eef7ff;
+      font-weight: 600;
+    }
+
     .timer-display {
       font-family: "Courier New", monospace;
       font-size: 1rem;
@@ -350,6 +564,25 @@
       color: #9ecbff;
     }
 
+    .column-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+      padding-right: 11px;
+      overflow-y: auto;
+      scrollbar-gutter: stable;
+    }
+
+    .column-heading h2 {
+      margin-bottom: 0;
+    }
+
+    .column-collapse-button {
+      margin-left: auto;
+    }
+
     #heroes-list,
     #enemies-list {
       display: flex;
@@ -357,6 +590,7 @@
       gap: 6px;
       max-height: clamp(560px, 72vh, 820px);
       overflow-y: auto;
+      scrollbar-gutter: stable;
       padding-right: 4px;
     }
 
@@ -464,17 +698,31 @@
       margin-bottom: 4px;
     }
 
+    .attribute-values-separator {
+      grid-column: 1 / -1;
+      height: 1px;
+      margin: 2px 0;
+      background: linear-gradient(90deg, transparent, rgba(158, 203, 255, 0.48), transparent);
+    }
+
     .stat-line {
       font-size: 0.75rem;
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(76px, 104px) 40px;
       align-items: center;
-      justify-content: space-between;
       gap: 4px;
-      flex-wrap: wrap;
     }
 
     .stat-label {
+      min-width: 0;
       opacity: 0.8;
+    }
+
+    .stat-value-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
     }
 
     .stat-value {
@@ -493,6 +741,7 @@
     .small-buttons {
       display: flex;
       gap: 2px;
+      justify-content: flex-end;
     }
 
     .small-buttons button {
@@ -515,7 +764,7 @@
 
     .hp-summary {
       display: grid;
-      grid-template-columns: auto 1fr;
+      grid-template-columns: auto minmax(0, 1fr) auto;
       align-items: center;
       gap: 8px;
       margin: 4px 0 6px;
@@ -552,7 +801,7 @@
     .hp-bar {
       position: relative;
       flex: 1 1 auto;
-      min-width: 90px;
+      min-width: 60px;
       height: 10px;
       overflow: hidden;
       border-radius: 999px;
@@ -567,6 +816,53 @@
       border-radius: inherit;
       transition: width 140ms ease;
       box-shadow: 0 0 10px currentColor;
+    }
+
+    .parry-button {
+      position: relative;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border-color: #38e9c8;
+      font-size: 1rem;
+      line-height: 1;
+      filter: none;
+      opacity: 1;
+    }
+
+    .parry-button.used {
+      border-color: #526078;
+      color: #778197;
+      background: #0a1120;
+      box-shadow: none;
+    }
+
+    .parry-button.used .parry-icon {
+      filter: grayscale(1);
+      opacity: 0.3;
+    }
+
+    .parry-button.used:hover,
+    .parry-button.used:focus {
+      box-shadow: 0 0 5px rgba(158, 203, 255, 0.35);
+    }
+
+    .parry-button.used:hover .parry-icon,
+    .parry-button.used:focus .parry-icon {
+      opacity: 0.52;
+    }
+
+    .parry-button.used::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 3px;
+      right: 3px;
+      height: 2px;
+      border-radius: 999px;
+      background: #b7c0d2;
+      transform: rotate(-38deg);
+      pointer-events: none;
     }
 
     .card-textarea {
@@ -615,6 +911,22 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+    }
+
+    .item-target-highlight {
+      scroll-margin: 12px;
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+      animation: item-target-pulse 1.2s ease-out;
+    }
+
+    @keyframes item-target-pulse {
+      0%, 100% {
+        outline-color: rgba(255, 214, 102, 0);
+      }
+      30%, 65% {
+        outline-color: rgba(255, 214, 102, 0.95);
+      }
     }
 
     .skill-add-row {
@@ -803,10 +1115,25 @@
       min-width: 0;
       max-width: 100%;
       padding: 1px 5px;
+      margin: 0;
       border-radius: 999px;
       background: rgba(8, 18, 40, 0.38);
       border: 1px solid rgba(255, 214, 102, 0.10);
       min-height: 18px;
+      appearance: none;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    button.equipped-summary-row:hover {
+      box-shadow: 0 0 6px rgba(255, 214, 102, 0.34);
+    }
+
+    button.equipped-summary-row:focus-visible {
+      outline: 1px solid #ffd666;
+      outline-offset: 2px;
     }
 
     .equipped-summary-name,
@@ -1196,6 +1523,7 @@
         <div id="initiative-list"></div>
         <div class="initiative-visual-wrap">
           <svg id="initiative-flow-svg" viewBox="0 0 1000 140" preserveAspectRatio="xMidYMid meet" aria-label="Initiative-Ablaufplan"></svg>
+          <div id="initiative-hover-card" class="initiative-hover-card" role="tooltip" hidden></div>
         </div>
         <div class="initiative-turn-controls">
           <button id="next-turn-btn" type="button" disabled>Nächster dran</button>
@@ -1233,6 +1561,48 @@
             <summary>Würfelprotokoll</summary>
             <div id="dice-log"></div>
           </details>
+          <details class="comparison-check" id="comparison-check" open>
+            <summary>Würfelcheck (Vergleichsprobe)</summary>
+            <div class="comparison-check-body">
+              <div class="comparison-check-row comparison-participant-row">
+                <span class="comparison-participant-label">A</span>
+                <label class="comparison-skill-inline" for="comparison-skill-a">
+                  Wert
+                  <input id="comparison-skill-a" type="number" min="0" max="9999" value="50" />
+                </label>
+                <label class="comparison-manual-toggle" for="comparison-use-manual-a" title="W100 für A manuell eintragen">
+                  <input id="comparison-use-manual-a" type="checkbox" aria-controls="comparison-manual-roll-a" aria-expanded="false" />
+                  W100
+                </label>
+                <input id="comparison-manual-roll-a" type="number" min="1" max="100" placeholder="1–100" aria-label="Manueller W100-Wert für A" disabled hidden />
+              </div>
+              <div class="comparison-check-row comparison-participant-row">
+                <span class="comparison-participant-label">B</span>
+                <label class="comparison-skill-inline" for="comparison-skill-b">
+                  Wert
+                  <input id="comparison-skill-b" type="number" min="0" max="9999" value="50" />
+                </label>
+                <label class="comparison-manual-toggle" for="comparison-use-manual-b" title="W100 für B manuell eintragen">
+                  <input id="comparison-use-manual-b" type="checkbox" aria-controls="comparison-manual-roll-b" aria-expanded="false" />
+                  W100
+                </label>
+                <input id="comparison-manual-roll-b" type="number" min="1" max="100" placeholder="1–100" aria-label="Manueller W100-Wert für B" disabled hidden />
+              </div>
+              <div class="comparison-check-hint">W100-Haken = manueller Wurf; sonst automatisch.</div>
+              <button id="comparison-roll-btn" type="button">Vergleichsprobe ausführen</button>
+              <div class="comparison-check-result" aria-live="polite">
+                <div class="comparison-check-result-line">
+                  <span>A: Wurf <span id="comparison-roll-a">–</span></span>
+                  <span id="comparison-grade-a" class="comparison-grade">Grad –</span>
+                </div>
+                <div class="comparison-check-result-line">
+                  <span>B: Wurf <span id="comparison-roll-b">–</span></span>
+                  <span id="comparison-grade-b" class="comparison-grade">Grad –</span>
+                </div>
+                <div id="comparison-check-winner">Noch nicht gewürfelt.</div>
+              </div>
+            </div>
+          </details>
         </div>
 
         <div class="panel timer-panel">
@@ -1259,14 +1629,18 @@
 
     <div id="main">
       <div class="panel column hero-column">
-        <h2>Helden</h2>
+        <div class="column-heading">
+          <h2>Helden</h2>
+          <button id="toggle-all-heroes-btn" class="card-minimize-button column-collapse-button" type="button" aria-controls="heroes-list">−</button>
+        </div>
         <div id="heroes-list"></div>
         <button id="add-hero-btn" type="button">Held hinzufügen</button>
         <div class="json-import">
           <label for="hero-json-input">
-            Helden-JSON-Import – ein oder mehrere Helden (Array, Einzelobjekt oder { heroes: [...] }):
+            Helden-JSON-Import – Legacy oder V2, ein oder mehrere Helden:
           </label>
-          <textarea id="hero-json-input" rows="8" placeholder=""></textarea>
+          <textarea id="hero-json-input" rows="8" maxlength="2000000" placeholder=""></textarea>
+          <input id="import-hero-json-file" type="file" accept=".json,application/json" hidden />
           <div class="json-import-actions">
             <button id="import-hero-json-btn" type="button">Helden JSON importieren</button>
             <button id="export-all-heroes-btn" class="export-button" type="button">Alle Helden exportieren</button>
@@ -1276,7 +1650,10 @@
       </div>
 
       <div class="panel column enemy-column">
-        <h2>Gegner</h2>
+        <div class="column-heading">
+          <h2>Gegner</h2>
+          <button id="toggle-all-enemies-btn" class="card-minimize-button column-collapse-button" type="button" aria-controls="enemies-list">−</button>
+        </div>
         <div id="enemies-list"></div>
         <div class="enemy-buttons">
           <button id="add-enemy-btn" type="button">Gegner hinzufügen</button>
@@ -1284,9 +1661,10 @@
         </div>
         <div class="json-import">
           <label for="json-input">
-            Gegner-JSON-Import – ein oder mehrere Gegner (Array, Einzelobjekt oder { enemies: [...] }):
+            Gegner-JSON-Import – Legacy oder V2, ein oder mehrere Gegner:
           </label>
-          <textarea id="json-input" rows="8" placeholder=""></textarea>
+          <textarea id="json-input" rows="8" maxlength="2000000" placeholder=""></textarea>
+          <input id="import-enemy-json-file" type="file" accept=".json,application/json" hidden />
           <div class="json-import-actions">
             <button id="import-json-btn" type="button">JSON importieren</button>
             <button id="export-all-enemies-btn" class="export-button" type="button">Alle Gegner exportieren</button>
@@ -1384,12 +1762,25 @@
     let localBoardStorageChecked = false;
     let localBoardSaveTimeout = null;
     let lastLocalBoardJson = null;
+    let comparisonCheckState = {
+      rollA: null,
+      rollB: null,
+      gradeA: null,
+      gradeB: null,
+      result: ""
+    };
 
     const EFFECT_TARGET_OPTIONS = [
       { value: "hp", label: "LP" },
       { value: "geistCurrent", label: "Geist" },
       { value: "body", label: "Körper" },
       { value: "charisma", label: "Charisma" }
+    ];
+    const SKILL_SUBMENU_STATE_KEYS = [
+      "skillSocialOpen", "skillKnowledgeOpen", "skillCombatOpen", "skillMiscOpen"
+    ];
+    const ITEM_SUBMENU_STATE_KEYS = [
+      "itemWeaponOpen", "itemArmorOpen", "itemMoneyOpen", "itemOtherOpen"
     ];
 
     const EFFECT_TARGET_LABELS = {
@@ -1401,11 +1792,27 @@
 
     const EXPORT_SYSTEM_ID = "elysium-horizon";
     const EXPORT_FILE_PREFIX = "elysium-horizon";
-    const LOCAL_BOARD_STORAGE_KEY = "encounter-fight-helper:elysium-horizon:board:v1";
-    const LOCAL_BOARD_STORAGE_VERSION = 1;
+    const ENTITY_SCHEMA_VERSION = 2;
+    const BOARD_SCHEMA_VERSION = 2;
+    const LEGACY_BOARD_SCHEMA_VERSION = 1;
+    const LOCAL_BOARD_STORAGE_KEY = "encounter-fight-helper:elysium-horizon:board:v2";
+    const LEGACY_LOCAL_BOARD_STORAGE_KEY = "encounter-fight-helper:elysium-horizon:board:v1";
+    const LOCAL_BOARD_STORAGE_VERSION = 2;
+    const LEGACY_LOCAL_BOARD_STORAGE_VERSION = 1;
     const LOCAL_BOARD_SAVE_DELAY_MS = 400;
+    const MAX_JSON_IMPORT_CHARS = 2000000;
+    const MAX_JSON_IMPORT_FILE_BYTES = 5000000;
+    const MAX_BOARD_FILE_BYTES = 5000000;
+    const MAX_IMPORTED_ENTITIES = 500;
+    const MAX_IMPORTED_LIST_ENTRIES = 1000;
+    const CURRENCY_ITEM_TERMS = new Set([
+      "geld", "bargeld", "guthaben", "saldo", "credit", "credits", "creditstand", "creditsaldo",
+      "munze", "munzen", "taler", "cash", "coin", "coins", "currency", "wahrung", "wahrungen",
+      "euro", "dollar", "pfund"
+    ]);
     const EXPORT_UI_STATE_KEYS = new Set([
       "cardMinimized",
+      "parryUsed",
       "attributeOpen",
       "skillsOpen",
       "skillSocialOpen",
@@ -1559,7 +1966,9 @@
     "name": "Sicherheitsdrohne",
     "type": "Minion",
     "hp": 16,
+    "maxHp": 16,
     "geistBase": 5,
+    "geistCurrent": 5,
     "body": 55,
     "bodyBase": 55,
     "charisma": 0,
@@ -1591,25 +2000,127 @@
     }
 
     function clampPercent(value) {
-      if (isNaN(value)) return 0;
+      if (!Number.isFinite(value)) return 0;
       if (value < 0) return 0;
       if (value > 100) return 100;
       return value;
     }
 
     function clampHp(value, maxHp) {
-      if (isNaN(value)) return 0;
+      if (!Number.isFinite(value)) return 0;
       if (value < 0) return 0;
       if (typeof maxHp === "number" && value > maxHp) return maxHp;
       return value;
     }
 
-    function parseBoundedInt(value, fallback, min, max) {
-      let parsed = parseInt(value, 10);
-      if (isNaN(parsed)) parsed = fallback;
+    function isPlainObject(value) {
+      if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+      const prototype = Object.getPrototypeOf(value);
+      return prototype === Object.prototype || prototype === null;
+    }
+
+    function parseStrictInteger(value) {
+      if (typeof value === "number") {
+        return Number.isSafeInteger(value) ? value : null;
+      }
+      if (typeof value !== "string") return null;
+      const trimmed = value.trim();
+      if (!/^[+-]?\d+$/.test(trimmed)) return null;
+      const parsed = Number(trimmed);
+      return Number.isSafeInteger(parsed) ? parsed : null;
+    }
+
+    function parseOptionalBoundedInt(value, min, max) {
+      let parsed = parseStrictInteger(value);
+      if (parsed === null) return null;
       if (typeof min === "number") parsed = Math.max(min, parsed);
       if (typeof max === "number") parsed = Math.min(max, parsed);
       return parsed;
+    }
+
+    function parseBoundedInt(value, fallback, min, max) {
+      let parsed = parseStrictInteger(value);
+      if (parsed === null) parsed = parseStrictInteger(fallback);
+      if (parsed === null) parsed = 0;
+      if (typeof min === "number") parsed = Math.max(min, parsed);
+      if (typeof max === "number") parsed = Math.min(max, parsed);
+      return parsed;
+    }
+
+    function normalizeBoolean(value, fallback) {
+      if (typeof value === "boolean") return value;
+      const normalizedValue = typeof value === "string" ? value.trim().toLowerCase() : value;
+      if (normalizedValue === 1 || normalizedValue === "1" || normalizedValue === "true") return true;
+      if (normalizedValue === 0 || normalizedValue === "0" || normalizedValue === "false") return false;
+      return typeof fallback === "boolean" ? fallback : false;
+    }
+
+    function closeEntityMenuStates(entity, stateKeys) {
+      stateKeys.forEach(key => {
+        if (Object.prototype.hasOwnProperty.call(entity, key)) entity[key] = false;
+      });
+    }
+
+    function collapseEntitySkillMenus(entity) {
+      closeEntityMenuStates(entity, SKILL_SUBMENU_STATE_KEYS);
+    }
+
+    function collapseEntityItemMenus(entity) {
+      closeEntityMenuStates(entity, ITEM_SUBMENU_STATE_KEYS);
+    }
+
+    function collapseEntityEffectMenus(entity) {
+      (Array.isArray(entity.effectDrafts) ? entity.effectDrafts : []).forEach(draft => {
+        draft.open = false;
+      });
+    }
+
+    function collapseEntityCardMenus(entity) {
+      entity.attributeOpen = false;
+      entity.skillsOpen = false;
+      collapseEntitySkillMenus(entity);
+      entity.itemsOpen = false;
+      collapseEntityItemMenus(entity);
+      entity.effectsOpen = false;
+      collapseEntityEffectMenus(entity);
+    }
+
+    function normalizeEntityMenuHierarchy(entity) {
+      if (!entity.skillsOpen) collapseEntitySkillMenus(entity);
+      if (!entity.itemsOpen) collapseEntityItemMenus(entity);
+      if (!entity.effectsOpen) collapseEntityEffectMenus(entity);
+      if (entity.cardMinimized) collapseEntityCardMenus(entity);
+      return entity;
+    }
+
+    function normalizeOptionalComparisonRoll(value) {
+      if (value === null || value === undefined || String(value).trim() === "") return null;
+      const parsed = parseStrictInteger(value);
+      return parsed !== null && parsed >= 1 && parsed <= 100 ? parsed : null;
+    }
+
+    function assertImportCollectionLimit(value, label) {
+      let size = 0;
+      if (Array.isArray(value)) {
+        size = value.length;
+      } else if (isPlainObject(value)) {
+        size = Object.keys(value).length;
+      } else if (typeof value === "string") {
+        size = value.split(/\r?\n/).filter(line => line.trim()).length;
+      }
+      if (size > MAX_IMPORTED_LIST_ENTRIES) {
+        throw new Error(`${label} darf höchstens ${MAX_IMPORTED_LIST_ENTRIES} Einträge enthalten.`);
+      }
+    }
+
+    function normalizeItemValue(value) {
+      if (typeof value === "string") return value.trim();
+      if (typeof value === "number" && Number.isFinite(value)) return String(value);
+      return "";
+    }
+
+    function hasAnyOwnProperty(value, keys) {
+      return isPlainObject(value) && keys.some(key => Object.prototype.hasOwnProperty.call(value, key));
     }
 
     function updateRoundDisplay() {
@@ -1650,7 +2161,136 @@
       return `combatant-card-${type}-${id}`;
     }
 
+    function hideInitiativeHoverCard() {
+      const hoverCard = document.getElementById("initiative-hover-card");
+      if (hoverCard) hoverCard.hidden = true;
+    }
+
+    function summarizeInitiativeOverview(items, limit) {
+      if (items.length === 0) return "Keine";
+      const visibleItems = items.slice(0, limit);
+      const remainingCount = items.length - visibleItems.length;
+      return `${visibleItems.join(", ")}${remainingCount > 0 ? ` +${remainingCount}` : ""}`;
+    }
+
+    function getInitiativeEffectOverview(entity) {
+      const effects = (entity.activeEffects || [])
+        .filter(effect => getEffectRemainingRounds(effect) > 0)
+        .map(effect => `${effect.name || "Effekt"} (${getEffectRemainingRounds(effect)} R)`);
+      return summarizeInitiativeOverview(effects, 3);
+    }
+
+    function getInitiativeEquippedOverview(entity) {
+      const itemLists = [
+        entity.itemWeaponList || [],
+        entity.itemArmorList || [],
+        entity.itemMoneyList || [],
+        entity.itemOtherList || []
+      ];
+      const items = itemLists.flat()
+        .filter(item => item && item.angelegt)
+        .map(item => {
+          const itemName = String(item.name || "Unbenannt").trim() || "Unbenannt";
+          const itemValue = String(item.value || "").trim();
+          const amount = Number(item.amount) > 1 ? ` ×${item.amount}` : "";
+          return `${itemName}${itemValue ? ` (${itemValue})` : ""}${amount}`;
+        });
+      return summarizeInitiativeOverview(items, 3);
+    }
+
+    function appendInitiativeHoverRow(container, labelText, valueText, valueClass) {
+      const label = document.createElement("span");
+      label.className = "initiative-hover-label";
+      label.textContent = labelText;
+
+      const value = document.createElement("span");
+      value.className = `initiative-hover-value${valueClass ? ` ${valueClass}` : ""}`;
+      value.textContent = valueText;
+
+      container.appendChild(label);
+      container.appendChild(value);
+    }
+
+    function appendInitiativeHoverDetail(container, labelText, valueText) {
+      const detail = document.createElement("div");
+      detail.className = "initiative-hover-detail";
+
+      const label = document.createElement("span");
+      label.className = "initiative-hover-label";
+      label.textContent = labelText;
+
+      const value = document.createElement("span");
+      value.className = "initiative-hover-detail-value";
+      value.textContent = valueText;
+
+      detail.appendChild(label);
+      detail.appendChild(value);
+      container.appendChild(detail);
+    }
+
+    function positionInitiativeHoverCard(node, hoverCard, visualWrap) {
+      const nodeRect = node.getBoundingClientRect();
+      const wrapRect = visualWrap.getBoundingClientRect();
+      const wrapWidth = visualWrap.clientWidth || wrapRect.width;
+      const gap = 6;
+      const preferredLeft = nodeRect.left - wrapRect.left + (nodeRect.width - hoverCard.offsetWidth) / 2;
+      const maxLeft = Math.max(4, wrapWidth - hoverCard.offsetWidth - 4);
+      const left = Math.max(4, Math.min(maxLeft, preferredLeft));
+      const nodeCenterY = nodeRect.top - wrapRect.top + (nodeRect.height / 2);
+      const top = nodeCenterY <= wrapRect.height / 2
+        ? nodeRect.bottom - wrapRect.top + gap
+        : nodeRect.top - wrapRect.top - hoverCard.offsetHeight - gap;
+
+      hoverCard.style.left = `${left}px`;
+      hoverCard.style.top = `${Math.max(4, top)}px`;
+    }
+
+    function showInitiativeHoverCard(entry, node) {
+      const entity = getCombatant(entry);
+      const hoverCard = document.getElementById("initiative-hover-card");
+      const visualWrap = document.querySelector(".initiative-visual-wrap");
+      if (!entity || !hoverCard || !visualWrap) {
+        hideInitiativeHoverCard();
+        return;
+      }
+
+      hoverCard.innerHTML = "";
+
+      const header = document.createElement("div");
+      header.className = "initiative-hover-header";
+      const name = document.createElement("span");
+      name.textContent = getCombatantDisplayName(entry);
+      const type = document.createElement("span");
+      type.className = "initiative-hover-type";
+      type.textContent = entry.type === "hero" ? "Held" : (entity.type || "Gegner");
+      header.appendChild(name);
+      header.appendChild(type);
+      hoverCard.appendChild(header);
+
+      const grid = document.createElement("div");
+      grid.className = "initiative-hover-grid";
+      const hpPercent = entity.maxHp > 0
+        ? Math.round(Math.max(0, Math.min(100, (entity.hp / entity.maxHp) * 100)))
+        : 0;
+      appendInitiativeHoverRow(grid, "LP", `${entity.hp} / ${entity.maxHp} (${hpPercent} %)`);
+      appendInitiativeHoverRow(grid, "Initiative", String(entry.ini));
+      appendInitiativeHoverRow(
+        grid,
+        "Parade",
+        entity.parryUsed ? "Verwendet" : "Verfügbar",
+        entity.parryUsed ? "used" : "available"
+      );
+      hoverCard.appendChild(grid);
+
+      appendInitiativeHoverDetail(hoverCard, "Effekte", getInitiativeEffectOverview(entity));
+      appendInitiativeHoverDetail(hoverCard, "Angelegt", getInitiativeEquippedOverview(entity));
+
+      hoverCard.hidden = false;
+      window.requestAnimationFrame(() => positionInitiativeHoverCard(node, hoverCard, visualWrap));
+    }
+
     function showCombatantCard(entry) {
+      hideInitiativeHoverCard();
       const combatant = getCombatant(entry);
       if (!combatant) return;
 
@@ -1775,6 +2415,94 @@
       return exportedEntity;
     }
 
+    function mapEntityEffectTargets(value, targetMap) {
+      if (!Array.isArray(value)) return value;
+      return value.map(effect => {
+        if (!isPlainObject(effect) || !Array.isArray(effect.changes)) return cloneJsonData(effect);
+        return {
+          ...cloneJsonData(effect),
+          changes: effect.changes.map(change => {
+            if (!isPlainObject(change)) return cloneJsonData(change);
+            return {
+              ...cloneJsonData(change),
+              target: targetMap[change.target] || change.target
+            };
+          })
+        };
+      });
+    }
+
+    function createEntityExportV2(entity) {
+      const legacy = createEntityExport(entity);
+      const exported = { name: legacy.name };
+      if (legacy.type !== undefined) exported.type = legacy.type;
+
+      exported.hp = { baseValue: legacy.maxHp, currentValue: legacy.hp };
+      exported.geist = { baseValue: legacy.geistBase, currentValue: legacy.geistCurrent };
+      exported.body = { baseValue: legacy.bodyBase, currentValue: legacy.body };
+      exported.charisma = { baseValue: legacy.charismaBase, currentValue: legacy.charisma };
+
+      if (legacy.color !== undefined) exported.color = legacy.color;
+      if (legacy.noteLink !== undefined) exported.noteLink = legacy.noteLink;
+
+      const reservedKeys = new Set([
+        "name", "type", "color", "noteLink", "hp", "maxHp", "geistBase", "geistCurrent",
+        "body", "bodyBase", "charisma", "charismaBase"
+      ]);
+      const effectTargetMap = {
+        hp: "hp",
+        geistCurrent: "geist",
+        body: "body",
+        charisma: "charisma"
+      };
+      Object.entries(legacy).forEach(([key, value]) => {
+        if (reservedKeys.has(key)) return;
+        exported[key] = key === "activeEffects" || key === "effectDrafts"
+          ? mapEntityEffectTargets(value, effectTargetMap)
+          : cloneJsonData(value);
+      });
+      return exported;
+    }
+
+    function createBoardEntityExportV2(entity) {
+      const exported = {
+        id: entity.id,
+        ...createEntityExportV2(entity)
+      };
+      EXPORT_UI_STATE_KEYS.forEach(key => {
+        if (Object.prototype.hasOwnProperty.call(entity, key)) {
+          exported[key] = normalizeBoolean(entity[key], false);
+        }
+      });
+      return exported;
+    }
+
+    function createEntityV2Envelope(kind, data) {
+      return {
+        schemaVersion: ENTITY_SCHEMA_VERSION,
+        kind,
+        system: EXPORT_SYSTEM_ID,
+        exportedAt: new Date().toISOString(),
+        data
+      };
+    }
+
+    function createEntityV2ImportPlaceholder(kind, legacyPlaceholder) {
+      try {
+        const examples = JSON.parse(legacyPlaceholder);
+        if (!Array.isArray(examples)) return "";
+        return JSON.stringify({
+          schemaVersion: ENTITY_SCHEMA_VERSION,
+          kind,
+          system: EXPORT_SYSTEM_ID,
+          data: examples.map(createEntityExportV2)
+        }, null, 2);
+      } catch (err) {
+        console.error("V2-Importbeispiel konnte nicht erzeugt werden:", err);
+        return "";
+      }
+    }
+
     function sanitizeFileName(value, fallback) {
       const safeName = String(value || "")
         .trim()
@@ -1782,13 +2510,23 @@
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .replace(/[^a-z0-9_-]+/g, "-")
-        .replace(/^-+|-+$/g, "");
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 80);
       return safeName || fallback;
     }
 
     function downloadJson(data, fileName) {
       try {
-        const json = JSON.stringify(data, null, 2);
+        const json = JSON.stringify(data, (key, value) => {
+          if (typeof value === "number" && !Number.isFinite(value)) {
+            throw new TypeError(`Nicht endliche Zahl im Exportfeld ${key || "(Wurzel)"}.`);
+          }
+          if (["bigint", "function", "symbol"].includes(typeof value)) {
+            throw new TypeError(`Nicht unterstützter Datentyp im Exportfeld ${key || "(Wurzel)"}.`);
+          }
+          return value;
+        }, 2);
+        if (typeof json !== "string") throw new TypeError("Die Exportdaten sind nicht serialisierbar.");
         const blob = new Blob([json], { type: "application/json;charset=utf-8" });
         const objectUrl = URL.createObjectURL(blob);
         const link = document.createElement("a");
@@ -1808,22 +2546,22 @@
 
     function exportHero(hero) {
       const safeName = sanitizeFileName(hero && hero.name, "held");
-      downloadJson(createEntityExport(hero), `${EXPORT_FILE_PREFIX}-held-${safeName}.json`);
+      downloadJson(createEntityV2Envelope("hero", createEntityExportV2(hero)), `${EXPORT_FILE_PREFIX}-held-${safeName}.json`);
     }
 
     function exportEnemy(enemy) {
       const safeName = sanitizeFileName(enemy && enemy.name, "gegner");
-      downloadJson(createEntityExport(enemy), `${EXPORT_FILE_PREFIX}-gegner-${safeName}.json`);
+      downloadJson(createEntityV2Envelope("enemy", createEntityExportV2(enemy)), `${EXPORT_FILE_PREFIX}-gegner-${safeName}.json`);
     }
 
-    function exportExampleEntity(placeholder, fileName, entityLabel) {
+    function exportExampleEntity(placeholder, fileName, entityLabel, kind) {
       try {
         const examples = JSON.parse(placeholder);
         const example = Array.isArray(examples) ? examples[0] : null;
-        if (!example || typeof example !== "object") {
+        if (!isPlainObject(example)) {
           throw new Error(`Kein Beispiel für ${entityLabel} gefunden.`);
         }
-        downloadJson(example, fileName);
+        downloadJson(createEntityV2Envelope(kind, createEntityExportV2(example)), fileName);
       } catch (err) {
         console.error(`${entityLabel}-Beispielexport fehlgeschlagen:`, err);
         alert(`${entityLabel}-Beispielexport fehlgeschlagen.`);
@@ -1831,41 +2569,32 @@
     }
 
     function exportExampleHero() {
-      exportExampleEntity(HERO_IMPORT_PLACEHOLDER, `${EXPORT_FILE_PREFIX}-beispiel-held.json`, "Held");
+      exportExampleEntity(HERO_IMPORT_PLACEHOLDER, `${EXPORT_FILE_PREFIX}-beispiel-held.json`, "Held", "hero");
     }
 
     function exportExampleEnemy() {
-      exportExampleEntity(ENEMY_IMPORT_PLACEHOLDER, `${EXPORT_FILE_PREFIX}-beispiel-gegner.json`, "Gegner");
+      exportExampleEntity(ENEMY_IMPORT_PLACEHOLDER, `${EXPORT_FILE_PREFIX}-beispiel-gegner.json`, "Gegner", "enemy");
     }
 
     function exportAllHeroes() {
-      downloadJson({
-        schemaVersion: 1,
-        kind: "heroes",
-        system: EXPORT_SYSTEM_ID,
-        exportedAt: new Date().toISOString(),
-        heroes: heroes.map(createEntityExport)
-      }, `${EXPORT_FILE_PREFIX}-alle-helden.json`);
+      downloadJson(createEntityV2Envelope("heroes", heroes.map(createEntityExportV2)), `${EXPORT_FILE_PREFIX}-alle-helden.json`);
     }
 
     function exportAllEnemies() {
-      downloadJson({
-        schemaVersion: 1,
-        kind: "enemies",
-        system: EXPORT_SYSTEM_ID,
-        exportedAt: new Date().toISOString(),
-        enemies: enemies.map(createEntityExport)
-      }, `${EXPORT_FILE_PREFIX}-alle-gegner.json`);
+      downloadJson(createEntityV2Envelope("enemies", enemies.map(createEntityExportV2)), `${EXPORT_FILE_PREFIX}-alle-gegner.json`);
     }
 
     function createBoardSnapshot(settings) {
-      const options = settings && typeof settings === "object" ? settings : {};
+      const options = isPlainObject(settings) ? settings : {};
       const diceLog = Array.from(document.querySelectorAll("#dice-log > div"))
-        .map(entry => entry.textContent || "");
+        .map(entry => String(entry.textContent || "").slice(0, 1000))
+        .slice(0, 8);
+      const allowedDiceSides = [2, 3, 4, 6, 8, 10, 12, 20, 100];
+      const selectedDiceSides = parseBoundedInt(document.getElementById("dice-select").value, 100, 2, 100);
       const hasRunningEndTimestamp = timerRunning && Number.isFinite(timerEndTimestamp);
       const timerState = {
-        seconds: options.forLocalStorage && hasRunningEndTimestamp ? 0 : timerSeconds,
-        running: timerRunning
+        seconds: options.forLocalStorage && hasRunningEndTimestamp ? 0 : parseBoundedInt(timerSeconds, 0, 0, 3599999),
+        running: normalizeBoolean(timerRunning, false)
       };
 
       if (options.forLocalStorage && hasRunningEndTimestamp) {
@@ -1873,22 +2602,33 @@
       }
 
       const snapshot = {
-        schemaVersion: 1,
+        schemaVersion: BOARD_SCHEMA_VERSION,
         kind: "board",
         system: EXPORT_SYSTEM_ID,
-        heroes: cloneJsonData(heroes),
-        enemies: cloneJsonData(enemies),
+        heroes: heroes.map(createBoardEntityExportV2),
+        enemies: enemies.map(createBoardEntityExportV2),
         initiativeOrder: cloneJsonData(initiativeOrder),
         currentTurnIndex,
         roundCounter,
         timer: timerState,
         dice: {
-          count: parseInt(document.getElementById("dice-count").value, 10) || 1,
-          sides: parseInt(document.getElementById("dice-select").value, 10) || 100,
-          modifier: parseInt(document.getElementById("dice-mod").value, 10) || 0,
+          count: parseBoundedInt(document.getElementById("dice-count").value, 1, 1, 999),
+          sides: allowedDiceSides.includes(selectedDiceSides) ? selectedDiceSides : 100,
+          modifier: parseBoundedInt(document.getElementById("dice-mod").value, 0, -9999, 9999),
           result: document.getElementById("dice-result").textContent || "–",
           log: diceLog,
-          logOpen: document.getElementById("dicelog").open
+          logOpen: document.getElementById("dicelog").open,
+          comparison: {
+            skillA: parseBoundedInt(document.getElementById("comparison-skill-a").value, 50, 0, 9999),
+            skillB: parseBoundedInt(document.getElementById("comparison-skill-b").value, 50, 0, 9999),
+            useManualA: document.getElementById("comparison-use-manual-a").checked,
+            useManualB: document.getElementById("comparison-use-manual-b").checked,
+            manualRollA: normalizeOptionalComparisonRoll(document.getElementById("comparison-manual-roll-a").value),
+            manualRollB: normalizeOptionalComparisonRoll(document.getElementById("comparison-manual-roll-b").value),
+            rollA: comparisonCheckState.rollA,
+            rollB: comparisonCheckState.rollB,
+            open: document.getElementById("comparison-check").open
+          }
         }
       };
 
@@ -1904,44 +2644,44 @@
     }
 
     function normalizeBoardEffectChange(change, includeLastAppliedRound) {
-      if (!change || typeof change !== "object" || Array.isArray(change)) return null;
+      if (!isPlainObject(change)) return null;
       if (!Object.prototype.hasOwnProperty.call(EFFECT_TARGET_LABELS, change.target)) return null;
 
       const normalizedChange = {
         target: change.target,
         amount: parseBoundedInt(change.amount, 0, -9999, 9999),
-        perRound: !!change.perRound,
-        resetToBaseOnExpire: !!change.resetToBaseOnExpire
+        perRound: normalizeBoolean(change.perRound, false),
+        resetToBaseOnExpire: normalizeBoolean(change.resetToBaseOnExpire, false)
       };
 
       if (typeof change.id === "string" && change.id) {
-        normalizedChange.id = change.id;
+        normalizedChange.id = change.id.slice(0, 200);
       }
 
       if (includeLastAppliedRound) {
-        const lastAppliedRound = Number(change.lastAppliedRound);
-        normalizedChange.lastAppliedRound = Number.isInteger(lastAppliedRound) && lastAppliedRound >= 1
-          ? lastAppliedRound
-          : null;
+        normalizedChange.lastAppliedRound = parseOptionalBoundedInt(change.lastAppliedRound, 1, 999999);
       }
 
       return normalizedChange;
     }
 
     function normalizeBoardActiveEffects(value) {
-      if (!Array.isArray(value)) return [];
+      if (value === undefined || value === null) return [];
+      if (!Array.isArray(value)) throw new Error("Aktive Effekte müssen als Array angegeben werden.");
+      assertImportCollectionLimit(value, "Aktive Effekte");
 
       return value
         .map((effect, effectIndex) => {
-          if (!effect || typeof effect !== "object" || Array.isArray(effect)) return null;
+          if (!isPlainObject(effect)) return null;
+          assertImportCollectionLimit(effect.changes, "Effektänderungen");
           const changes = (Array.isArray(effect.changes) ? effect.changes : [])
             .map(change => normalizeBoardEffectChange(change, true))
             .filter(Boolean);
           if (changes.length === 0) return null;
 
           return {
-            id: typeof effect.id === "string" && effect.id ? effect.id : `effect_import_${Date.now()}_${effectIndex}`,
-            name: typeof effect.name === "string" && effect.name.trim() ? effect.name.trim() : "Effekt",
+            id: typeof effect.id === "string" && effect.id ? effect.id.slice(0, 200) : `effect_import_${Date.now()}_${effectIndex}`,
+            name: typeof effect.name === "string" && effect.name.trim() ? effect.name.trim().slice(0, 200) : "Effekt",
             startRound: parseBoundedInt(effect.startRound, 1, 1, 999999),
             durationRounds: parseBoundedInt(effect.durationRounds, 1, 1, 999),
             changes
@@ -1951,11 +2691,14 @@
     }
 
     function normalizeBoardEffectDrafts(value) {
-      if (!Array.isArray(value)) return [];
+      if (value === undefined || value === null) return [];
+      if (!Array.isArray(value)) throw new Error("Effektentwürfe müssen als Array angegeben werden.");
+      assertImportCollectionLimit(value, "Effektentwürfe");
 
       return value
         .map((draft, draftIndex) => {
-          if (!draft || typeof draft !== "object" || Array.isArray(draft)) return null;
+          if (!isPlainObject(draft)) return null;
+          assertImportCollectionLimit(draft.changes, "Effektentwurf-Änderungen");
           const changes = (Array.isArray(draft.changes) ? draft.changes : [])
             .map(change => normalizeBoardEffectChange(change, false))
             .filter(Boolean)
@@ -1968,11 +2711,11 @@
             }));
 
           return {
-            id: typeof draft.id === "string" && draft.id ? draft.id : `effect_draft_import_${Date.now()}_${draftIndex}`,
-            name: typeof draft.name === "string" ? draft.name : "",
+            id: typeof draft.id === "string" && draft.id ? draft.id.slice(0, 200) : `effect_draft_import_${Date.now()}_${draftIndex}`,
+            name: typeof draft.name === "string" ? draft.name.slice(0, 200) : "",
             durationRounds: parseBoundedInt(draft.durationRounds, 3, 1, 999),
             changes: changes.length > 0 ? changes : [createDefaultEffectDraftChange()],
-            open: !!draft.open
+            open: normalizeBoolean(draft.open, false)
           };
         })
         .filter(Boolean);
@@ -1981,12 +2724,22 @@
     function restoreBoardEntityState(entity, rawEntity) {
       EXPORT_UI_STATE_KEYS.forEach(key => {
         if (Object.prototype.hasOwnProperty.call(entity, key)) {
-          entity[key] = !!rawEntity[key];
+          entity[key] = normalizeBoolean(rawEntity[key], false);
         }
       });
       entity.activeEffects = normalizeBoardActiveEffects(rawEntity.activeEffects);
       entity.effectDrafts = normalizeBoardEffectDrafts(rawEntity.effectDrafts);
-      return entity;
+      return normalizeEntityMenuHierarchy(entity);
+    }
+
+    function createBoardEntityImportSource(rawEntity, isEnemy, schemaVersion) {
+      if (schemaVersion === BOARD_SCHEMA_VERSION) {
+        return createLegacyEntityFromV2(rawEntity, isEnemy);
+      }
+      if (schemaVersion === LEGACY_BOARD_SCHEMA_VERSION) {
+        return rawEntity;
+      }
+      throw new Error("Die Boardversion wird nicht unterstützt.");
     }
 
     function updateEffectIdCounterFromBoard() {
@@ -2001,29 +2754,60 @@
     }
 
     function restoreBoardDiceState(diceState) {
-      const state = diceState && typeof diceState === "object" ? diceState : {};
+      const state = isPlainObject(diceState) ? diceState : {};
       const allowedSides = [2, 3, 4, 6, 8, 10, 12, 20, 100];
       const sides = parseBoundedInt(state.sides, 100, 2, 100);
       document.getElementById("dice-count").value = parseBoundedInt(state.count, 1, 1, 999);
       document.getElementById("dice-select").value = allowedSides.includes(sides) ? String(sides) : "100";
       document.getElementById("dice-mod").value = parseBoundedInt(state.modifier, 0, -9999, 9999);
       document.getElementById("dice-result").textContent = typeof state.result === "string" ? state.result : "–";
-      document.getElementById("dicelog").open = !!state.logOpen;
+      document.getElementById("dicelog").open = normalizeBoolean(state.logOpen, false);
 
       const log = document.getElementById("dice-log");
       log.innerHTML = "";
-      (Array.isArray(state.log) ? state.log : []).slice(0, 8).forEach(text => {
+      (Array.isArray(state.log) ? state.log : []).filter(text => typeof text === "string").slice(0, 8).forEach(text => {
         const entry = document.createElement("div");
-        entry.textContent = String(text);
+        entry.textContent = text.slice(0, 1000);
         log.appendChild(entry);
       });
+
+      const comparison = isPlainObject(state.comparison) ? state.comparison : {};
+      const skillA = parseBoundedInt(comparison.skillA, 50, 0, 9999);
+      const skillB = parseBoundedInt(comparison.skillB, 50, 0, 9999);
+      const manualRollA = normalizeOptionalComparisonRoll(comparison.manualRollA);
+      const manualRollB = normalizeOptionalComparisonRoll(comparison.manualRollB);
+      const useManualA = comparison.useManualA === undefined
+        ? manualRollA !== null
+        : normalizeBoolean(comparison.useManualA, false);
+      const useManualB = comparison.useManualB === undefined
+        ? manualRollB !== null
+        : normalizeBoolean(comparison.useManualB, false);
+      const rollA = parseOptionalBoundedInt(comparison.rollA, 1, 100);
+      const rollB = parseOptionalBoundedInt(comparison.rollB, 1, 100);
+      document.getElementById("comparison-skill-a").value = skillA;
+      document.getElementById("comparison-skill-b").value = skillB;
+      document.getElementById("comparison-use-manual-a").checked = useManualA;
+      document.getElementById("comparison-use-manual-b").checked = useManualB;
+      document.getElementById("comparison-manual-roll-a").value = manualRollA ?? "";
+      document.getElementById("comparison-manual-roll-b").value = manualRollB ?? "";
+      syncComparisonManualRollInput("a");
+      syncComparisonManualRollInput("b");
+      document.getElementById("comparison-check").open = normalizeBoolean(comparison.open, false);
+
+      if (rollA !== null && rollB !== null) {
+        applyComparisonCheckResult(skillA, rollA, skillB, rollB);
+      } else {
+        comparisonCheckState = { rollA: null, rollB: null, gradeA: null, gradeB: null, result: "" };
+        renderComparisonCheck();
+      }
     }
 
-    function restoreBoardData(board) {
-      if (!board || typeof board !== "object" || Array.isArray(board)) {
+    function validateBoardDataTypes(board) {
+      if (!isPlainObject(board)) {
         throw new Error("Die Datei enthält kein gültiges Board-Objekt.");
       }
-      if (board.kind !== "board" || Number(board.schemaVersion) !== 1) {
+      if (board.kind !== "board"
+        || (board.schemaVersion !== BOARD_SCHEMA_VERSION && board.schemaVersion !== LEGACY_BOARD_SCHEMA_VERSION)) {
         throw new Error("Die Datei ist kein unterstützter Board-Export.");
       }
       if (board.system !== EXPORT_SYSTEM_ID) {
@@ -2032,6 +2816,68 @@
       if (!Array.isArray(board.heroes) || !Array.isArray(board.enemies) || !Array.isArray(board.initiativeOrder)) {
         throw new Error("Im Board-Export fehlen Helden, Gegner oder Initiative.");
       }
+      if (board.heroes.length > MAX_IMPORTED_ENTITIES || board.enemies.length > MAX_IMPORTED_ENTITIES) {
+        throw new Error(`Ein Board darf höchstens ${MAX_IMPORTED_ENTITIES} Helden und Gegner je Liste enthalten.`);
+      }
+      if (board.schemaVersion === BOARD_SCHEMA_VERSION) {
+        board.heroes.forEach(rawHero => createLegacyEntityFromV2(rawHero, false));
+        board.enemies.forEach(rawEnemy => createLegacyEntityFromV2(rawEnemy, true));
+      }
+      if (board.initiativeOrder.length > MAX_IMPORTED_ENTITIES * 2) {
+        throw new Error("Die Initiative enthält zu viele Einträge.");
+      }
+      if (!Number.isSafeInteger(board.roundCounter) || board.roundCounter < 1 || board.roundCounter > 999999) {
+        throw new Error("Die Rundenzahl im Board ist ungültig.");
+      }
+      if (!Number.isSafeInteger(board.currentTurnIndex)) {
+        throw new Error("Der aktive Initiativeindex im Board ist ungültig.");
+      }
+      const hasValidTurnIndex = board.initiativeOrder.length === 0
+        ? board.currentTurnIndex === -1
+        : board.currentTurnIndex >= 0 && board.currentTurnIndex < board.initiativeOrder.length;
+      if (!hasValidTurnIndex) {
+        throw new Error("Der aktive Initiativeindex passt nicht zur Initiative.");
+      }
+      if (!isPlainObject(board.timer) || !Number.isSafeInteger(board.timer.seconds)
+        || board.timer.seconds < 0 || board.timer.seconds > 3599999 || typeof board.timer.running !== "boolean") {
+        throw new Error("Der Timerzustand im Board ist ungültig.");
+      }
+      if (board.timer.endsAt !== undefined && (!Number.isSafeInteger(board.timer.endsAt) || board.timer.endsAt < 0)) {
+        throw new Error("Der gespeicherte Timerzeitpunkt ist ungültig.");
+      }
+
+      const allowedSides = [2, 3, 4, 6, 8, 10, 12, 20, 100];
+      const dice = board.dice;
+      if (!isPlainObject(dice)
+        || !Number.isSafeInteger(dice.count) || dice.count < 1 || dice.count > 999
+        || !Number.isSafeInteger(dice.sides) || !allowedSides.includes(dice.sides)
+        || !Number.isSafeInteger(dice.modifier) || dice.modifier < -9999 || dice.modifier > 9999
+        || typeof dice.result !== "string" || dice.result.length > 1000
+        || !Array.isArray(dice.log) || dice.log.length > 8
+        || dice.log.some(entry => typeof entry !== "string" || entry.length > 1000)
+        || typeof dice.logOpen !== "boolean") {
+        throw new Error("Der Würfelzustand im Board ist ungültig.");
+      }
+
+      if (dice.comparison !== undefined) {
+        if (!isPlainObject(dice.comparison)) throw new Error("Die Vergleichsprobe im Board ist ungültig.");
+        const comparison = dice.comparison;
+        const isValidSkill = value => Number.isSafeInteger(value) && value >= 0 && value <= 9999;
+        const isValidRoll = value => value === null || (Number.isSafeInteger(value) && value >= 1 && value <= 100);
+        if (!isValidSkill(comparison.skillA) || !isValidSkill(comparison.skillB)
+          || !isValidRoll(comparison.rollA) || !isValidRoll(comparison.rollB)
+          || (comparison.manualRollA !== undefined && !isValidRoll(comparison.manualRollA))
+          || (comparison.manualRollB !== undefined && !isValidRoll(comparison.manualRollB))
+          || (comparison.useManualA !== undefined && typeof comparison.useManualA !== "boolean")
+          || (comparison.useManualB !== undefined && typeof comparison.useManualB !== "boolean")
+          || typeof comparison.open !== "boolean") {
+          throw new Error("Die Vergleichsprobe enthält ungültige Datentypen.");
+        }
+      }
+    }
+
+    function restoreBoardData(board) {
+      validateBoardDataTypes(board);
 
       const previousHeroIdCounter = heroIdCounter;
       const previousEnemyIdCounter = enemyIdCounter;
@@ -2046,54 +2892,65 @@
 
       try {
         nextHeroes = board.heroes.map(rawHero => {
-          const oldId = Number(rawHero && rawHero.id);
-          if (!Number.isInteger(oldId) || oldId < 1 || heroIdMap.has(oldId)) {
+          if (!isPlainObject(rawHero)) throw new Error("Ein Held im Board-Export ist ungültig.");
+          const oldId = rawHero.id;
+          if (!Number.isSafeInteger(oldId) || oldId < 1 || heroIdMap.has(oldId)) {
             throw new Error("Der Board-Export enthält ungültige Helden-IDs.");
           }
-          const hero = normalizeImportedHero(rawHero);
+          const importSource = createBoardEntityImportSource(rawHero, false, board.schemaVersion);
+          const hero = normalizeImportedHero(importSource);
           if (!hero) throw new Error("Ein Held im Board-Export ist ungültig.");
           heroIdMap.set(oldId, hero.id);
-          return restoreBoardEntityState(hero, rawHero);
+          return restoreBoardEntityState(hero, importSource);
         });
 
         nextEnemies = board.enemies.map(rawEnemy => {
-          const oldId = Number(rawEnemy && rawEnemy.id);
-          if (!Number.isInteger(oldId) || oldId < 1 || enemyIdMap.has(oldId)) {
+          if (!isPlainObject(rawEnemy)) throw new Error("Ein Gegner im Board-Export ist ungültig.");
+          const oldId = rawEnemy.id;
+          if (!Number.isSafeInteger(oldId) || oldId < 1 || enemyIdMap.has(oldId)) {
             throw new Error("Der Board-Export enthält ungültige Gegner-IDs.");
           }
-          const enemy = normalizeImportedEnemy(rawEnemy);
+          const importSource = createBoardEntityImportSource(rawEnemy, true, board.schemaVersion);
+          const enemy = normalizeImportedEnemy(importSource);
           if (!enemy) throw new Error("Ein Gegner im Board-Export ist ungültig.");
           enemyIdMap.set(oldId, enemy.id);
-          return restoreBoardEntityState(enemy, rawEnemy);
+          return restoreBoardEntityState(enemy, importSource);
         });
 
-        nextInitiativeOrder = board.initiativeOrder
-          .map(entry => {
-            if (!entry || (entry.type !== "hero" && entry.type !== "enemy")) return null;
-            const oldId = Number(entry.id);
+        const initiativeKeys = new Set();
+        nextInitiativeOrder = board.initiativeOrder.map(entry => {
+            if (!isPlainObject(entry) || (entry.type !== "hero" && entry.type !== "enemy")) {
+              throw new Error("Die Initiative enthält einen ungültigen Eintrag.");
+            }
+            const oldId = entry.id;
+            if (!Number.isSafeInteger(oldId) || oldId < 1 || !Number.isSafeInteger(entry.ini)
+              || entry.ini < -9999 || entry.ini > 9999) {
+              throw new Error("Die Initiative enthält ungültige Zahlenwerte.");
+            }
+            const initiativeKey = `${entry.type}:${oldId}`;
+            if (initiativeKeys.has(initiativeKey)) {
+              throw new Error("Die Initiative enthält doppelte Teilnehmer.");
+            }
+            initiativeKeys.add(initiativeKey);
             const id = entry.type === "hero" ? heroIdMap.get(oldId) : enemyIdMap.get(oldId);
-            if (!id) return null;
+            if (!id) throw new Error("Die Initiative verweist auf einen unbekannten Teilnehmer.");
             return {
               type: entry.type,
               id,
               ini: parseBoundedInt(entry.ini, 0, -9999, 9999)
             };
-          })
-          .filter(Boolean);
+          });
       } catch (err) {
         heroIdCounter = previousHeroIdCounter;
         enemyIdCounter = previousEnemyIdCounter;
         throw err;
       }
 
-      const nextRoundCounter = parseBoundedInt(board.roundCounter, 1, 1, 999999);
-      const rawTurnIndex = parseInt(board.currentTurnIndex, 10);
-      const nextTurnIndex = nextInitiativeOrder.length === 0
-        ? -1
-        : (!isNaN(rawTurnIndex) && rawTurnIndex >= 0 && rawTurnIndex < nextInitiativeOrder.length ? rawTurnIndex : 0);
-      const timerState = board.timer && typeof board.timer === "object" ? board.timer : {};
-      const nextTimerSeconds = parseBoundedInt(timerState.seconds, 0, 0, 3599999);
-      const resumeTimer = !!timerState.running && nextTimerSeconds > 0;
+      const nextRoundCounter = board.roundCounter;
+      const nextTurnIndex = board.currentTurnIndex;
+      const timerState = board.timer;
+      const nextTimerSeconds = timerState.seconds;
+      const resumeTimer = timerState.running && nextTimerSeconds > 0;
 
       pauseTimer();
       heroes = nextHeroes;
@@ -2116,14 +2973,22 @@
       const fileInput = event.target;
       const file = fileInput.files && fileInput.files[0];
       if (!file) return;
+      if (typeof file.size === "number" && file.size > MAX_BOARD_FILE_BYTES) {
+        fileInput.value = "";
+        alert(`Board-Dateien dürfen höchstens ${MAX_BOARD_FILE_BYTES} Bytes groß sein.`);
+        return;
+      }
 
       const reader = new FileReader();
       reader.onload = () => {
         try {
-          const board = JSON.parse(String(reader.result || ""));
+          const boardText = String(reader.result || "");
+          if (boardText.length > MAX_BOARD_FILE_BYTES) throw new Error("Die Board-Datei ist zu groß.");
+          const board = JSON.parse(boardText);
           if (!board || board.kind !== "board" || board.system !== EXPORT_SYSTEM_ID) {
             throw new Error("Die Datei ist kein Board-Export dieses Regelwerks.");
           }
+          validateBoardDataTypes(board);
           if (!confirm("Der aktuelle Board-Zustand wird vollständig ersetzt. Fortfahren?")) return;
           restoreBoardData(board);
           scheduleLocalBoardSave();
@@ -2193,33 +3058,51 @@
       const storage = getLocalBoardStorage();
       if (!storage) return false;
 
+      let storageKey = LOCAL_BOARD_STORAGE_KEY;
+
       try {
-        const storedValue = storage.getItem(LOCAL_BOARD_STORAGE_KEY);
+        let expectedStorageVersion = LOCAL_BOARD_STORAGE_VERSION;
+        let storedValue = storage.getItem(storageKey);
+        if (!storedValue) {
+          storageKey = LEGACY_LOCAL_BOARD_STORAGE_KEY;
+          expectedStorageVersion = LEGACY_LOCAL_BOARD_STORAGE_VERSION;
+          storedValue = storage.getItem(storageKey);
+        }
         if (!storedValue) return false;
         const payload = JSON.parse(storedValue);
-        if (!payload || Number(payload.storageVersion) !== LOCAL_BOARD_STORAGE_VERSION) {
+        if (!isPlainObject(payload) || payload.storageVersion !== expectedStorageVersion) {
           throw new Error("Nicht unterstützte lokale Speicherversion.");
         }
 
         const board = cloneJsonData(payload.board);
-        const timerState = board && board.timer && typeof board.timer === "object" ? board.timer : {};
-        const storedEndTimestamp = Number(timerState.endsAt);
+        const timerState = board && isPlainObject(board.timer) ? board.timer : {};
+        const storedEndTimestamp = timerState.endsAt;
 
-        if (timerState.running && Number.isFinite(storedEndTimestamp)) {
+        if (timerState.running === true && Number.isSafeInteger(storedEndTimestamp)) {
           timerState.seconds = Math.max(0, Math.ceil((storedEndTimestamp - Date.now()) / 1000));
           timerState.running = timerState.seconds > 0;
         }
         delete timerState.endsAt;
 
         restoreBoardData(board);
-        if (timerState.running && Number.isFinite(storedEndTimestamp)) {
+        if (timerState.running === true && Number.isSafeInteger(storedEndTimestamp)) {
           timerEndTimestamp = storedEndTimestamp;
+        }
+
+        if (storageKey === LEGACY_LOCAL_BOARD_STORAGE_KEY) {
+          const migratedBoard = createBoardSnapshot({ forLocalStorage: true });
+          storage.setItem(LOCAL_BOARD_STORAGE_KEY, JSON.stringify({
+            storageVersion: LOCAL_BOARD_STORAGE_VERSION,
+            savedAt: new Date().toISOString(),
+            board: migratedBoard
+          }));
+          storage.removeItem(LEGACY_LOCAL_BOARD_STORAGE_KEY);
         }
         return true;
       } catch (err) {
         console.warn("Lokaler Board-Zustand konnte nicht wiederhergestellt werden:", err);
         try {
-          storage.removeItem(LOCAL_BOARD_STORAGE_KEY);
+          storage.removeItem(storageKey);
         } catch (removeErr) {
           console.warn("Ungültiger lokaler Board-Zustand konnte nicht entfernt werden:", removeErr);
         }
@@ -2257,7 +3140,19 @@
 
       document.getElementById("timer-preset").value = "0";
       document.getElementById("import-board-file").value = "";
-      restoreBoardDiceState({});
+      restoreBoardDiceState({
+        comparison: {
+          skillA: 50,
+          skillB: 50,
+          useManualA: false,
+          useManualB: false,
+          manualRollA: null,
+          manualRollB: null,
+          rollA: null,
+          rollB: null,
+          open: true
+        }
+      });
       updateRoundDisplay();
       updateTimerDisplay();
       renderHeroes();
@@ -2276,17 +3171,19 @@
     }
 
     function normalizeSkillList(value) {
+      if (value === undefined || value === null || value === "") return [];
+      assertImportCollectionLimit(value, "Fähigkeitsliste");
       if (Array.isArray(value)) {
         return value
           .map(entry => {
-            if (entry && typeof entry === "object") {
+            if (isPlainObject(entry)) {
               return {
-                name: typeof entry.name === "string" ? entry.name.trim() : "",
+                name: typeof entry.name === "string" ? entry.name.trim().slice(0, 200) : "",
                 value: parseBoundedInt(entry.value, 0, 0, 9999)
               };
             }
             if (typeof entry === "string") {
-              const trimmed = entry.trim();
+              const trimmed = entry.trim().slice(0, 200);
               return trimmed ? { name: trimmed, value: 0 } : null;
             }
             return null;
@@ -2294,17 +3191,17 @@
           .filter(entry => entry && entry.name);
       }
 
-      if (value && typeof value === "object") {
+      if (isPlainObject(value)) {
         return Object.keys(value)
           .map(key => ({
-            name: String(key).trim(),
+            name: String(key).trim().slice(0, 200),
             value: parseBoundedInt(value[key], 0, 0, 9999)
           }))
           .filter(entry => entry.name);
       }
 
       if (typeof value !== "string") {
-        return [];
+        throw new Error("Fähigkeitslisten müssen als Array, Objekt oder Text angegeben werden.");
       }
 
       const carriageReturn = String.fromCharCode(13);
@@ -2318,33 +3215,35 @@
         .map(line => {
           const separatorIndex = line.indexOf(":");
           if (separatorIndex < 0) {
-            return { name: line, value: 0 };
+            return { name: line.slice(0, 200), value: 0 };
           }
 
-          const name = line.slice(0, separatorIndex).trim();
+          const name = line.slice(0, separatorIndex).trim().slice(0, 200);
           const rawValue = line.slice(separatorIndex + 1).replace(/%/g, "").trim();
           return {
-            name: name || line,
+            name: name || line.slice(0, 200),
             value: parseBoundedInt(rawValue, 0, 0, 9999)
           };
         });
     }
 
     function normalizeItemList(value) {
+      if (value === undefined || value === null || value === "") return [];
+      assertImportCollectionLimit(value, "Itemliste");
       if (Array.isArray(value)) {
         return value
           .map(entry => {
-            if (entry && typeof entry === "object") {
+            if (isPlainObject(entry)) {
               return {
-                name: typeof entry.name === "string" ? entry.name.trim() : "",
-                value: entry.value !== undefined && entry.value !== null ? String(entry.value).trim() : "",
+                name: typeof entry.name === "string" ? entry.name.trim().slice(0, 200) : "",
+                value: normalizeItemValue(entry.value).slice(0, 1000),
                 amount: parseBoundedInt(entry.amount, 1, 0, 9999),
-                description: typeof entry.description === "string" ? entry.description : "",
-                angelegt: !!entry.angelegt
+                description: typeof entry.description === "string" ? entry.description.slice(0, 5000) : "",
+                angelegt: normalizeBoolean(entry.angelegt, false)
               };
             }
             if (typeof entry === "string") {
-              const trimmed = entry.trim();
+              const trimmed = entry.trim().slice(0, 200);
               return trimmed ? { name: trimmed, value: "", amount: 1, description: "", angelegt: false } : null;
             }
             return null;
@@ -2352,11 +3251,11 @@
           .filter(entry => entry && entry.name);
       }
 
-      if (value && typeof value === "object") {
+      if (isPlainObject(value)) {
         return Object.keys(value)
           .map(key => ({
-            name: String(key).trim(),
-            value: value[key] !== undefined && value[key] !== null ? String(value[key]).trim() : "",
+            name: String(key).trim().slice(0, 200),
+            value: normalizeItemValue(value[key]).slice(0, 1000),
             amount: 1,
             description: "",
             angelegt: false
@@ -2365,7 +3264,7 @@
       }
 
       if (typeof value !== "string") {
-        return [];
+        throw new Error("Itemlisten müssen als Array, Objekt oder Text angegeben werden.");
       }
 
       const carriageReturn = String.fromCharCode(13);
@@ -2379,19 +3278,50 @@
         .map(line => {
           const separatorIndex = line.indexOf(":");
           if (separatorIndex < 0) {
-            return { name: line, value: "", amount: 1, description: "", angelegt: false };
+            return { name: line.slice(0, 200), value: "", amount: 1, description: "", angelegt: false };
           }
 
-          const name = line.slice(0, separatorIndex).trim();
-          const rawValue = line.slice(separatorIndex + 1).trim();
+          const name = line.slice(0, separatorIndex).trim().slice(0, 200);
+          const rawValue = line.slice(separatorIndex + 1).trim().slice(0, 1000);
           return {
-            name: name || line,
+            name: name || line.slice(0, 200),
             value: rawValue,
             amount: 1,
             description: "",
             angelegt: false
           };
         });
+    }
+
+    function isCurrencyItem(item) {
+      if (!isPlainObject(item)) return false;
+      const searchableText = `${item.name || ""} ${item.value || ""}`
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+      if (!searchableText) return false;
+      return searchableText.split(/\s+/).some(term => CURRENCY_ITEM_TERMS.has(term));
+    }
+
+    function normalizeImportedItemLists(rawEntity) {
+      const itemWeaponList = normalizeItemList(rawEntity.itemWeaponList !== undefined ? rawEntity.itemWeaponList : rawEntity.weaponItemsText);
+      const itemArmorList = normalizeItemList(rawEntity.itemArmorList !== undefined ? rawEntity.itemArmorList : rawEntity.armorItemsText);
+      const itemMoneyList = normalizeItemList(rawEntity.itemMoneyList !== undefined ? rawEntity.itemMoneyList : rawEntity.moneyItemsText);
+      const normalizedOtherItems = normalizeItemList(rawEntity.itemOtherList !== undefined ? rawEntity.itemOtherList : rawEntity.otherItemsText);
+      const detectedMoneyItems = normalizedOtherItems.filter(isCurrencyItem);
+      const combinedMoneyItems = [...itemMoneyList, ...detectedMoneyItems];
+      assertImportCollectionLimit(combinedMoneyItems, "Geldliste");
+
+      // Kompatibilität: Das bestehende Item-Schema bleibt unverändert. Nur
+      // eindeutig erkannte Währungen werden beim Import passend einsortiert.
+      return {
+        itemWeaponList,
+        itemArmorList,
+        itemMoneyList: combinedMoneyItems,
+        itemOtherList: normalizedOtherItems.filter(item => !isCurrencyItem(item))
+      };
     }
 
     function buildStatControl(entity, currentKey, baseKey, label, onAfterChange) {
@@ -2403,9 +3333,7 @@
       statLabel.textContent = label;
 
       const valueGroup = document.createElement("div");
-      valueGroup.style.display = "flex";
-      valueGroup.style.alignItems = "center";
-      valueGroup.style.gap = "4px";
+      valueGroup.className = "stat-value-group";
 
       const currentInput = document.createElement("input");
       currentInput.type = "number";
@@ -2513,7 +3441,7 @@
       return wrap;
     }
 
-    function createHpSummary(entity, accentColor) {
+    function createHpSummary(entity, accentColor, rerenderFn) {
       const wrap = document.createElement("div");
       wrap.className = "hp-summary";
 
@@ -2544,8 +3472,27 @@
       bar.appendChild(fill);
       main.appendChild(value);
       main.appendChild(bar);
+
+      const parryButton = document.createElement("button");
+      parryButton.type = "button";
+      parryButton.className = `parry-button${entity.parryUsed ? " used" : ""}`;
+      const parryIcon = document.createElement("span");
+      parryIcon.className = "parry-icon";
+      parryIcon.textContent = "🛡️";
+      parryButton.appendChild(parryIcon);
+      parryButton.title = entity.parryUsed
+        ? "Parade bereits verwendet – zum Korrigieren anklicken"
+        : "Parade verfügbar – zum Verwenden anklicken";
+      parryButton.setAttribute("aria-label", parryButton.title);
+      parryButton.setAttribute("aria-pressed", String(!!entity.parryUsed));
+      parryButton.addEventListener("click", () => {
+        entity.parryUsed = !entity.parryUsed;
+        rerenderFn();
+      });
+
       wrap.appendChild(label);
       wrap.appendChild(main);
+      wrap.appendChild(parryButton);
       return wrap;
     }
 
@@ -2978,6 +3925,10 @@
       details.open = !!entity.effectsOpen;
       details.addEventListener("toggle", () => {
         entity.effectsOpen = details.open;
+        if (!details.open) {
+          collapseEntityEffectMenus(entity);
+          rerenderFn();
+        }
       });
 
       const summary = document.createElement("summary");
@@ -3009,20 +3960,60 @@
       return details;
     }
 
-    function createAngelegtItemsSummary(entity) {
-      const equippedItems = [];
+    function showEquippedItemEntry(entity, combatantType, itemTarget) {
+      entity.cardMinimized = false;
+      entity.itemsOpen = true;
+      entity[itemTarget.openKey] = true;
 
-      (entity.itemWeaponList || []).forEach(item => {
-        if (item && item.angelegt) equippedItems.push({ name: item.name || "–", value: item.value || "–", amount: item.amount ?? 1, category: "Waffe" });
+      if (combatantType === "hero") {
+        renderHeroes();
+      } else {
+        renderEnemies();
+      }
+
+      window.requestAnimationFrame(() => {
+        const card = document.getElementById(getCombatantCardId(combatantType, entity.id));
+        if (!card) return;
+        const selector = `.skill-entry[data-item-list-key="${itemTarget.listKey}"][data-item-index="${itemTarget.index}"]`;
+        const itemEntry = card.querySelector(selector);
+        if (!itemEntry) return;
+
+        itemEntry.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+        itemEntry.classList.remove("item-target-highlight");
+        window.requestAnimationFrame(() => {
+          itemEntry.classList.add("item-target-highlight");
+          try {
+            itemEntry.focus({ preventScroll: true });
+          } catch (err) {
+            itemEntry.focus();
+          }
+          window.setTimeout(() => itemEntry.classList.remove("item-target-highlight"), 1300);
+        });
       });
-      (entity.itemArmorList || []).forEach(item => {
-        if (item && item.angelegt) equippedItems.push({ name: item.name || "–", value: item.value || "–", amount: item.amount ?? 1, category: "Rüstung" });
-      });
-      (entity.itemMoneyList || []).forEach(item => {
-        if (item && item.angelegt) equippedItems.push({ name: item.name || "–", value: item.value || "–", amount: item.amount ?? 1, category: "Geld" });
-      });
-      (entity.itemOtherList || []).forEach(item => {
-        if (item && item.angelegt) equippedItems.push({ name: item.name || "–", value: item.value || "–", amount: item.amount ?? 1, category: "Item" });
+    }
+
+    function createAngelegtItemsSummary(entity, combatantType) {
+      const equippedItems = [];
+      const itemGroups = [
+        { listKey: "itemWeaponList", openKey: "itemWeaponOpen", category: "Waffe" },
+        { listKey: "itemArmorList", openKey: "itemArmorOpen", category: "Rüstung" },
+        { listKey: "itemMoneyList", openKey: "itemMoneyOpen", category: "Geld" },
+        { listKey: "itemOtherList", openKey: "itemOtherOpen", category: "Item" }
+      ];
+
+      itemGroups.forEach(group => {
+        (entity[group.listKey] || []).forEach((item, index) => {
+          if (!item || !item.angelegt) return;
+          equippedItems.push({
+            name: item.name || "–",
+            value: item.value || "–",
+            amount: item.amount ?? 1,
+            category: group.category,
+            listKey: group.listKey,
+            openKey: group.openKey,
+            index
+          });
+        });
       });
 
       if (equippedItems.length === 0) {
@@ -3049,9 +4040,14 @@
               ? "category-geld"
               : "category-item";
 
-        const row = document.createElement("div");
+        const row = document.createElement("button");
+        row.type = "button";
         row.className = `equipped-summary-row ${categoryClass}`;
-        row.title = `${item.category} | ${item.name} | ${item.value} (${item.amount})`;
+        row.title = `${item.category} | ${item.name} | ${item.value} (${item.amount}) – zum Eintrag springen`;
+        row.setAttribute("aria-label", `${item.category} ${item.name} öffnen`);
+        row.addEventListener("click", () => {
+          showEquippedItemEntry(entity, combatantType, item);
+        });
 
         const name = document.createElement("span");
         name.className = "equipped-summary-name";
@@ -3079,7 +4075,8 @@
       if (!cardEl) return;
 
       const currentSummary = cardEl.querySelector(":scope > .equipped-summary");
-      const nextSummary = createAngelegtItemsSummary(entity);
+      const combatantType = cardEl.classList.contains("enemy-card") ? "enemy" : "hero";
+      const nextSummary = createAngelegtItemsSummary(entity, combatantType);
       const effectSummary = cardEl.querySelector(":scope > .effect-summary");
       const attributeBlock = cardEl.querySelector(":scope > .card-details");
       const insertionPoint = effectSummary || attributeBlock;
@@ -3131,6 +4128,12 @@
       body.appendChild(buildStatControl(entity, "geistCurrent", "geistBase", "Geist", doRender));
       body.appendChild(buildStatControl(entity, "body", "bodyBase", "Körper", rerenderFn));
       body.appendChild(buildStatControl(entity, "charisma", "charismaBase", "Charisma", rerenderFn));
+
+      const separator = document.createElement("div");
+      separator.className = "attribute-values-separator";
+      separator.setAttribute("aria-hidden", "true");
+      body.appendChild(separator);
+
       body.appendChild(buildBaseControl(entity, "maxHp", "LP max", rerenderFn));
       body.appendChild(buildBaseControl(entity, "geistBase", "Geist Basis", doRender));
       body.appendChild(buildBaseControl(entity, "bodyBase", "Körper Basis", rerenderFn));
@@ -3249,6 +4252,10 @@
       details.open = !!entity.skillsOpen;
       details.addEventListener("toggle", () => {
         entity.skillsOpen = details.open;
+        if (!details.open) {
+          collapseEntitySkillMenus(entity);
+          rerenderFn();
+        }
       });
 
       const summary = document.createElement("summary");
@@ -3266,6 +4273,9 @@
     function createItemEntryCard(entity, listKey, entry, index, rerenderFn) {
       const card = document.createElement("div");
       card.className = "skill-entry";
+      card.dataset.itemListKey = listKey;
+      card.dataset.itemIndex = String(index);
+      card.tabIndex = -1;
 
       const head = document.createElement("div");
       head.className = "skill-entry-head";
@@ -3435,6 +4445,10 @@
       details.open = !!entity.itemsOpen;
       details.addEventListener("toggle", () => {
         entity.itemsOpen = details.open;
+        if (!details.open) {
+          collapseEntityItemMenus(entity);
+          rerenderFn();
+        }
       });
 
       const summary = document.createElement("summary");
@@ -3459,10 +4473,37 @@
       button.setAttribute("aria-label", button.title);
       button.setAttribute("aria-expanded", String(!minimized));
       button.addEventListener("click", () => {
-        entity.cardMinimized = !minimized;
+        const nextMinimized = !minimized;
+        entity.cardMinimized = nextMinimized;
+        if (nextMinimized) collapseEntityCardMenus(entity);
         rerenderFn();
       });
       return button;
+    }
+
+    function updateColumnCollapseButton(buttonId, entities, cardLabel) {
+      const button = document.getElementById(buttonId);
+      if (!button) return;
+
+      const hasCards = entities.length > 0;
+      const allMinimized = hasCards && entities.every(entity => !!entity.cardMinimized);
+      button.disabled = !hasCards;
+      button.textContent = allMinimized ? "+" : "−";
+      button.title = hasCards
+        ? `Alle ${cardLabel} ${allMinimized ? "aufklappen" : "minimieren"}`
+        : `Keine ${cardLabel} vorhanden`;
+      button.setAttribute("aria-label", button.title);
+      button.setAttribute("aria-expanded", String(hasCards && !allMinimized));
+    }
+
+    function toggleAllCards(entities, rerenderFn) {
+      if (entities.length === 0) return;
+      const minimizeAll = entities.some(entity => !entity.cardMinimized);
+      entities.forEach(entity => {
+        entity.cardMinimized = minimizeAll;
+        if (minimizeAll) collapseEntityCardMenus(entity);
+      });
+      rerenderFn();
     }
 
     function renderHeroes() {
@@ -3497,8 +4538,8 @@
         header.appendChild(tag);
         header.appendChild(createCardMinimizeButton(hero, renderHeroes));
         card.appendChild(header);
-        card.appendChild(createHpSummary(hero, hero.color || "#38e9c8"));
-        const heroEquippedSummary = createAngelegtItemsSummary(hero);
+        card.appendChild(createHpSummary(hero, hero.color || "#38e9c8", renderHeroes));
+        const heroEquippedSummary = createAngelegtItemsSummary(hero, "hero");
         if (heroEquippedSummary) card.appendChild(heroEquippedSummary);
         const heroEffectSummary = createEffectSummary(hero);
         if (heroEffectSummary) card.appendChild(heroEffectSummary);
@@ -3533,6 +4574,7 @@
         card.appendChild(footer);
         container.appendChild(card);
       });
+      updateColumnCollapseButton("toggle-all-heroes-btn", heroes, "Heldenkarten");
     }
 
     function getEnemyDangerColor(maxHp) {
@@ -3575,8 +4617,8 @@
         header.appendChild(tag);
         header.appendChild(createCardMinimizeButton(enemy, renderEnemies));
         card.appendChild(header);
-        card.appendChild(createHpSummary(enemy, bgColor));
-        const enemyEquippedSummary = createAngelegtItemsSummary(enemy);
+        card.appendChild(createHpSummary(enemy, bgColor, renderEnemies));
+        const enemyEquippedSummary = createAngelegtItemsSummary(enemy, "enemy");
         if (enemyEquippedSummary) card.appendChild(enemyEquippedSummary);
         const enemyEffectSummary = createEffectSummary(enemy);
         if (enemyEffectSummary) card.appendChild(enemyEffectSummary);
@@ -3621,10 +4663,18 @@
         card.appendChild(footer);
         container.appendChild(card);
       });
+      updateColumnCollapseButton("toggle-all-enemies-btn", enemies, "Gegnerkarten");
+    }
+
+    function resetParryForEntity(entity) {
+      if (!entity) return;
+      entity.parryUsed = false;
     }
 
     function rollInitiative() {
       initiativeOrder = [];
+      heroes.forEach(resetParryForEntity);
+      enemies.forEach(resetParryForEntity);
 
       heroes.forEach(hero => {
         const geist = hero.geistCurrent ?? hero.geistBase ?? 0;
@@ -3648,6 +4698,8 @@
       currentTurnIndex = initiativeOrder.length > 0 ? 0 : -1;
       roundCounter = 1;
       updateRoundDisplay();
+      renderHeroes();
+      renderEnemies();
       renderInitiative();
     }
 
@@ -3804,6 +4856,7 @@
     function renderInitiativeFlow() {
       const svg = document.getElementById("initiative-flow-svg");
       if (!svg) return;
+      hideInitiativeHoverCard();
 
       const width = 1000;
       const height = 152;
@@ -3883,15 +4936,17 @@
           filter: nodeStyle.filter,
           role: "button",
           tabindex: 0,
-          "aria-label": `${fullName} (${typeTag}) in der Initiative anzeigen`
+          "aria-label": `${fullName} (${typeTag}) in der Initiative anzeigen`,
+          "aria-describedby": "initiative-hover-card"
         });
 
         const maxLen = boxWidth < 64 ? 5 : boxWidth < 76 ? 6 : boxWidth < 92 ? 8 : 12;
         const name = truncateInitiativeLabel(fullName, maxLen);
 
-        const title = createSvgElement("title", {});
-        title.textContent = `${fullName} (${typeTag}) [${entry.ini}]`;
-        node.appendChild(title);
+        node.addEventListener("mouseenter", () => showInitiativeHoverCard(entry, node));
+        node.addEventListener("mouseleave", hideInitiativeHoverCard);
+        node.addEventListener("focus", () => showInitiativeHoverCard(entry, node));
+        node.addEventListener("blur", hideInitiativeHoverCard);
         node.addEventListener("click", () => showCombatantCard(entry));
         node.addEventListener("keydown", event => {
           if (event.key !== "Enter" && event.key !== " ") return;
@@ -3961,6 +5016,8 @@
 
       heroes.forEach(applyActiveEffectsForNewRound);
       enemies.forEach(applyActiveEffectsForNewRound);
+      heroes.forEach(resetParryForEntity);
+      enemies.forEach(resetParryForEntity);
       renderHeroes();
       renderEnemies();
       renderInitiative();
@@ -3969,6 +5026,8 @@
     function resetInitiative() {
       heroes.forEach(clearAllEffectsForEntity);
       enemies.forEach(clearAllEffectsForEntity);
+      heroes.forEach(resetParryForEntity);
+      enemies.forEach(resetParryForEntity);
       initiativeOrder = [];
       currentTurnIndex = -1;
       roundCounter = 1;
@@ -3989,9 +5048,15 @@
     }
 
     function rollDice() {
-      const count = parseInt(document.getElementById("dice-count").value, 10) || 1;
-      const sides = parseInt(document.getElementById("dice-select").value, 10) || 100;
-      const mod = parseInt(document.getElementById("dice-mod").value, 10) || 0;
+      const countInput = document.getElementById("dice-count");
+      const sidesInput = document.getElementById("dice-select");
+      const modInput = document.getElementById("dice-mod");
+      const count = parseBoundedInt(countInput.value, 1, 1, 999);
+      const sides = parseBoundedInt(sidesInput.value, 100, 2, 100);
+      const mod = parseBoundedInt(modInput.value, 0, -9999, 9999);
+      countInput.value = count;
+      sidesInput.value = sides;
+      modInput.value = mod;
 
       let total = 0;
       const rolls = [];
@@ -4004,6 +5069,119 @@
 
       document.getElementById("dice-result").textContent = total;
       updateDiceLog(`${count}W${sides} + ${mod} → [${rolls.join(", ")}] = ${total}`);
+    }
+
+    function formatComparisonGrade(value) {
+      if (typeof value !== "number") return "–";
+      return value >= 0 ? `+${value}` : String(value);
+    }
+
+    function resolveComparisonCheck(skillA, rollA, skillB, rollB) {
+      const gradeA = skillA - rollA;
+      const gradeB = skillB - rollB;
+      const bothFailed = gradeA < 0 && gradeB < 0;
+      let winner = null;
+      let decidedBySkill = false;
+
+      if (gradeA > gradeB) {
+        winner = "A";
+      } else if (gradeB > gradeA) {
+        winner = "B";
+      } else if (skillA > skillB) {
+        winner = "A";
+        decidedBySkill = true;
+      } else if (skillB > skillA) {
+        winner = "B";
+        decidedBySkill = true;
+      }
+
+      let result;
+      if (!winner) {
+        result = "Unentschieden: Erfolgsgrad und Fähigkeitswert sind gleich.";
+      } else if (bothFailed) {
+        result = `${winner} hat sich besser geschlagen; beide Proben sind nicht bestanden.`;
+      } else if (decidedBySkill) {
+        result = `${winner} gewinnt bei gleichem Erfolgsgrad durch den höheren Fähigkeitswert.`;
+      } else {
+        const lead = Math.abs(gradeA - gradeB);
+        result = `${winner} gewinnt mit ${lead} ${lead === 1 ? "Punkt" : "Punkten"} Vorsprung.`;
+      }
+
+      return { gradeA, gradeB, result };
+    }
+
+    function renderComparisonCheck() {
+      const rollA = document.getElementById("comparison-roll-a");
+      const rollB = document.getElementById("comparison-roll-b");
+      const gradeA = document.getElementById("comparison-grade-a");
+      const gradeB = document.getElementById("comparison-grade-b");
+      const result = document.getElementById("comparison-check-winner");
+      const hasResult = typeof comparisonCheckState.rollA === "number"
+        && typeof comparisonCheckState.rollB === "number";
+
+      rollA.textContent = hasResult ? comparisonCheckState.rollA : "–";
+      rollB.textContent = hasResult ? comparisonCheckState.rollB : "–";
+      gradeA.textContent = `Grad ${hasResult ? formatComparisonGrade(comparisonCheckState.gradeA) : "–"}`;
+      gradeB.textContent = `Grad ${hasResult ? formatComparisonGrade(comparisonCheckState.gradeB) : "–"}`;
+      gradeA.className = `comparison-grade${hasResult ? (comparisonCheckState.gradeA >= 0 ? " success" : " failure") : ""}`;
+      gradeB.className = `comparison-grade${hasResult ? (comparisonCheckState.gradeB >= 0 ? " success" : " failure") : ""}`;
+      result.textContent = hasResult ? comparisonCheckState.result : "Noch nicht gewürfelt.";
+    }
+
+    function applyComparisonCheckResult(skillA, rollA, skillB, rollB) {
+      const outcome = resolveComparisonCheck(skillA, rollA, skillB, rollB);
+      comparisonCheckState = {
+        rollA,
+        rollB,
+        gradeA: outcome.gradeA,
+        gradeB: outcome.gradeB,
+        result: outcome.result
+      };
+      renderComparisonCheck();
+    }
+
+    function syncComparisonManualRollInput(participant) {
+      const checkbox = document.getElementById(`comparison-use-manual-${participant}`);
+      const input = document.getElementById(`comparison-manual-roll-${participant}`);
+      if (!checkbox || !input) return;
+
+      input.hidden = !checkbox.checked;
+      input.disabled = !checkbox.checked;
+      checkbox.setAttribute("aria-expanded", String(checkbox.checked));
+    }
+
+    function readManualComparisonRoll(input, participantLabel) {
+      const rawValue = input.value.trim();
+      const value = normalizeOptionalComparisonRoll(rawValue);
+      if (value === null) {
+        alert(`Der manuelle W100-Wert für ${participantLabel} muss eine ganze Zahl von 1 bis 100 sein.`);
+        input.focus();
+        return { valid: false, value: null };
+      }
+
+      input.value = String(value);
+      return { valid: true, value };
+    }
+
+    function rollComparisonCheck() {
+      const skillAInput = document.getElementById("comparison-skill-a");
+      const skillBInput = document.getElementById("comparison-skill-b");
+      const useManualA = document.getElementById("comparison-use-manual-a").checked;
+      const useManualB = document.getElementById("comparison-use-manual-b").checked;
+      const manualRollAInput = document.getElementById("comparison-manual-roll-a");
+      const manualRollBInput = document.getElementById("comparison-manual-roll-b");
+      const skillA = parseBoundedInt(skillAInput.value, 0, 0, 9999);
+      const skillB = parseBoundedInt(skillBInput.value, 0, 0, 9999);
+      const manualRollA = useManualA ? readManualComparisonRoll(manualRollAInput, "A") : { valid: true, value: null };
+      if (!manualRollA.valid) return;
+      const manualRollB = useManualB ? readManualComparisonRoll(manualRollBInput, "B") : { valid: true, value: null };
+      if (!manualRollB.valid) return;
+      const rollA = useManualA ? manualRollA.value : randomInt(1, 100);
+      const rollB = useManualB ? manualRollB.value : randomInt(1, 100);
+
+      skillAInput.value = skillA;
+      skillBInput.value = skillB;
+      applyComparisonCheckResult(skillA, rollA, skillB, rollB);
     }
 
     function formatTime(sec) {
@@ -4057,32 +5235,37 @@
     }
 
     function applyTimerPreset() {
-      const preset = parseInt(document.getElementById("timer-preset").value, 10) || 0;
+      const preset = parseBoundedInt(document.getElementById("timer-preset").value, 0, 0, 300);
       timerSeconds = preset;
       updateTimerDisplay();
     }
 
     function normalizeImportedHero(rawHero) {
-      if (!rawHero || typeof rawHero !== "object" || Array.isArray(rawHero)) return null;
+      if (!hasAnyOwnProperty(rawHero, [
+        "name", "hp", "maxHp", "geistBase", "geistCurrent", "body", "bodyBase", "charisma", "charismaBase", "color",
+        "skillSocialList", "skillKnowledgeList", "skillCombatList", "skillMiscList", "skillSocialText", "skillKnowledgeText", "skillCombatText", "skillMiscText",
+        "itemWeaponList", "itemArmorList", "itemMoneyList", "itemOtherList", "weaponItemsText", "armorItemsText", "moneyItemsText", "otherItemsText",
+        "activeEffects", "effectDrafts"
+      ])) return null;
 
-      const name = typeof rawHero.name === "string" && rawHero.name.trim() ? rawHero.name.trim() : "Neuer Held";
+      const name = typeof rawHero.name === "string" && rawHero.name.trim() ? rawHero.name.trim().slice(0, 200) : "Neuer Held";
 
-      let maxHp = parseInt(rawHero.maxHp, 10);
-      let hp = parseInt(rawHero.hp, 10);
-      if (isNaN(maxHp) || maxHp < 1) maxHp = !isNaN(hp) && hp > 0 ? hp : 100;
-      if (isNaN(hp) || hp < 0) hp = maxHp;
+      let maxHp = parseOptionalBoundedInt(rawHero.maxHp, 1, 9999);
+      let hp = parseOptionalBoundedInt(rawHero.hp, 0, 9999);
+      if (maxHp === null) maxHp = hp !== null && hp > 0 ? hp : 100;
+      if (hp === null) hp = maxHp;
       hp = clampHp(hp, maxHp);
 
-      let geistBase = parseInt(rawHero.geistBase, 10);
-      if (isNaN(geistBase)) geistBase = 50;
-      geistBase = clampPercent(geistBase);
-
-      let geistCurrent = parseInt(rawHero.geistCurrent, 10);
-      if (isNaN(geistCurrent)) geistCurrent = geistBase;
-      geistCurrent = clampPercent(geistCurrent);
+      const geistBase = parseBoundedInt(rawHero.geistBase, 50, 0, 100);
+      const geistCurrent = parseBoundedInt(rawHero.geistCurrent, geistBase, 0, 100);
+      const body = parseBoundedInt(rawHero.body, 50, 0, 100);
+      const bodyBase = parseBoundedInt(rawHero.bodyBase, body, 0, 100);
+      const charisma = parseBoundedInt(rawHero.charisma, 30, 0, 100);
+      const charismaBase = parseBoundedInt(rawHero.charismaBase, charisma, 0, 100);
 
       const fallbackColor = heroColors[(heroIdCounter - 1) % heroColors.length];
-      const color = typeof rawHero.color === "string" && rawHero.color.trim() ? rawHero.color.trim() : fallbackColor;
+      const color = typeof rawHero.color === "string" && rawHero.color.trim() ? rawHero.color.trim().slice(0, 100) : fallbackColor;
+      const itemLists = normalizeImportedItemLists(rawHero);
 
       return {
         id: heroIdCounter++,
@@ -4092,11 +5275,12 @@
         geistBase,
         geistCurrent,
         color,
-        body: clampPercent(parseInt(rawHero.body, 10) || 50),
-        bodyBase: clampPercent(parseInt(rawHero.bodyBase, 10) || parseInt(rawHero.body, 10) || 50),
-        charisma: clampPercent(parseInt(rawHero.charisma, 10) || 30),
-        charismaBase: clampPercent(parseInt(rawHero.charismaBase, 10) || parseInt(rawHero.charisma, 10) || 30),
+        body,
+        bodyBase,
+        charisma,
+        charismaBase,
         cardMinimized: false,
+        parryUsed: false,
         attributeOpen: false,
         skillsOpen: false,
         skillSocialOpen: false,
@@ -4112,42 +5296,49 @@
         itemArmorOpen: false,
         itemMoneyOpen: false,
         itemOtherOpen: false,
-        itemWeaponList: normalizeItemList(rawHero.itemWeaponList !== undefined ? rawHero.itemWeaponList : rawHero.weaponItemsText),
-        itemArmorList: normalizeItemList(rawHero.itemArmorList !== undefined ? rawHero.itemArmorList : rawHero.armorItemsText),
-        itemMoneyList: normalizeItemList(rawHero.itemMoneyList !== undefined ? rawHero.itemMoneyList : rawHero.moneyItemsText),
-        itemOtherList: normalizeItemList(rawHero.itemOtherList !== undefined ? rawHero.itemOtherList : rawHero.otherItemsText),
+        ...itemLists,
         activeEffects: normalizeBoardActiveEffects(rawHero.activeEffects),
-        effectsOpen: !!rawHero.effectsOpen,
+        effectsOpen: normalizeBoolean(rawHero.effectsOpen, false),
         effectDrafts: normalizeBoardEffectDrafts(rawHero.effectDrafts),
-        angelegt: !!rawHero.angelegt
+        angelegt: normalizeBoolean(rawHero.angelegt, false)
       };
     }
 
     function normalizeImportedEnemy(rawEnemy) {
-      if (!rawEnemy || typeof rawEnemy !== "object" || Array.isArray(rawEnemy)) return null;
+      if (!hasAnyOwnProperty(rawEnemy, [
+        "name", "type", "hp", "maxHp", "geistBase", "geistCurrent", "body", "bodyBase", "charisma", "charismaBase", "noteLink",
+        "skillSocialList", "skillKnowledgeList", "skillCombatList", "skillMiscList", "skillSocialText", "skillKnowledgeText", "skillCombatText", "skillMiscText",
+        "itemWeaponList", "itemArmorList", "itemMoneyList", "itemOtherList", "weaponItemsText", "armorItemsText", "moneyItemsText", "otherItemsText",
+        "activeEffects", "effectDrafts"
+      ])) return null;
 
-      const name = typeof rawEnemy.name === "string" && rawEnemy.name.trim() ? rawEnemy.name.trim() : "Gegner";
-      const type = typeof rawEnemy.type === "string" && rawEnemy.type.trim() ? rawEnemy.type.trim() : "Gegner";
+      const name = typeof rawEnemy.name === "string" && rawEnemy.name.trim() ? rawEnemy.name.trim().slice(0, 200) : "Gegner";
+      const type = typeof rawEnemy.type === "string" && rawEnemy.type.trim() ? rawEnemy.type.trim().slice(0, 100) : "Gegner";
 
-      let maxHp = parseInt(rawEnemy.maxHp, 10);
-      let hp = parseInt(rawEnemy.hp, 10);
-      if (isNaN(maxHp) || maxHp < 1) maxHp = !isNaN(hp) && hp > 0 ? hp : 10;
-      if (isNaN(hp) || hp < 0) hp = maxHp;
+      let maxHp = parseOptionalBoundedInt(rawEnemy.maxHp, 1, 9999);
+      let hp = parseOptionalBoundedInt(rawEnemy.hp, 0, 9999);
+      if (maxHp === null) maxHp = hp !== null && hp > 0 ? hp : 10;
+      if (hp === null) hp = maxHp;
       hp = clampHp(hp, maxHp);
 
       let geistBase = null;
       if (rawEnemy.geistBase !== undefined && rawEnemy.geistBase !== null && rawEnemy.geistBase !== "") {
-        geistBase = clampPercent(parseInt(rawEnemy.geistBase, 10) || 0);
+        geistBase = parseOptionalBoundedInt(rawEnemy.geistBase, 0, 100);
       }
 
       let geistCurrent = null;
       if (rawEnemy.geistCurrent !== undefined && rawEnemy.geistCurrent !== null && rawEnemy.geistCurrent !== "") {
-        geistCurrent = clampPercent(parseInt(rawEnemy.geistCurrent, 10) || 0);
+        geistCurrent = parseOptionalBoundedInt(rawEnemy.geistCurrent, 0, 100);
       } else if (geistBase != null) {
         geistCurrent = geistBase;
       }
 
-      const noteLink = typeof rawEnemy.noteLink === "string" && rawEnemy.noteLink.trim() ? rawEnemy.noteLink.trim() : null;
+      const body = parseBoundedInt(rawEnemy.body, 50, 0, 100);
+      const bodyBase = parseBoundedInt(rawEnemy.bodyBase, body, 0, 100);
+      const charisma = parseBoundedInt(rawEnemy.charisma, 20, 0, 100);
+      const charismaBase = parseBoundedInt(rawEnemy.charismaBase, charisma, 0, 100);
+      const noteLink = typeof rawEnemy.noteLink === "string" && rawEnemy.noteLink.trim() ? rawEnemy.noteLink.trim().slice(0, 2048) : null;
+      const itemLists = normalizeImportedItemLists(rawEnemy);
 
       return {
         id: enemyIdCounter++,
@@ -4158,11 +5349,12 @@
         geistBase,
         geistCurrent,
         noteLink,
-        body: clampPercent(parseInt(rawEnemy.body, 10) || 50),
-        bodyBase: clampPercent(parseInt(rawEnemy.bodyBase, 10) || parseInt(rawEnemy.body, 10) || 50),
-        charisma: clampPercent(parseInt(rawEnemy.charisma, 10) || 20),
-        charismaBase: clampPercent(parseInt(rawEnemy.charismaBase, 10) || parseInt(rawEnemy.charisma, 10) || 20),
+        body,
+        bodyBase,
+        charisma,
+        charismaBase,
         cardMinimized: false,
+        parryUsed: false,
         attributeOpen: false,
         skillsOpen: false,
         skillSocialOpen: false,
@@ -4178,18 +5370,112 @@
         itemArmorOpen: false,
         itemMoneyOpen: false,
         itemOtherOpen: false,
-        itemWeaponList: normalizeItemList(rawEnemy.itemWeaponList !== undefined ? rawEnemy.itemWeaponList : rawEnemy.weaponItemsText),
-        itemArmorList: normalizeItemList(rawEnemy.itemArmorList !== undefined ? rawEnemy.itemArmorList : rawEnemy.armorItemsText),
-        itemMoneyList: normalizeItemList(rawEnemy.itemMoneyList !== undefined ? rawEnemy.itemMoneyList : rawEnemy.moneyItemsText),
-        itemOtherList: normalizeItemList(rawEnemy.itemOtherList !== undefined ? rawEnemy.itemOtherList : rawEnemy.otherItemsText),
+        ...itemLists,
         activeEffects: normalizeBoardActiveEffects(rawEnemy.activeEffects),
-        effectsOpen: !!rawEnemy.effectsOpen,
+        effectsOpen: normalizeBoolean(rawEnemy.effectsOpen, false),
         effectDrafts: normalizeBoardEffectDrafts(rawEnemy.effectDrafts),
-        angelegt: !!rawEnemy.angelegt
+        angelegt: normalizeBoolean(rawEnemy.angelegt, false)
       };
     }
 
+    function readV2Attribute(rawEntity, key, label, options) {
+      const settings = isPlainObject(options) ? options : {};
+      const attribute = rawEntity[key];
+      if (!isPlainObject(attribute)
+        || !Object.prototype.hasOwnProperty.call(attribute, "baseValue")
+        || !Object.prototype.hasOwnProperty.call(attribute, "currentValue")) {
+        throw new Error(`${label} muss baseValue und currentValue enthalten.`);
+      }
+
+      const readValue = (value, fieldLabel, min) => {
+        if (settings.allowNull && value === null) return null;
+        if (!Number.isSafeInteger(value) || value < min || value > settings.max) {
+          throw new Error(`${label}.${fieldLabel} muss eine ganze Zahl von ${min} bis ${settings.max}${settings.allowNull ? " oder null" : ""} sein.`);
+        }
+        return value;
+      };
+
+      const baseValue = readValue(attribute.baseValue, "baseValue", settings.baseMin ?? 0);
+      const currentValue = readValue(attribute.currentValue, "currentValue", settings.currentMin ?? 0);
+      if (settings.currentNotAboveBase && currentValue > baseValue) {
+        throw new Error(`${label}.currentValue darf baseValue nicht überschreiten.`);
+      }
+      return { baseValue, currentValue };
+    }
+
+    function createLegacyEntityFromV2(rawEntity, allowNullGeist) {
+      if (!isPlainObject(rawEntity)) throw new Error("V2-Entitätsdaten müssen ein Objekt sein.");
+      const hp = readV2Attribute(rawEntity, "hp", "hp", {
+        max: 9999,
+        baseMin: 1,
+        currentMin: 0,
+        currentNotAboveBase: true
+      });
+      const geist = readV2Attribute(rawEntity, "geist", "geist", { max: 100, allowNull: allowNullGeist });
+      const body = readV2Attribute(rawEntity, "body", "body", { max: 100 });
+      const charisma = readV2Attribute(rawEntity, "charisma", "charisma", { max: 100 });
+      const legacy = { ...rawEntity };
+
+      delete legacy.hp;
+      delete legacy.geist;
+      delete legacy.body;
+      delete legacy.charisma;
+      legacy.hp = hp.currentValue;
+      legacy.maxHp = hp.baseValue;
+      legacy.geistBase = geist.baseValue;
+      legacy.geistCurrent = geist.currentValue;
+      legacy.body = body.currentValue;
+      legacy.bodyBase = body.baseValue;
+      legacy.charisma = charisma.currentValue;
+      legacy.charismaBase = charisma.baseValue;
+
+      const effectTargetMap = {
+        hp: "hp",
+        geist: "geistCurrent",
+        body: "body",
+        charisma: "charisma"
+      };
+      if (rawEntity.activeEffects !== undefined) {
+        legacy.activeEffects = mapEntityEffectTargets(rawEntity.activeEffects, effectTargetMap);
+      }
+      if (rawEntity.effectDrafts !== undefined) {
+        legacy.effectDrafts = mapEntityEffectTargets(rawEntity.effectDrafts, effectTargetMap);
+      }
+      return legacy;
+    }
+
+    function normalizeImportedHeroV2(rawHero) {
+      return normalizeImportedHero(createLegacyEntityFromV2(rawHero, false));
+    }
+
+    function normalizeImportedEnemyV2(rawEnemy) {
+      return normalizeImportedEnemy(createLegacyEntityFromV2(rawEnemy, true));
+    }
+
+    function parseVersionedEntityImport(parsed, arrayKey) {
+      const singularKind = arrayKey === "heroes" ? "hero" : "enemy";
+      if (parsed.system !== EXPORT_SYSTEM_ID) {
+        alert("Der V2-Import gehört zu einem anderen Regelwerk.");
+        return null;
+      }
+
+      if (parsed.kind === singularKind && isPlainObject(parsed.data)) {
+        return [parsed.data];
+      }
+      if (parsed.kind === arrayKey && Array.isArray(parsed.data)) {
+        return parsed.data;
+      }
+
+      alert(`V2-Import erwartet kind \"${singularKind}\" mit einem data-Objekt oder kind \"${arrayKey}\" mit einem data-Array.`);
+      return null;
+    }
+
     function parseJsonImport(text, arrayKey, unsupportedMessage) {
+      if (typeof text !== "string" || text.length > MAX_JSON_IMPORT_CHARS) {
+        alert(`JSON-Eingaben dürfen höchstens ${MAX_JSON_IMPORT_CHARS} Zeichen enthalten.`);
+        return null;
+      }
+
       let parsed;
       try {
         parsed = JSON.parse(text);
@@ -4199,27 +5485,108 @@
         return null;
       }
 
-      if (Array.isArray(parsed)) return parsed;
-      if (parsed && Array.isArray(parsed[arrayKey])) return parsed[arrayKey];
-      if (parsed && typeof parsed === "object") return [parsed];
+      let entries;
+      let format = "legacy";
+      if (isPlainObject(parsed) && parsed.schemaVersion === ENTITY_SCHEMA_VERSION) {
+        entries = parseVersionedEntityImport(parsed, arrayKey);
+        if (!entries) return null;
+        format = "v2";
+      } else {
+        if (isPlainObject(parsed) && parsed.schemaVersion !== undefined && parsed.schemaVersion !== 1) {
+          alert("Diese Importversion wird nicht unterstützt.");
+          return null;
+        }
 
-      alert(unsupportedMessage);
-      return null;
+        if (Array.isArray(parsed)) {
+          entries = parsed;
+        } else if (isPlainObject(parsed)) {
+          if (Object.prototype.hasOwnProperty.call(parsed, arrayKey)) {
+            if (!Array.isArray(parsed[arrayKey])) {
+              alert(unsupportedMessage);
+              return null;
+            }
+            entries = parsed[arrayKey];
+          } else if (hasAnyOwnProperty(parsed, ["heroes", "enemies", "kind"])) {
+            alert(unsupportedMessage);
+            return null;
+          } else {
+            entries = [parsed];
+          }
+        } else {
+          alert(unsupportedMessage);
+          return null;
+        }
+      }
+
+      if (entries.length > MAX_IMPORTED_ENTITIES) {
+        alert(`Ein Import darf höchstens ${MAX_IMPORTED_ENTITIES} Datensätze enthalten.`);
+        return null;
+      }
+      return { entries, format };
+    }
+
+    function importEntityJsonFile(event, textareaId, importCallback, entityLabel) {
+      const fileInput = event.target;
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+      if (typeof file.size === "number" && file.size > MAX_JSON_IMPORT_FILE_BYTES) {
+        fileInput.value = "";
+        alert(`${entityLabel}-JSON-Dateien dürfen höchstens ${MAX_JSON_IMPORT_FILE_BYTES} Bytes groß sein.`);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const text = String(reader.result || "");
+        fileInput.value = "";
+        if (text.length > MAX_JSON_IMPORT_CHARS) {
+          alert(`JSON-Eingaben dürfen höchstens ${MAX_JSON_IMPORT_CHARS} Zeichen enthalten.`);
+          return;
+        }
+        if (!text.trim()) {
+          alert(`Die ${entityLabel}-JSON-Datei ist leer.`);
+          return;
+        }
+        document.getElementById(textareaId).value = text;
+        importCallback();
+      };
+      reader.onerror = () => {
+        fileInput.value = "";
+        alert(`Die ${entityLabel}-JSON-Datei konnte nicht gelesen werden.`);
+      };
+      reader.readAsText(file, "UTF-8");
     }
 
     function importHeroJson() {
-      const text = document.getElementById("hero-json-input").value.trim();
-      if (!text) return;
+      const textInput = document.getElementById("hero-json-input");
+      const text = textInput.value.trim();
+      if (!text) {
+        const fileInput = document.getElementById("import-hero-json-file");
+        fileInput.value = "";
+        fileInput.click();
+        return;
+      }
 
-      const rawHeroes = parseJsonImport(
+      const parsedHeroes = parseJsonImport(
         text,
         "heroes",
-        "JSON-Format nicht unterstützt. Erwarte ein Objekt, ein Array oder { heroes: [...] }."
+        "JSON-Format nicht unterstützt. Erwarte einen Legacy-Import oder eine gültige V2-Hülle."
       );
-      if (!rawHeroes) return;
+      if (!parsedHeroes) return;
 
-      const normalizedHeroes = rawHeroes.map(normalizeImportedHero).filter(Boolean);
+      const previousHeroIdCounter = heroIdCounter;
+      let normalizedHeroes;
+      try {
+        const normalizer = parsedHeroes.format === "v2" ? normalizeImportedHeroV2 : normalizeImportedHero;
+        normalizedHeroes = parsedHeroes.entries.map(normalizer).filter(Boolean);
+      } catch (err) {
+        heroIdCounter = previousHeroIdCounter;
+        console.error("Heldenimport fehlgeschlagen:", err);
+        alert(`Heldenimport fehlgeschlagen: ${err.message || "Ungültige Datentypen."}`);
+        return;
+      }
       if (normalizedHeroes.length === 0) {
+        heroIdCounter = previousHeroIdCounter;
         alert("Keine gültigen Heldendaten gefunden.");
         return;
       }
@@ -4232,18 +5599,35 @@
     }
 
     function importJson() {
-      const text = document.getElementById("json-input").value.trim();
-      if (!text) return;
+      const textInput = document.getElementById("json-input");
+      const text = textInput.value.trim();
+      if (!text) {
+        const fileInput = document.getElementById("import-enemy-json-file");
+        fileInput.value = "";
+        fileInput.click();
+        return;
+      }
 
-      const rawEnemies = parseJsonImport(
+      const parsedEnemies = parseJsonImport(
         text,
         "enemies",
-        "JSON-Format nicht unterstützt. Erwarte ein Objekt, ein Array oder { enemies: [...] }."
+        "JSON-Format nicht unterstützt. Erwarte einen Legacy-Import oder eine gültige V2-Hülle."
       );
-      if (!rawEnemies) return;
+      if (!parsedEnemies) return;
 
-      const normalizedEnemies = rawEnemies.map(normalizeImportedEnemy).filter(Boolean);
+      const previousEnemyIdCounter = enemyIdCounter;
+      let normalizedEnemies;
+      try {
+        const normalizer = parsedEnemies.format === "v2" ? normalizeImportedEnemyV2 : normalizeImportedEnemy;
+        normalizedEnemies = parsedEnemies.entries.map(normalizer).filter(Boolean);
+      } catch (err) {
+        enemyIdCounter = previousEnemyIdCounter;
+        console.error("Gegnerimport fehlgeschlagen:", err);
+        alert(`Gegnerimport fehlgeschlagen: ${err.message || "Ungültige Datentypen."}`);
+        return;
+      }
       if (normalizedEnemies.length === 0) {
+        enemyIdCounter = previousEnemyIdCounter;
         alert("Keine gültigen Gegnerdaten gefunden.");
         return;
       }
@@ -4269,6 +5653,7 @@
         charisma: 30,
         charismaBase: 30,
         cardMinimized: false,
+        parryUsed: false,
         attributeOpen: false,
         skillsOpen: false,
         skillSocialOpen: false,
@@ -4312,6 +5697,7 @@
         charisma: 20,
         charismaBase: 20,
         cardMinimized: false,
+        parryUsed: false,
         attributeOpen: false,
         skillsOpen: false,
         skillSocialOpen: false,
@@ -4410,6 +5796,8 @@
 
       document.getElementById("add-hero-btn").addEventListener("click", addHero);
       document.getElementById("add-enemy-btn").addEventListener("click", addEnemy);
+      document.getElementById("toggle-all-heroes-btn").addEventListener("click", () => toggleAllCards(heroes, renderHeroes));
+      document.getElementById("toggle-all-enemies-btn").addEventListener("click", () => toggleAllCards(enemies, renderEnemies));
       document.getElementById("clear-enemies-btn").addEventListener("click", clearEnemies);
       document.getElementById("export-all-heroes-btn").addEventListener("click", exportAllHeroes);
       document.getElementById("export-all-enemies-btn").addEventListener("click", exportAllEnemies);
@@ -4428,6 +5816,14 @@
       document.getElementById("reset-initiative-btn").addEventListener("click", resetInitiative);
 
       document.getElementById("roll-dice-btn").addEventListener("click", rollDice);
+      document.getElementById("comparison-roll-btn").addEventListener("click", rollComparisonCheck);
+      ["a", "b"].forEach(participant => {
+        const checkbox = document.getElementById(`comparison-use-manual-${participant}`);
+        checkbox.addEventListener("change", () => {
+          syncComparisonManualRollInput(participant);
+          if (checkbox.checked) document.getElementById(`comparison-manual-roll-${participant}`).focus();
+        });
+      });
 
       document.getElementById("timer-start-btn").addEventListener("click", startTimer);
       document.getElementById("timer-pause-btn").addEventListener("click", pauseTimer);
@@ -4442,14 +5838,21 @@
 
       document.getElementById("import-json-btn").addEventListener("click", importJson);
       document.getElementById("import-hero-json-btn").addEventListener("click", importHeroJson);
+      document.getElementById("import-hero-json-file").addEventListener("change", event => {
+        importEntityJsonFile(event, "hero-json-input", importHeroJson, "Helden");
+      });
+      document.getElementById("import-enemy-json-file").addEventListener("change", event => {
+        importEntityJsonFile(event, "json-input", importJson, "Gegner");
+      });
 
-      document.getElementById("hero-json-input").placeholder = HERO_IMPORT_PLACEHOLDER;
-      document.getElementById("json-input").placeholder = ENEMY_IMPORT_PLACEHOLDER;
+      document.getElementById("hero-json-input").placeholder = createEntityV2ImportPlaceholder("heroes", HERO_IMPORT_PLACEHOLDER);
+      document.getElementById("json-input").placeholder = createEntityV2ImportPlaceholder("enemies", ENEMY_IMPORT_PLACEHOLDER);
 
       const restoredLocalBoard = initializeLocalBoardPersistence();
       if (!restoredLocalBoard) {
         updateRoundDisplay();
         updateTimerDisplay();
+        renderComparisonCheck();
         renderHeroes();
         renderEnemies();
         renderInitiative();
